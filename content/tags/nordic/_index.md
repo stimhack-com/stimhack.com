@@ -1,0 +1,5 @@
+---
+title: nordic
+slug: nordic
+---
+

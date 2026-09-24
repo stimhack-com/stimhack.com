@@ -1,0 +1,156 @@
+---
+title: A Comparison of Event-Based Runner Economies in ANR
+slug: a-comparison-of-event-based-runner-economies-in-anr
+date: '2015-01-09T14:14:34-07:00'
+lastmod: '2015-01-09T14:23:00-07:00'
+authors:
+- ycombinator
+categories:
+- articles
+tags: []
+summary: How efficient is an economic engine? This article quantitatively investigates this fundamental question for event-based runner economies.
+featured_image: /wp-content/uploads/2015/01/sg.png
+thumbnail: /wp-content/uploads/2015/01/sg-215x300.png
+wp_id: 6342
+---
+<p>To the point, this article quantitatively classifies different event economies:</p>
+<table bgcolor="#404040">
+<thead>
+<tr>
+<th>Draw efficiency</th>
+<th>Credit efficiency</th>
+<th>Economic package</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>High</td>
+<td>Low</td>
+<td>SG+DL+LF+Diesel+QT</td>
+</tr>
+<tr>
+<td>Low</td>
+<td>Very high, with a 5 click delay</td>
+<td>PC+SG+DL+LF</td>
+</tr>
+<tr>
+<td>Med</td>
+<td>Med</td>
+<td>PVP+SG+DL+LF+Diesel+QT</td>
+</tr>
+</tbody>
+</table>
+<p>where</p>
+<ul class="task-list">
+<li>SG = Sure Gamble</li>
+<li>DL = Dirty Laundry</li>
+<li>LF = Lucky Find</li>
+<li>Diesel = &#8230;yeah</li>
+<li>QT = Quality Time</li>
+<li>PC = Professional Contacts</li>
+<li>PVP = Prepaid VoicePad</li>
+</ul>
+<h2><em>Abstract</em></h2>
+<p>This article provides a simulation-driven analysis of multiple popular runner economic and draw engines in Android Netrunner (ANR). We study the click efficiency for card draw and credit generation of different economic packages. The goal is to provide an additional set of information for consideration in deck design, so that you can choose the proper economic engine for the tempo and timing of your deck. When should you throw Professional Contacts in your deck? How much better is Prepaid Kate than normal Prepaid decks? How much better is a Prepaid deck than a normal event deck? How important are draw cards? For the answers to this and more, read on.</p>
+<h2>Why use a Simulation?</h2>
+<p>There are many aspects of ANR that we understand relatively well. Sure Gamble is a good card. Prepaid Kate is a firm foundation. Criminal economies can enable constant pressure. There is a tempo loss for Professional Contacts. Magnum Opus works well in big-rig decks. These intuitions are developed from our personal experiences, and from the ANR community at large (bgg, stimhack, netreddit, youtube).  We use these and other considerations when constructing and playing decks. However, our intuitions are relatively imprecise. It is difficult to answer questions such as:</p>
+<ul class="task-list">
+<li>How much of a tempo hit can we expect from Professional Contacts?</li>
+<li>How much better is Prepaid Kate over a normal Prepaid VoicePad deck?</li>
+<li>How much click efficiency do we get for drawing normally versus drawing with Diesel and Quality Time versus doing the same with an event economy?</li>
+<li>In the worst 10% of my games, what&#8217;s economic efficiency I can expect?</li>
+</ul>
+<p>This article provides the results from a discrete event simulator of the runner economies of ANR that is able to answer these and many other questions. If you want to know what a discrete event simulator is, or why we&#8217;re using it, check out the FAQ below.</p>
+<p>In future articles, I&#8217;ll expand beyond event economies. However, event economies are quite popular, and it is not always clear which to choose for a given deck. So our goal is to get some quantitative information that we can use to describe the various runner economies. Most of these economies make some trade-offs &#8211; for example, ceding tempo for long-term efficiency &#8211; that must be matched with the the specific requirements of your deck for maximum efficiency. Simply put, our goal is to understand the various aspects of economic and card-draw efficiency.</p>
+<h2>Back to Basics: Credits and Cards</h2>
+<p>We enjoy seeing the likes of a good Medium dig or a successful Quest Completed. The basis of all such plays is <em>drawing </em>the necessary breakers and tricks, and the <em>credits</em> to install them and fund the runs. There are many great articles that focus on the breakers and tricks parts of decks. This will focus entirely on the credit and draw aspect. It is not enough to focus on either draw or credits, without the other as most cards impact both. Many economic packages impact draw efficiency, and vice-versa. More importantly, we&#8217;ll see that most traditional economic engines trade one for the other. Lets start with a few definitions:</p>
+<p><em><strong>Click efficiency</strong></em> is the multiplicative factor that cards give you for spending your clicks on getting credits and cards. Without playing any cards, ANR lets you trade a single click for a single credit or card, so this is the base-line efficiency. At the high end, we see cards like Magnum Opus that gives us two credits for a single click, or Professional Contacts that gives us both a credit and a draw. These efficiency multipliers are easy to understand (though the up-front cost of the cards is less-so).</p>
+<p>However, this analysis gets complicated quickly. What is the efficiency of Sure Gamble? A click to draw, a click to play, and a net gain of 4 credits = 2 credits per click? But what if you also include Diesel in your deck that increases the efficiency of your card draw. Now Sure Gamble is more efficient as it is less than a click to draw it (on average)! What about Quality Time that is net-zero efficient (one click to draw, one to play, and three credits = 5 clicks for 5 clicks worth of draw)? It actually becomes more efficient with Sure Gamble as click efficiency for credits is increased, and more efficient with Diesel that increases click efficiency for draw. And the increased efficiency of Quality Time also increase the efficiency of Sure Gamble and Diesel that both must be drawn. These complex relationships are what motivate simulation to assess the click efficiency, and also what makes me want to investigate event-based economies first.</p>
+<p><em><strong>Resource clicks</strong></em> are those that are used with the intention of gaining more credits or cards. They do not include actions such as playing a breaker, a piece of hardware, or a resource. This article investigates only the <em>resource click efficiency </em>of various economy and draw packages. This is a strange definition and a little difficult to wrap your head around. The intuition is that if you&#8217;re playing and think &#8220;I need cards&#8221;, or &#8220;I need credits&#8221;, and you choose the path that gets you that, you&#8217;re spending a resource click. Note that for many event economies, the answer is often the same: if you have a economy card, play it. Otherwise draw. The efficiency of a resource click will <em>on average</em> yield you a number of credits, and a number of draws. The &#8220;on average&#8221; part is important to understand. You may draw during a game, which obviously gets you no credits. However over the course of a game, the average credits for such a resource click will also consider playing Sure Gambles. Thus, on average, you&#8217;re getting some amount of credits, and some amount of cards.</p>
+<p>A <em><strong>Quality Draw</strong></em> is a draw that results in a card that is not itself devoted to economy or draw. A non-quality draw is different from the traditional notion of a <em>dead draw</em>. A dead draw is a card that is useless as it was only useful in another part of the game (e.g. Levy AR Access in your starting hand), or is a copy of an already installed program that doesn&#8217;t stack (e.g. Professional Contacts). Every dead draw is not a quality draw. However, there are non-quality draws that are not dead. A deck that includes <em>only</em> economy and draw cards would have no dead draws, but none of them are really useful. Quality draws, then, are those that allow you to interact with the opposing side, not just play the macro game of credit and draw.</p>
+<p>Given these definitions, the rest of this article, looks at the <strong>resource click efficiency of gaining both credits and quality draws</strong> for various economic packages.</p>
+<h2>Event Economies</h2>
+<p>Lets look at three prototypical runner economies. The <strong>bold</strong> labels designate the lines within the graphs.</p>
+<ul class="task-list">
+<li><strong>evt</strong> which is based on Sure Gamble, Dirty Laundry, and Lucky Find.</li>
+<li><strong>draw</strong> includes a draw package based on Quality Time and Diesel. Card advantage isn&#8217;t as important in ANR as in MTG, but it will impact our ability to find our next event that provides credits!</li>
+<li><strong>pvp</strong> which includes both the credit and draw packages from <strong>evt</strong> and <strong>draw</strong>, along with Prepaid VoicePad (PVP). We&#8217;ll look at both the Kate and non-Kate versions.</li>
+<li><strong>procons</strong> which includes Professional Contacts.</li>
+</ul>
+<p>The event package is commonly seen in many runner decks. The pvp list is the backbone of the famous &#8220;Prepaid Kate&#8221; decks. These decks are interesting as it is unclear if PVP is worthwhile outside of Kate, and it is also unclear how much more efficient Prepaid Kate is than the alternatives. The Professional Contacts deck, though less common competitively, is not uncommon on NetrunnerDB. The tempo hit for playing the 5-cost Professional Contacts is often used as an excuse to avoid this economic engine. Lets see the impact of that!</p>
+<p>We use simple mulligan strategies: the Professional Contacts-based packages mulligan for <strong>procons</strong>, and the others mulligan for either Sure Gamble or Lucky Find. Obviously, mulligan decisions in a real game are more complicated than this. In a later article, we&#8217;ll investigate the impact of mulligan strategies on click efficiency.</p>
+<h2>Credit Click Efficiency</h2>
+<p>First, lets check out credit click efficiency. In the following graphs, X-axis is the increasing number of resource clicks, and the Y-axis is the number of credits accumulated. There are two straight dotted lines. One represents just clicking for money (slope of 1, starting at 5 credits), and the other has a slope of 2, and is useful for reference. We run 4096 simulated games, and these graphs report the average credits gained over a number of resource clicks.</p>
+<p><img loading="lazy" decoding="async" class="aligncenter wp-image-6354" src="/wp-content/uploads/2015/01/mean0.png" alt="mean0" width="500" height="375" srcset="/wp-content/uploads/2015/01/mean0.png 800w, /wp-content/uploads/2015/01/mean0-300x225.png 300w, /wp-content/uploads/2015/01/mean0-150x113.png 150w" sizes="(max-width: 500px) 100vw, 500px" /></p>
+<p><strong>Discussion.</strong></p>
+<ul class="task-list">
+<li>First, lets discuss the outlier. <strong>procons</strong> on its own is pretty bad. Though it gets close to a slope of one eventually, it is offset downward from the other curves by about 10 credits. Indeed, <strong>procons</strong> can impose a <em>huge</em> tempo hit.</li>
+<li><strong>procons+evt</strong>, however, is significantly better. Though you can see a tempo hit versus the other approaches for the first five clicks, after that it has the steepest slope! The events smooth over the one-time hit from installing <strong>procons</strong>, lessening the tempo hit. If you have a deck that is willing to get rolling a little slower (a large possibility once Clot forces the meta to change), this offers the highest credit/click ratio for the long game.</li>
+<li><strong>evt</strong> and <strong>evt+draw</strong> start the strongest as they have almost no &#8220;infrastructure&#8221; costs that cause tempo loss. However, their click efficiency over time is inferior (less than 1 click per credit!). The <em>draw</em> cards increase the <em>credit</em> click efficiency of the deck as they put more credit events into your hand more efficiently. If you have an extremely aggressive deck that needs money very quickly, this package might be appropriate.</li>
+<li>The <strong>pvp</strong> decks are a little bit of an aberration. They <em>increase</em> in efficiency as time goes on (i.e. the slope increases with more resource clicks). Prepaid Kate has a well-deserved reputation, but the normal <strong>pvp</strong> deck does quite well, and is consistently better than getting one click per credit. Note that another aspect of <strong>pvp</strong> decks is that other events are comparably discounted which isn&#8217;t considered here.</li>
+</ul>
+<p>Next, we can explicitly look at the slope of the lines to determine click efficiency. Now the Y-axis is simply the number of credits received per click. This is just another representation of the same data.</p>
+<p><img loading="lazy" decoding="async" class="aligncenter wp-image-6355" src="/wp-content/uploads/2015/01/mean1.png" alt="mean1" width="500" height="375" srcset="/wp-content/uploads/2015/01/mean1.png 800w, /wp-content/uploads/2015/01/mean1-300x225.png 300w, /wp-content/uploads/2015/01/mean1-150x113.png 150w" sizes="(max-width: 500px) 100vw, 500px" /></p>
+<p><strong>Discussion.</strong> This reinforces the previous conclusions. The event decks start out very fast as they play any credit-gaining events in their starting hands (without having to draw any cards yet). However, when they have to dig for economy cards, their efficiency goes down. The <strong>pvp</strong> decks only out-perform clicking for a credit after 15 resource clicks, while the <strong>evt+procons</strong> deck suffers a tempo hit at the start, but then powers into significant efficiency. By the end, efficiency is topping out at around 1.4 credits per click. Note that the <strong>procons</strong> decks increase in efficiency as the clicks go on due to variance in if we drew Professional Contacts early or not.</p>
+<p>This last point seems a little suspect. If the variance of an economic package including <strong>procons</strong> has such an impact on its <em>average</em> efficiency, does that mean that it will under-perform in a competitive environment where consistency is key? Yes and no. Lets look at the credits you&#8217;d get in that 1 out of 10 game where everything goes wrong. The following graph takes the lower-bound on the credit value that you&#8217;d see 9 times out of 10. 1 out of 10 times, you might see worse. There is a subtlety here: there is no &#8220;10% game&#8221;. Instead, we took the 10% worst credit value across all games for each click number. So any given game &#8211; even one of the worst &#8211; might be worse than this curve for some clicks, but not for others. However, it does give us a sense for how bad the bad draws are for the various economic packages.</p>
+<p><a href="/wp-content/uploads/2015/01/90p0.png"><img loading="lazy" decoding="async" class="aligncenter wp-image-6353" src="/wp-content/uploads/2015/01/90p0.png" alt="90p0" width="500" height="375" srcset="/wp-content/uploads/2015/01/90p0.png 800w, /wp-content/uploads/2015/01/90p0-300x225.png 300w, /wp-content/uploads/2015/01/90p0-150x113.png 150w" sizes="(max-width: 500px) 100vw, 500px" /></a></p>
+<p><strong>Discussion.</strong> We can see that <strong>procons+evt</strong> is still the most efficient in the long game, but in this case, there is quite a tempo hit (taking about 7 resource clicks to catch up from). Overall, many of the approaches are still relatively efficient, but they take some time to get rolling.</p>
+<p>Lets take a step back for a second. These results are a little distressing. Are we saying that <em>we put all of these economy cards into our decks, and the result is often not even as efficient as clicking for credits?</em>!? Insanity!</p>
+<p>Yes, yes we are. But that&#8217;s only half the story. The other half is quality draw efficiency. While clicking for credits might do better than <strong>evt</strong>, it would yield no cards, thus no options. So to round out the story, we must also look at quality draw efficiency.</p>
+<h2>Quality Draw Efficiency</h2>
+<p>So how many quality draws per resource click do each of the economic packages yield? In the following graph, the dotted line has a slope of one, again for reference. If we just clicked to draw, that line would result.</p>
+<p><a href="/wp-content/uploads/2015/01/qdraw0.png"><img loading="lazy" decoding="async" class="aligncenter wp-image-6356" src="/wp-content/uploads/2015/01/qdraw0.png" alt="qdraw0" width="500" height="375" srcset="/wp-content/uploads/2015/01/qdraw0.png 800w, /wp-content/uploads/2015/01/qdraw0-300x225.png 300w, /wp-content/uploads/2015/01/qdraw0-150x113.png 150w" sizes="(max-width: 500px) 100vw, 500px" /></a></p>
+<p><strong>Discussion.</strong></p>
+<ul class="task-list">
+<li><strong>procons</strong> interestingly comes out at the top of the bunch. This is because except for <strong>procons</strong> draw and the click to play the Professional Contacts, every click is spent either on drawing, or on clicking <strong>procons</strong>. The main reason the efficiency is slightly less than one is due to dead draws of the subsequent Professional Contacts.</li>
+<li><strong>evts+procons</strong> demonstrates the lowest efficiency, in contrast to the credit efficiency graphs. This is due to three factors: first, the Professional Contacts dead draws; second, drawing the subsequent economic events decrease draw quality; third, the draw power of <strong>procons</strong> is less than the draw events.</li>
+<li>The draw efficiency of <strong>evts</strong> is slowed down by 1) drawing economy events, and 2) playing them to gain credits.  <strong>evts+draw</strong> has more quality draw efficiency. This answers the question, &#8220;how much of an impact will adding card draw into my deck have&#8221;?</li>
+<li><em>pvp</em> decks (the lines are overlapped) have decreased quality draw efficiency due to the clicks to draw the Prepaid VoicePads, and the clicks to play them. Though they accelerate the credit efficiency, they degrade draw efficiency.</li>
+</ul>
+<p>The next graph emphasizes the click efficiency for quality draws. All the <strong>draw</strong> decks show a boost at low click numbers due to draw cards in the starting hand, and then settle into a steady-state efficiency. Spoiler: Andromeda is good.</p>
+<p><img loading="lazy" decoding="async" class="aligncenter wp-image-6357" src="/wp-content/uploads/2015/01/qdraw1.png" alt="qdraw1" width="500" height="375" srcset="/wp-content/uploads/2015/01/qdraw1.png 800w, /wp-content/uploads/2015/01/qdraw1-300x225.png 300w, /wp-content/uploads/2015/01/qdraw1-150x113.png 150w" sizes="(max-width: 500px) 100vw, 500px" /></p>
+<h2>Implications for Deck Building</h2>
+<p>The results point to three significant dimensions that impact which credit and draw package is best for different strategies.</p>
+<ol class="task-list">
+<li>How important are the first five resource clicks for your deck? Typical Gabe decks cannot wait for the tempo hit that <strong>evt+procons</strong> imposes.</li>
+<li>How important is quality draw efficiency? The difference between <strong>evts+procons</strong> and <strong>evts+draw</strong> is about a 33% increase in draw efficiency? The <strong>pvp</strong> deck&#8217;s quality draw efficiency are in-between the other two.</li>
+<li>How important are mid- and late-game credits? The efficiency of <strong>evts+procons</strong> is exceptional (75% greater than <strong>evts+draw</strong>).</li>
+</ol>
+<p><em>Simple conclusions:</em></p>
+<ul class="task-list">
+<li>Each economic engine you create should understand the trade-off it makes between draw and credits. Each of the engines I check out here make different trade-offs, and will be ideal for different decks.</li>
+<li>Is early game econ required? Don&#8217;t use <strong>procons</strong> decks. If you can burn around 4-5 resource clicks, it becomes a monster. If you can&#8217;t, it isn&#8217;t the econ package for you.</li>
+<li>Never use a deck that relies <em>only</em> on <strong>procons</strong>. As expected, consistency is an issue.</li>
+<li>High draw efficiency, and decent credit economy = <strong>evt+draw</strong>.</li>
+<li>Decent draw, and high(est) credit efficiency = <strong>procons+evts</strong>.</li>
+<li>Medium-level draw and medium-level click efficiency = <strong>pvp+evts+draw</strong>.</li>
+</ul>
+<h1>FAQ</h1>
+<h2>What&#8217;s a discrete event simulator (DES)?</h2>
+<p>A DES quantizes time, and executes a sequence of events at each time. In our case, we quantize the system into resource clicks. At each click, a set of events that manipulate the state of the hand, board, deck, and credit pool are executed. An event might add future events (i.e. Earthrise Hotel sets future events for additional draw). At its core, this is all that a DES is.</p>
+<h2>Why a simulator?</h2>
+<p>Lets use the Sure Gamble example from before. How many clicks does it cost in total? The naive analysis is 1 to play, and 1 to draw. But throw a Quality Time in the deck and it all changes. Lets restate the Sure Gamble and Quality Time click costs (CC):</p>
+<p><tt>CC(SureGamble) = 5CE + DE + 1</tt></p>
+<p><tt>CC(QualityTime) = 3CE + DE + 1</tt></p>
+<p>where <tt>CE</tt> is the credit efficiency and <tt>DE</tt> is the draw efficiency (note, <em>not</em> the quality draw efficiency as we don&#8217;t want to ignore drawing the Sure Gamble). The &#8220;<tt>+ 1</tt>&#8221; in both cases is the play click which isn&#8217;t compressed (until we get Hayley). Now what&#8217;s the <tt>CE</tt> and <tt>DE</tt>?</p>
+<p><tt>CE = f(CC(SureGamble))</tt></p>
+<p><tt>DE = g(CC(QualityTime))</tt></p>
+<p>There are two functions, <tt>f</tt> and <tt>g</tt> that determine the efficiencies <em>based on the click costs of the economy and draw cards</em>. Lets ignore for now what <tt>f</tt> and <tt>g</tt> actually are (a previous simulator attempted to define them&#8230;and failed in a sea of complexity). Lets just point out that <tt>CC</tt> is dependent on <tt>DE</tt> and <tt>CE</tt>, while both <tt>DE</tt> and <tt>CE</tt> are dependent on <tt>CC</tt>. This recursive relationship will likely converge, but finding a strict fixed point is quite complicated. Determining it analytically (i.e. with only math) is unlikely to be reasonably feasible.</p>
+<p>Now factor in the odd rules of many cards in ANR (Test Run for Magnum Opus), and you realize that simply throwing math at the problem won&#8217;t be sufficient.</p>
+<p>Thus, we use a discrete event simulator.</p>
+<h2>What assumptions are made by the simulator?</h2>
+<p>We have to make a number of assumptions so that we can get useful information out of the simulator. These include:</p>
+<ul class="task-list">
+<li>Hand size is infinite.</li>
+<li>We consider resource clicks. Thus, there isn&#8217;t a direct correspondence between clicks in a game, and the clicks displayed in the graphs.</li>
+<li>The big one: there is currently <em>no interaction</em> between runner and corp. The results of this simulation are meant to provide information to a runner regarding how efficient each click spent on econ/draw is. This is the largest assumption, but is necessary to simply the game to the level where a simulation provides useful information.</li>
+<li>An ordering, or priority, is assigned to different cards that is used to determine which action to take with any given click. This ordering is derived from my own experience with playing ANR, and watching others play.</li>
+</ul>
+<p>However, there are many non-trivial aspects of the game we do consider:</p>
+<ul class="task-list">
+<li>Mulligan.</li>
+<li>Starting hard and deck size.</li>
+<li>Decision processes to determine which action to take out of a number of possibilities.</li>
+<li>The rules of many different cards including, for example, Earthrise Hotel, Test Run, SMC, Lucky Find.</li>
+</ul>
+<p>&#8211; Gabe &#8220;Ycombinator&#8221; Parmer</p>

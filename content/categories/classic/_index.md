@@ -1,0 +1,5 @@
+---
+title: Classic
+slug: classic
+---
+

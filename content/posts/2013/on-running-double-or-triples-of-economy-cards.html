@@ -1,0 +1,273 @@
+---
+title: On Running Double or Triples of Reusable Economy Cards
+slug: on-running-double-or-triples-of-economy-cards
+date: '2013-08-14T11:45:22-07:00'
+lastmod: '2014-05-24T08:35:34-07:00'
+authors:
+- szymkodf
+categories:
+- articles
+- classic
+- strategy
+tags:
+- classics
+summary: The math behind how many copies of economy cards you should run in your deck.
+featured_image: /wp-content/uploads/2013/05/sizedKatiJones.jpg
+thumbnail: /wp-content/uploads/2013/05/sizedKatiJones.jpg
+comments:
+- id: 331
+  parent: 0
+  author: SneakySly
+  avatar: https://secure.gravatar.com/avatar/c062c74a11a5281e22a7f90fd080f3f1?s=48&d=identicon&r=r
+  date: '2013-08-15T09:23:49-07:00'
+  content: '<p>Discuss this article in our forums:</p>
+
+    <p><a href="http://forum.stimhack.com/t/on-running-double-or-triples-of-reusable-economy-cards/206" rel="nofollow ugc">http://forum.stimhack.com/t/on-running-double-or-triples-of-reusable-economy-cards/206</a></p>'
+wp_id: 1087
+---
+<p>After discussing <a href="/kate-professional-anarch/">Alexfrog&#8217;s &#8220;Profesional&#8221; Anarch</a> deck on the <a href="http://forum.stimhack.com/t/kate-professional-anarch/187/17">Stimhack forums</a>, several of us had an exchange in which we agreed to disagree.  Should you run 2 copies or 3 copies of an economy card if future draws of that card will be dead draws?  Examples of this include Kati Jones, Professional Contacts and Magnum Opus.</p>
+<p><img loading="lazy" decoding="async" src="http://www.cardgamedb.com/forums/uploads/an/ffg_kati-jones-humanitys-shadow.png" alt="" width="187" height="261" /><img loading="lazy" decoding="async" src="http://www.cardgamedb.com/forums/uploads/an/ffg_professional-contacts-creation-and-control.png" alt="" width="184" height="259" /><img loading="lazy" decoding="async" src="http://www.cardgamedb.com/forums/uploads/an/ffg_magnum-opus-core.png" alt="" width="184" height="259" /></p>
+<p>Single-use cards are easy to examine.  Take Daily Casts or Sure Gamble, for example: the value you gain with every iteration is the same.  Reusable economy cards are more nuanced, because the earlier the draw, the more value you can extract from it over the course of a game.  This is the argument in favor of running triples of these cards.</p>
+<p>However, there is a cost associated with running triples of potentially dead cards that is often overlooked.  The future dead draw is not only a wasted click &#8212; that dead draw could have been a card that actually added value.  If, say, you decided to replace the third Magnum Opus in your deck with a Dirty Laundry, one of the two future dead draws (a redundant Magnum Opus) will be a Dirty Laundry, a card that actually gives you value.  Therefore, we should think of this problem as follows: the benefit of running a third iteration of a card is the additional value you would get from drawing it earlier, and this must be weighed against the value of a card you&#8217;re not running in its place.</p>
+<p>Back to our discussion of Professional Contacts.  Let&#8217;s do some math and actually figure out the expected value of running a third iteration and see if it outweighs the potential benefit of a card we could run in its place.</p>
+<p><strong>WARNING: There will be real math coming up, so I hope you brushed up on your probability.</strong></p>
+<p>I propose we attack the problem as follows: calculate the expected value of the first copy of Professional Contacts over the course of the game when running 3 copies vs running 2 copies.  The difference in value should be greater than the value of a card you would run in the third iteration&#8217;s place.  Fortunately our problem is simplified somewhat because of the linear nature of PC&#8217;s return &#8212; every draw you make after it&#8217;s in play gains you 1 credit, so every additional card you have to wait costs you 1 credit.  Therefore, if we can calculate the expected waiting time until drawing PC in the 2-card or 3-card versions, the difference in waiting time (card draws) is exactly the value you gain when running three copies.</p>
+<p>The expected waiting time for drawing a card when running three copies is (roughly, not exactly) equal to the number of card draws required to have drawn it 50% of the time.  That is, there&#8217;s some number of cards you could draw where 50% of the time you will have drawn at least one Professional Contacts.  Here is the calculation:</p>
+<table border="0" width="644" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td width="64" height="20">Cards</td>
+<td width="139">Non-PC Cards Left</td>
+<td width="87">Total Cards</td>
+<td width="192">Pr(Did not draw PC this draw)</td>
+<td width="162">Pr(Did not draw PC ever)</td>
+</tr>
+<tr>
+<td height="20">1</td>
+<td>42</td>
+<td>45</td>
+<td>93%</td>
+<td>93%</td>
+</tr>
+<tr>
+<td height="20">2</td>
+<td>41</td>
+<td>44</td>
+<td>93%</td>
+<td>87%</td>
+</tr>
+<tr>
+<td height="20">3</td>
+<td>40</td>
+<td>43</td>
+<td>93%</td>
+<td>81%</td>
+</tr>
+<tr>
+<td height="20">4</td>
+<td>39</td>
+<td>42</td>
+<td>93%</td>
+<td>75%</td>
+</tr>
+<tr>
+<td height="20">5</td>
+<td>38</td>
+<td>41</td>
+<td>93%</td>
+<td>70%</td>
+</tr>
+<tr>
+<td height="20">6</td>
+<td>37</td>
+<td>40</td>
+<td>93%</td>
+<td>64%</td>
+</tr>
+<tr>
+<td height="20">7</td>
+<td>36</td>
+<td>39</td>
+<td>92%</td>
+<td>59%</td>
+</tr>
+<tr>
+<td height="20">8</td>
+<td>35</td>
+<td>38</td>
+<td>92%</td>
+<td>55%</td>
+</tr>
+<tr>
+<td height="20">9</td>
+<td>34</td>
+<td>37</td>
+<td>92%</td>
+<td>50%</td>
+</tr>
+<tr>
+<td height="20">10</td>
+<td>33</td>
+<td>36</td>
+<td>92%</td>
+<td>46%</td>
+</tr>
+<tr>
+<td height="20">11</td>
+<td>32</td>
+<td>35</td>
+<td>91%</td>
+<td>42%</td>
+</tr>
+<tr>
+<td height="20">12</td>
+<td>31</td>
+<td>34</td>
+<td>91%</td>
+<td>38%</td>
+</tr>
+<tr>
+<td height="20">13</td>
+<td>30</td>
+<td>33</td>
+<td>91%</td>
+<td>35%</td>
+</tr>
+<tr>
+<td height="20">14</td>
+<td>29</td>
+<td>32</td>
+<td>91%</td>
+<td>32%</td>
+</tr>
+</tbody>
+</table>
+<p>If you&#8217;re running three copies of Professional Contacts, then after seeing 9 cards you would not have seen one 50% of the time &#8212; to put it another way, within 9 cards you will see a Professional Contacts 50% of the time.  This is roughly the average amount of time you will have to wait to see it in a game.  Let&#8217;s run the math for 2 copies:</p>
+<table border="0" width="644" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td width="64" height="20">Cards</td>
+<td width="139">Non-PC Cards Left</td>
+<td width="87">Total Cards</td>
+<td width="192">Pr(Did not draw PC this draw)</td>
+<td width="162">Pr(Did not draw PC ever)</td>
+</tr>
+<tr>
+<td height="20">1</td>
+<td>43</td>
+<td>45</td>
+<td>96%</td>
+<td>96%</td>
+</tr>
+<tr>
+<td height="20">2</td>
+<td>42</td>
+<td>44</td>
+<td>95%</td>
+<td>91%</td>
+</tr>
+<tr>
+<td height="20">3</td>
+<td>41</td>
+<td>43</td>
+<td>95%</td>
+<td>87%</td>
+</tr>
+<tr>
+<td height="20">4</td>
+<td>40</td>
+<td>42</td>
+<td>95%</td>
+<td>83%</td>
+</tr>
+<tr>
+<td height="20">5</td>
+<td>39</td>
+<td>41</td>
+<td>95%</td>
+<td>79%</td>
+</tr>
+<tr>
+<td height="20">6</td>
+<td>38</td>
+<td>40</td>
+<td>95%</td>
+<td>75%</td>
+</tr>
+<tr>
+<td height="20">7</td>
+<td>37</td>
+<td>39</td>
+<td>95%</td>
+<td>71%</td>
+</tr>
+<tr>
+<td height="20">8</td>
+<td>36</td>
+<td>38</td>
+<td>95%</td>
+<td>67%</td>
+</tr>
+<tr>
+<td height="20">9</td>
+<td>35</td>
+<td>37</td>
+<td>95%</td>
+<td>64%</td>
+</tr>
+<tr>
+<td height="20">10</td>
+<td>34</td>
+<td>36</td>
+<td>94%</td>
+<td>60%</td>
+</tr>
+<tr>
+<td height="20">11</td>
+<td>33</td>
+<td>35</td>
+<td>94%</td>
+<td>57%</td>
+</tr>
+<tr>
+<td height="20">12</td>
+<td>32</td>
+<td>34</td>
+<td>94%</td>
+<td>53%</td>
+</tr>
+<tr>
+<td height="20">13</td>
+<td>31</td>
+<td>33</td>
+<td>94%</td>
+<td>50%</td>
+</tr>
+<tr>
+<td height="20">14</td>
+<td>30</td>
+<td>32</td>
+<td>94%</td>
+<td>47%</td>
+</tr>
+</tbody>
+</table>
+<p>So after seeing 13 cards, we expect to see a Professional Contacts 50% of the time.  The difference in expected waiting time is the additional value you get from running a third Professional Contacts &#8212; therefore, we can calculate this as being 13-9 = 4 credits.  A card that adds 4 credits of value to your deck puts it in the company of cards like Sure Gamble, something almost all decks run 3 of.</p>
+<p>Conclusion: if you replace the third copy of Professional Contacts with a card, it should be with a card at least as good as Sure Gamble.  If it&#8217;s not, then you&#8217;re hurting your deck.</p>
+<p><strong>Let&#8217;s Generalize</strong></p>
+<p>Generalizing this, we can see that if your economy card will generate more credits within 4 draws than anything you could run in its place, and you intend to use it under all circumstances, then you should run a third copy.  A deck that only runs 1 Magnum Opus and tutors for it if necessary obviously operates differently than a deck where it is its primary economy.  If Magnum Opus is in fact your primary economic engine, I think it&#8217;s obvious you will make heavy use of MO in the space of 4 draws &#8212; more use than any other economy card besides MO could provide.  Therefore it is always correct to run 3 MO in this case.</p>
+<p>Now let&#8217;s think about Kati Jones.  Will you get more value out of a Dirty Laundry or a third Kati Jones?  Depending on the rate of drawing in the early game, this will change the answer &#8212; let&#8217;s suppose you click Kati every turn and take money at 9 credits (a fairly average level of use for her).  We can do the math assuming you draw 0.5 cards/turn, 1 card/turn, and 1.5 cards/turn.  Clicking Kati 3 times and taking money grants 9 credits/4 turns, minus 1 credit/click 4 times in opportunity cost, so 1.25 additional credits/turn.</p>
+<p>0.5 cards/turn implies 8 turns before drawing 4 times, so 1.25 credits/turn * 8 turns = 10 additional credits.</p>
+<p>1 card/turn implies 4 turns before drawing 4 times, so 1.25 credits/turn * 4 turns = 5 additional credits.</p>
+<p>1.5 cards/turn implies 2.67 turns before drawing 4 times, so 1.25 credits/turn * 2.67 = 3.34 additional credits.</p>
+<p>It&#8217;s pretty unlikely you will have a sustained draw rate of 2 cards/turn (unless you have Wyldside), since it means you will be drawing 2 and playing 2 as all of your actions every turn.  Otherwise you will be continuously discarding cards, so this sounds unrealistic.  I think you can conclude that under all realistic scenarios, it is always worth running a third Kati Jones in your deck if under almost all circumstances you plan on utilizing her.</p>
+<p><strong>Conclusions</strong></p>
+<p>With some simple math, we&#8217;ve shown the following:</p>
+<p><span style="text-decoration: underline;">Professional Contacts</span></p>
+<p>Deciding whether to run a third copy or replacing it with a solid card like Sure Gamble, Daily Casts or Dirty Laundry <em>you would not run if you had 3 copies of PC</em> is marginal and does not really matter.  Running a far worse card, like Armitage Codebusting, would be a mistake.</p>
+<p><span style="text-decoration: underline;">Magnum Opus</span></p>
+<p>If Magnum Opus is your primary economy, then running three is always correct.</p>
+<p><span style="text-decoration: underline;">Kati Jones</span></p>
+<p>If Kati Jones will almost always be played out if you have it, then running three is always correct.</p>
+<p><strong>One Caveat&#8230;</strong></p>
+<p>All of these conclusions should be tempered against the fact that sometimes these cards are situational &#8212; Kati Jones will not be useful if you got slammed with a huge Midseason, so a Dirty Laundry would be better here.  Sometimes you need a backup if your PC gets trashed.  These are much harder to model and should be taken into account via testing in-game.</p>

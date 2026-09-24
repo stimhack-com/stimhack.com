@@ -1,0 +1,5 @@
+---
+title: MaxX
+slug: maxx
+---
+

@@ -1,0 +1,207 @@
+---
+title: The Effect of Player Skill on Netrunner Win Rates
+slug: the-effect-of-player-skill-on-netrunner-win-rates
+date: '2014-02-10T16:46:02-07:00'
+lastmod: '2015-04-06T13:43:02-07:00'
+authors:
+- alexfrog
+categories:
+- articles
+- strategy
+tags: []
+summary: Alex delves through the OCTGN data, and looks at what identities gain the most from skilled play.
+featured_image: /wp-content/uploads/2014/02/sizedAltGabe.png
+thumbnail: /wp-content/uploads/2014/02/sizedAltGabe.png
+wp_id: 1847
+---
+<p><b>Thanks to those who made this post possible:</b></p>
+<p>I would like to thank two people, without whom this post would not be possible.</p>
+<p>First is DB0, the creator of the OCTGN Netrunner plugin.  Without him we might not even have online Netrunner, and we also wouldn’t have the OCTGN game results dataset, which is massively valuable to anyone trying to gain a good understanding of the relative strength of the different identities, based on actual data.  Several weeks ago, DB0 released a set of data for over 150,000 Netrunner games, which is the basis of this post.</p>
+<p>Second is Captain_Frisk on Boardgamegeek, who helped me to perform data analysis, extracting out the particular data I wanted to look at.  Without him I wouldn’t have known how to sort through the dataset for particular skill ranges of players.  He did some great data analysis for me, which enabled me to gather the numbers to write this article.</p>
+<p>&nbsp;</p>
+<p><b>Purpose:</b></p>
+<p>&nbsp;</p>
+<p>My goal in looking at the OCTGN data is to try to determine how the win rates of different IDs changes depending on player skill.  It has long been claimed that runners do better at higher skill levels.  Is this hypothesis supported by the data?  It has been claimed by some that Gabe is better than Andromeda at the highest skill level.  It has been claimed that Jinteki doesn’t work against top players, or that Weyland Scorch decks don’t work against top players.  Let us look at all of these claims, and try to come up with real answers!</p>
+<p>As a result of this analysis, I will present some empirically supported answers to questions like: Do runners dominate at high skill?  The Andy vs. Gabe debate, which ID is better at high skill?  And more!</p>
+<p>&nbsp;</p>
+<p><b>Methodology:</b></p>
+<p><img loading="lazy" decoding="async" class="alignnone" src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTEhZym84gDh5obKSEQLfvH0-0k0CzmRzbiYSQQtc-j5yG8mafnZA" alt="" width="259" height="194" /></p>
+<p>I decided to focus on the period of time leading up to Worlds, as my data to analyze.  For one thing, this was a lengthy period of time with a stable meta (from the release of Opening Moves on OCTGN in mid-August, until Worlds in early November, all without the release of new sets to throw a wrench in things).  This period also had a very high sample size of games.  I feel that is important not to look at the data for all time, because the game has changed a lot since the release of Netrunner in 2012, and many IDs did not exist for much of that time frame, which would skew the data.  Looking at the data for Opening Moves through Worlds lets us examine a well-known metagame, that many of us played in and tested, leading up to Netrunner’s biggest tournament.</p>
+<p>&nbsp;</p>
+<p>My analysis will be performed on a set of 44980 games from shortly after the release of Opening Moves, until mid-November, when Second Thoughts was finally released.</p>
+<p>&nbsp;</p>
+<p>I will be dividing the player base into three sets:</p>
+<p>The first of these is <b>“all players”.</b>  This simply includes all games played during the time period.  As a result, it is a mix of both skilled and inexperienced players.</p>
+<p>Next is <b>“strong” players</b>.  To be called a “strong” player under my system (which I took from Captain_Frisk), you must do two things.  1) Play 20 or more games on OCTGN as Corp (to be a strong Corp player), or 20 or more games as Runner (to be a strong Runner player).  2) Win MORE than 50% of those games.   This results in a sample of 697 different Strong Corp players, who played a total of 20,696 games during my time period, and 775 different Strong Runner players, who played a total of 22,105 games during my period.  (Most of these people overlap)</p>
+<p>Finally, there is <b>“weak” players</b>.  This is the people who didn’t qualify as “strong” players.</p>
+<p>&nbsp;</p>
+<p><b>Strong players ends up capturing a set of players from about the 53<sup>rd</sup> percentile up to the 100<sup>th</sup> percentile.  Weak players captures those from about the 0<sup>th</sup> percentile to the 52<sup>nd</sup> percentile.  (All players is everyone, combined).  </b></p>
+<p>So you could imagine that the results of the overall ‘strong players’ as a whole might approximately equal the results of someone at the 75<sup>th</sup>-80<sup>th</sup> percentile, and those of ‘weak players’ might approximately equal that of someone from the 25<sup>th</sup>-30<sup>th</sup> percentile.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><b>How does Player Skill affect Runner/Corp balance:</b></p>
+<p>Here is a chart that results from looking at the results of strong runners and strong corps, as a whole.</p>
+<p><a href="/wp-content/uploads/2014/02/WinratesAll.png"><img loading="lazy" decoding="async" class="alignnone size-full wp-image-1848" src="/wp-content/uploads/2014/02/WinratesAll.png" alt="WinratesAll" width="520" height="314" /></a></p>
+<p>We can see that for all players as a whole, the game is quite well balanced, with a 51 to 49 edge in favor of the runner.  Note that this was for Aug-Nov.  Since then recent sets have helped corps to take the small edge!</p>
+<p>“High Skill Games” indicates games in which BOTH players qualify as “strong”.   (Imagine this as the 75-80<sup>th</sup> percentile players playing against each other).</p>
+<p>In High Skill Games, the runner edge increases by almost 5%, leading to a 55-45 split in the runner’s favor.  If you extrapolated this further, to the 100<sup>th</sup> percentile of play, perhaps you would see something like a 60-40 runner edge?  Unfortunately the dataset would become too small to be reliable at that point, but we might estimate this to be approximately true.  This aligns pretty well with my own experience.  Runner has an edge at high skill play, but at least since Jackson Howard was printed, it’s not TOO huge.</p>
+<p>Strong Runners, playing against all corps, drub them at a 65-35 pace, while Strong Corps only beat all runners at a 60-40 pace.  Being a strong runner gives you a 14% boost, while being a strong corp only boosts your win rate by 9%, against the field.  This gives some support to an idea that runner power rises more with skill than corp power does!  Even when you are doing all you can as Corp, you are still more at the mercy of chance, and what the runner does.</p>
+<p>&nbsp;</p>
+<p><b>Verdict on Runner/Corp balance at high skill:</b></p>
+<p><img loading="lazy" decoding="async" class="alignnone" src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQnZU-FCkWWZ1Y6zdmFYKsGKTaWm9_gTITiQZnzA8Ko2MEXXgzV" alt="" width="318" height="159" /></p>
+<p>Yes, it appears that Runners DO gain as skill increases.  From a near 50-50 split, we rise to 55-45 for good players.  We might estimate that this continues to 60-40 for the very best players, though for this we are only extrapolating, and therefore this claim cannot be supported nearly as well.  For a sample of over 10000 ‘high skill’ games, our statistical error is under 1%, so the ~5% rise in runner win rate is definitely statistically significant.</p>
+<p>As a secondary claim, it appears that Runner play “gains more” from being strong than Corp play.  This idea also supports why runner win rate would rise as both players grow in skill.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><b>ID Specific Win rates:</b></p>
+<p>Alright, that was very interesting!  So how do specific IDs react to changes in skill level?  Can we solve the longstanding debate regarding Gabe vs. Andromeda?</p>
+<p>First of all, let’s see the win rates by ID, both for all games, and for “High Skill” games, between a strong runner and strong corp:</p>
+<p><a href="/wp-content/uploads/2014/02/WinratesByID.png"><img loading="lazy" decoding="async" class="alignnone  wp-image-1849" src="/wp-content/uploads/2014/02/WinratesByID.png" alt="WinratesByID" width="706" height="482" /></a></p>
+<p>I will be sorting all of the IDs in the order of their win rates for all the data in all these charts.</p>
+<p>The &#8220;Diff&#8221; column indicates how much the winrate changes between all games, and games in which both players are high skill.</p>
+<p>The &#8220;%HighSkill&#8221; column indicates the percentage of games played with this ID that fell into the &#8220;both players are high skill&#8221; category.</p>
+<p>We can see Weyland and the NBN IDs on top, followed by HB:EtF and then Jinteki PE.  On the runner side, we can see Andromeda on top, then Gabe, then Kate.  You can also see the win rates for the small amount of data for Laramy Fisk and The Collective.  From now on, I am simply going to ignore Laramy Fisk and The Collective.</p>
+<p>&nbsp;</p>
+<p>Let’s see what jumps out at us.  First of all, on the corp side, all the corps win rates get hammered when we move to high skill, except for HB:Custom Biotics which has a tiny sample size.  This is what we saw earlier as well.  All the runners win rates grow except Laramy Fisk, again on tiny sample size.  Jinteki:RP gets hammered the most by the change, and Jinteki:PE 3<sup>rd</sup> most, however the numbers aren’t SO much different than the rest of the corps.</p>
+<p>On the runner side one thing immediately jumps out, Andromeda doesn’t look to be gaining as much as the others.  Is the “Gabe gains more from skill” hypothesis correct?  At first glance it does look like this has some traction (though Andromeda’s win rate for high skill games is still 3% higher than Gabe’s, so all he did was cut down on Andy’s lead), and this was probably the first thing that started getting discussed when DB0 posted the dataset, and several people posted an initial analysis.</p>
+<p>However, there is one other really HUGE difference there between Andromeda and the other runners.  Look at the percentage of games played for the IDs that qualify as “High Skill”.  For Andromeda its over 30%!  Gabe&#8217;s is only 19%  The non-Andromeda runners are all in the 19-24% range (ignoring the Collective).   What is going on here?</p>
+<p>&nbsp;</p>
+<p>What we are seeing is that different IDs are being played a different amount by skilled players and unskilled players.  Additionally, different IDs are facing a different level of competition.   You would expect that if an ID was played more heavily by strong players, that its win rate would be higher.  And you would expect that if an ID faces stiffer competition, its win rate would be lower.</p>
+<p>Because a lot more strong players are playing Andromeda, the “All players” for Andromeda is capturing too many strong players!  But is she also playing against stronger competition as well?  We need to dig deeper!!</p>
+<p>&nbsp;</p>
+<p>An aside:  &#8220;But wait&#8221;, you might say.  &#8220;Is the reason that Andromeda has such a high percent of skilled games due to the fact that she is strong, and player her CAUSES you to appear as ‘strong’?   Does the causality chain actually go: Playing Andromeda -&gt; Appear strong -&gt; Andromeda has high % of strong players?&#8221;</p>
+<p>If that were the case, we would expect that other strong runner IDs would have high &#8216;strong player&#8217; percentages, while weak IDs would not.  But this isn’t what we see for runners.  Gabe has the 2<sup>nd</sup> highest win rate but the LOWEST portion of strong players playing it of any of the (non-Fisk/Collective) runner IDs!  For the other runners, it’s pretty random whether you are played a lot by strong players or not.  Only Andromeda really sticks out!</p>
+<p><b>In order to gain an accurate picture of ID strengths at different skill levels, we need to look more deeply</b>, looking at how many skilled vs. unskilled players are using that ID, and how strong is the competition that the ID is playing against!  <strong>Our initial look is a bit skewed, we need to further adjust for player strength.</strong></p>
+<p><b> </b></p>
+<p><b>Looking Deeper:</b></p>
+<p>&nbsp;</p>
+<p>Let’s take a look at win rates of each ID for Strong players versus everyone, and for Weak players versus everyone!</p>
+<p><a href="/wp-content/uploads/2014/02/WinratesDetailed.png"><img loading="lazy" decoding="async" class="alignnone size-full wp-image-1850" src="/wp-content/uploads/2014/02/WinratesDetailed.png" alt="WinratesDetailed" width="896" height="546" /></a></p>
+<p>On the left are the win rates by ID when played by <b>Strong</b> players, against <b>All </b>players.</p>
+<p>On the right are the win rates by ID when played by <b>Weak</b> players, against <b>All </b>players.</p>
+<p>This gives us a much better picture of how the win rate of each category differs, without being distorted by HOW MANY strong or weak players are playing the ID!</p>
+<p>Finally, the WinDiff% column shows the change in win percentage between strong players and weak players.</p>
+<p>&nbsp;</p>
+<p>Now that we have removed the distortion of having too many or too few strong players playing certain IDs, we see an interesting and somewhat different picture emerging!</p>
+<p>&nbsp;</p>
+<p><b>Runner data analysis:</b></p>
+<p><a href="/wp-content/uploads/2013/05/sizedAndro.png"><img loading="lazy" decoding="async" class="alignnone size-full wp-image-751" src="/wp-content/uploads/2013/05/sizedAndro.png" alt="sizedAndro" width="200" height="200" /></a><a href="/wp-content/uploads/2013/07/sizedGabriel.png"><img loading="lazy" decoding="async" class="alignnone size-full wp-image-920" src="/wp-content/uploads/2013/07/sizedGabriel.png" alt="sizedGabriel" width="200" height="200" /></a><a href="/wp-content/uploads/2013/08/AltKateSized.png"><img loading="lazy" decoding="async" class="alignnone size-full wp-image-1041" src="/wp-content/uploads/2013/08/AltKateSized.png" alt="AltKateSized" width="200" height="200" /></a></p>
+<p>It turns out that Andromeda wasn’t as far ahead of the pack as it looked when we just saw the win rates for all players.  In fact, part of the reason why Andromeda’s win rate was so high was that she was MORE POPULAR WITH STRONG PLAYERS!   Her true edge isn’t the 6% over 2<sup>nd</sup> place that it looked like initially, its actually much lower!</p>
+<p><b>It turns out that there IS a skill level in which Gabe and Andromeda are equal in power! </b> But it’s not at high skill.  Actually, if you are a WEAK player, you get the same win rate out of both Gabe and Andromeda, both in the mid 41% range! (41.7% Andy, 41.4% Gabe)</p>
+<p><b>It turns out that one of these runners DOES gain more than the other as you increase in skill.</b>  But it’s not Gabe.  Actually, its ANDROMEDA that gains more as you go up in skill!  Andromeda wins 70.6% when played by a strong player against all corp opponents, while Gabe wins only 66.8% when played by a strong player against any opponent.  (Why? Perhaps consistency?)</p>
+<p>&nbsp;</p>
+<p><b>Andy vs. Gabe argument conclusions:</b></p>
+<p>It turns out that both sides were partially right and partially wrong in this debate.</p>
+<p>In fact, Andromeda does NOT have a massive lead over Gabe in terms of power.  Her win rate in the OCTGN data has been inflated by the fact that a lot more ‘strong’ players have been playing her, than any other runner ID!  She actually ISNT 6% better than anyone else!  I found this result a bit shocking myself, I was wrong!  In truth, she is 0% better than Gabe at low skill and 4% better at high skill. (2% better on average?)  The Andy-ists were wrong about Andy’s power, she isn’t massively superior to everyone else!</p>
+<p>In fact, Gabe does NOT gain over Andromeda as you go up in skill.  Actually, it’s the reverse!  Andromeda gains more power than Gabe as you become a stronger runner!  The Gabe-ists were wrong, Gabe doesn’t gain and come out ahead when you ‘play perfectly’!</p>
+<p>Hopefully this will help settle the debate.  We can all be happy that we were right about one aspect, and all correct something that we were wrong about.</p>
+<p>&nbsp;</p>
+<p>Finally, these results fit in terms of explaining several more things.  It explains why the strong players on OCTGN tend to play Andromeda more.  It’s because Andromeda rewards skill more heavily.  (She &#8216;rewards skill&#8217; the second most of all runners, 1<sup>st</sup> being Noise, as measured by how much the win rate improves as you go up in skill).</p>
+<p>Secondly, it explains why Andromeda did so well at worlds.  Partially this was because so many strong players picked to play her, and partially because her overall win rate is the best, but also it is because Andromeda actually gains MORE from high skill!  So when you get to the very, very top (say, the top 32 of worlds), it makes perfect sense that an identity that both has a high overall win rate AND heavily rewards skill would come out performing the best.</p>
+<p>&nbsp;</p>
+<p><b>Other Runner Conclusions:</b></p>
+<p>Okay, enough Andy vs. Gabe.  What else do we see?</p>
+<p>&nbsp;</p>
+<p>Among runners, Noise is the runner that most rewards skill!  Noise has the highest difference between win rates when a skilled or weak player plays him!  I have seen comments in the past that Noise is easy to play, that all you have to do is play viruses and mill, mill, mill, then hit archives.  This data does not support that. In fact, it says Noise is HARD to play, that skill is important.  Noise’s win rate for weak players is a piddling 35.1%, one of the worst!  His win rate for strong players rises to 64.3%, the largest jump.</p>
+<p>My analysis of this is:  <b>There is a lot of skill involving in actually running successfully as Noise, in using his tools to effectively pressure, and to playing around Jackson Howard.  </b>Just milling doesn’t get you there.  Also, in the post-Jackson Howard world, there is an important skill of playing around Jackson.  A good Noise player has to mill a lot at the right times, when the corp doesn’t have Jackson, and then hit Archives before they get him.</p>
+<p>Note that Noise remains the 4<sup>th</sup> best runner at high skill, even after Jackson Howard (behind Andy, Gabe, Kate).</p>
+<p><a href="/wp-content/uploads/2013/06/sizedWhizzard.png"><img loading="lazy" decoding="async" class="alignnone size-full wp-image-836" src="/wp-content/uploads/2013/06/sizedWhizzard.png" alt="sizedWhizzard" width="200" height="200" /></a></p>
+<p>Among runners, Whizzard gains the least from skill, moving up only 24.3% between our categories, the lowest of all runners.</p>
+<p>My analysis of this is:  <b>Whizzard’s ability is very dependent on your opponent, not just yourself.  </b>If you are a strong player, you cannot guarantee that your opponent will play a deck that will make Whizzard’s ability relevant.</p>
+<p>&nbsp;</p>
+<p>Among runners, the Professor has the lowest percentage of ‘strong’ players playing him, at only 44.7% of his runner players being strong.  (However, this isn’t far off the rest of the pack.  Andromeda is a massive outlier here at 59%, which substantially inflates her win rate.  All the other runners are in the 44 to 49% range).</p>
+<p>My analysis of this is:  <b>Strong players avoid the Professor a bit more than others.  </b>He is actually not quite as bad as we thought.  But he still sucks.   Weak players get utterly spanked while playing him, winning just 27.9%  Strong players become only slightly above average players, at 54.5%.  The Professor has the lowest win rate of all runners for both strong runners and weak runners.</p>
+<p>&nbsp;</p>
+<p>Gabe and Kit are tied for being the LEAST rewarding to strong players.  That is, your win rate goes up by less with these IDs, for high skill players as compared to weak players.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><b>Corp data analysis:</b></p>
+<p>Alright, how about on the Corp side?  Let me post the chart again:</p>
+<p><a href="/wp-content/uploads/2014/02/WinratesDetailed1.png"><img loading="lazy" decoding="async" class="alignnone size-full wp-image-1852" src="/wp-content/uploads/2014/02/WinratesDetailed1.png" alt="WinratesDetailed" width="896" height="546" /></a></p>
+<p>First of all, for runners, Andromeda was an extreme outlier in terms of strong players picking to play her, while for all other runner IDs things were pretty even.   But for corps this is not the case at all.  Strong corp players OVERWHELMINGLY favor the perceived best corp IDs!</p>
+<p>Strong players flock to Weyland BABW, at a 55.0% rate!  They love NBN, with 53.8% of TWIY players and 50.7% of Making News players being strong.  HB:EtF, HB: Next Design, and HB: Cerebral Imaging are next in line.</p>
+<p>But Jinteki and the really weak IDs (Stronger Together and BWBI)?  Strong players avoid them like the plague!  One exception to a ‘bad’ ID getting avoided is HB: Next Design.  Strong players actually gave Next Design a very decent try, and yet the identity STILL FAILED.  I guess Next Design really isn’t very good, and was very overhyped.  (I know that I thought it was the second best HB ID, and I was wrong, because the second best HB ID is actually Cerebral Imaging, now that we have good combo cards to go with it!)</p>
+<p>&nbsp;</p>
+<p>For Corps, you could make the case that the Causality arrow is more like:  Strong players think a corp is good -&gt; Strong players play it -&gt; Its win rate gets inflated.  (However, the effect only explains part of the higher win rates, not all of it).</p>
+<p>Whereas with runners, it was just Andromeda as an outlier and then randomness, <b>for Corps it does appear that strong players flock to higher win rate IDs, further inflating them, and weak players play too much weak IDs, further depressing them.</b></p>
+<p><b>The “bad” corp IDs aren’t QUITE as bad as we thought.  But they are still bad.  The “good” corp IDs aren’t QUITE as good as we thought.  But they are still superior.  </b></p>
+<p>Weyland BABW’s win rate is the most inflated by being over-represented by strong players playing it.  NBN:TWIY’s win rate is the second most inflated, and Making News is third.</p>
+<p><b> </b></p>
+<p><b>What Corp IDs most reward player skill?</b></p>
+<p>The Corp IDs that most reward being a skilled corp player are:</p>
+<p>1) HB: Custom Biotics (+25.7% on tiny sample size)</p>
+<p>2) HB: EtF (+21.4%)</p>
+<p>3) Weyland: BABW (+21.1%)</p>
+<p>4) NBN: Making News (+19.3%)</p>
+<p>5) HB: Next Design (+18.9%)</p>
+<p>The Corp IDs that least reward skill are:</p>
+<p>1) Jinteki: PE  (13.9%)</p>
+<p>2) Jinteki: RP (14.8%)</p>
+<p>3) HB: Stronger together (16.0%)</p>
+<p>4) Weyland: BWBI (16.1%)</p>
+<p>5) NBN: TWIY (16.6%)</p>
+<p>It looks like HB tends to reward skill the most, as a faction, and Jinteki rewards it the least.</p>
+<p><b> </b></p>
+<p><b> </b></p>
+<p><b>My analysis: </b></p>
+<p><img loading="lazy" decoding="async" class="alignnone" src="http://www.cardgamedb.com/forums/uploads/an/ffg_jinteki-core.png" alt="" width="189" height="266" /></p>
+<p><b>HB is easy to screw up, performing badly for weak players.  </b>Perhaps they play too many Bioroids and expensive ice, and then get crushed by aggressive runners.  Strong players are able to avoid this trouble.</p>
+<p>Jinteki does a very poor job of rewarding you for being good.  You simply do not gain much from your skill when you play Jinteki!  I would guess that this is because so much of Jinteki play revolves around what your OPPONENT ends up doing.  Do they walk into your trap, or not.  Do they recklessly attack and die, or not.  As much as we might like to think that OMG I AM THE GREATEST AT MINDGAMES, in reality this strategy is simply too dependent on the opponent, to reliably reward a top player.</p>
+<p>Earlier, when we looked at Jinteki win rates between two high skill players we saw that Jinteki IDs suffered the most.  Now when we look at Jinteki wins by strong players or weak players, we see that strong players get the least mileage out of their skill, when they choose Jinteki.</p>
+<p>&nbsp;</p>
+<p><b>Jinteki fails to reward skill, and falls flat in high level games.  </b>This explains pretty clearly the reason for  the anti-Jinteki bias held by many strong players.  The reason is that when you play Jinteki you are too reliant on what your opponent does, and that the faction does not allow you to capitalize sufficiently on your skill!</p>
+<p>&nbsp;</p>
+<p>Take a look at the difference between the ‘strong’ and ‘weak’ corp player charts.  For strong players, there are four ‘good’ IDs: Weyland BABW, both NBNs, and HB:EtF, all between 61-64% win rate.  Jinteki:PE and HB:Cerebral Imaging fall far below them, at 55%.</p>
+<p>Now look at the ‘weak’ corp players.  Jinteki: PE is the 4<sup>th</sup> best ID now!  It is right there close to the top IDs!</p>
+<p>&nbsp;</p>
+<p><b>Jinteki: PE works fine for weak players.  (It works about as well as the four ‘good’ IDs).  Jinteki fails strong players, by not rewarding them as much for their skill!</b></p>
+<p><b> </b></p>
+<p>Let’s look at the top corp IDs for strong players and for weak players:</p>
+<p><img loading="lazy" decoding="async" class="alignnone" src="http://www.cardgamedb.com/forums/uploads/an/ffg_nbn-the-world-is-yours-future-proof.png" alt="" width="170" height="229" /></p>
+<p>Top Corp IDs for strong corp players:</p>
+<p>1) Weyland: BABW  (64.1%)</p>
+<p>2) NBN: Making News (62.7%)</p>
+<p>3) HB: EtF (62.2%)</p>
+<p>4) NBN: TWIY (61.8%)</p>
+<p>5) Jinteki: PE (55.8%)</p>
+<p>&nbsp;</p>
+<p>Top Corp IDs for weak corp players:</p>
+<p>1) NBN: TWIY (45.1%)</p>
+<p>2) NBN: Making News (43.4%)</p>
+<p>3) Weyland: BABW (43.0%)</p>
+<p>4) Jinteki: PE (41.9%)</p>
+<p>5) HB:EtF (40.7%)</p>
+<p>&nbsp;</p>
+<p><b>For weak players, NBN: TWIY is the best ID!  </b>It holds up very well for weak players, enabling them to win 45.1% of the time, ahead of making News at 43.4%  Both NBN IDs are excellent for weak corp players (and also good for strong players).</p>
+<p><b>For strong players, Weyland: BABW is the best ID!  </b>It rewards them greatly for their skill, enabling them to win 64.1% of the time, ahead of Making News at 62.7%</p>
+<p>&nbsp;</p>
+<p>Overall, the three top Corp IDs at both high and low skill are Weyland BABW and both NBNs.  HB EtF and Jinteki RP come 4<sup>th</sup> and 5<sup>th</sup>, though Jinteki falls off greatly for high skill players.</p>
+<p>&nbsp;</p>
+<p><b>My Analysis: </b></p>
+<p><b>Hard rushing as NBN:TWIY is a highly effective strategy for weaker corp players.  </b>It remains effective for strong players as well, but falls slightly, being only the third best.  <b>Making News overtakes TWIY when you are a strong player, but only just barely.</b>  Both IDs are quite close overall.  This does not mean that ‘if you play TWIY you are bad’.  In fact, TWIY had the second highest proportion of its players being ‘strong players’.  It just doesn’t reward skill quite as much as Making News does.</p>
+<p><b>Weyland’s performance is not hindered by Plascretes at a high level.  </b>In fact, strong players thrive the most with Weyland!  Perhaps it is the versatility of having more ways to win the game (with both Scorches or Agendas being viable), that helps these strong players perform well with it.  While a weaker player might try to go too ‘all in’ on scorching, a strong player takes advantage of the versatility.</p>
+<p><b>HB is skill dependent, and fails weak players.  </b>My guess is that they use too many Bioroids, and thus don’t do enough to force the runner to build a rig.  Also, HB: Stronger Together sucks horribly no matter who you are.  Again, probably the Bioroids, most of which are actually bad ice.</p>
+<p><b>Jinteki doesn’t reward skill enough. </b>It works fine for weak players, but falls far behind for strong players.<b> </b></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><b>What ID should I play?</b></p>
+<p>If you are a strong player, then Andromeda has a clear edge over the rest.  Gabe, Kate, and Noise are the second tier runners for you.  (This was Pre-Reina).</p>
+<p>If you are a strong player, then Weyland BABW, NBN (either ID), and HB:EtF are all viable choices, depending on your preference.  Weyland BABW has a small edge over the others.</p>
+<p>&nbsp;</p>
+<p>If you are a weak player, then either Gabe or Andy are good for you.  Kate and Whizzard are tier 2 for you.</p>
+<p>If you are a weak player, then NBN: TWIY is the best for you.  Weyland BABW, NBN:MN , Jinteki: PE, and HB: EtF are all close behind, and are viable if you prefer one of those.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><b>The Future:</b></p>
+<p>&nbsp;</p>
+<p>When looking at this data, keep in mind that this was for the Opening Moves meta.  We are now several sets past this, and things are changing a bit.</p>
+<p>Reina has appeared as a new runner.</p>
+<p>Keyhole is an interesting program.</p>
+<p>Weyland got Power Shutdown, a very strong tool for crushing the runner’s rig.</p>
+<p>NBN got Sweeps Week, a strong economy card.</p>
+<p>Jinteki got some goodies, but also gets destroyed by Keyhole.</p>
+<p>HB didn’t really get much, except maybe Accelerated Diagnostics, but that might actually be best when splashed into another faction.  It’s still unclear to me whether an Accelerated Diagnostics deck can be consistent enough to be competitive or not.  It really does eat up a lot of space and influence, but it’s pretty cool if the combo works.</p>
+<p>&nbsp;</p>
+<p>Hopefully, this article gives you a strong idea about what the metagame in the recent past was like, and helped resolve some long-standing debates (Runner vs. Corp balance at high skill, Andy vs. Gabe, is Jinteki playable, etc).</p>
+<p>&nbsp;</p>
+<p>Moving forward, we must expect that these numbers will shift around somewhat, and there will be new things to learn.  However, that doesn’t negate our prior learning completely, as win rates by faction do tend to be relatively steady over time.</p>

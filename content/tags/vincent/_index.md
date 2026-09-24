@@ -1,0 +1,5 @@
+---
+title: Vincent
+slug: vincent
+---
+

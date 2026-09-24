@@ -1,0 +1,153 @@
+---
+title: 'QuantANR: Analysis of a Changing Meta'
+slug: quantanr-analysis-of-a-changing-meta
+date: '2015-01-16T13:24:04-07:00'
+lastmod: '2015-01-16T13:24:04-07:00'
+authors:
+- ycombinator
+categories:
+- articles
+tags: []
+summary: What causes a shift in the meta? The second in a series of quantitative studies of ANR.
+featured_image: /wp-content/uploads/2015/01/pvp.png
+thumbnail: /wp-content/uploads/2015/01/pvp-215x300.png
+wp_id: 6405
+---
+<h1>Analysis of a Changing Meta</h1>
+<p>This is the second in a series of quantitative studies of ANR (QuantANR).  See the <a title="first article" href="/a-comparison-of-event-based-runner-economies-in-anr/" target="_blank">first article</a>, for quite a bit more background and introduction.</p>
+<p>The meta of runner economies is always in flux. What does it mean quantitatively to shake up the meta? Will cards on the horizon shake up the meta? First we look at the past: why did Lucky Find create such a stable and lasting economic engine in Prepaid Kate? Second, we&#8217;ll check out the cards that recently came out, or are coming out in Order and Chaos, and see if a similar disturbance in the meta will be created. The summary:</p>
+<table bgcolor="#333333">
+<thead>
+<tr>
+<th>Card</th>
+<th>Credit Efficiency</th>
+<th>Draw Efficiency</th>
+<th>Meta Impact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lucky Find</td>
+<td>+0.4</td>
+<td>-0.2</td>
+<td>Created Prepaid Kate</td>
+</tr>
+<tr>
+<td>Day Job</td>
+<td>+0.2</td>
+<td>-0.2</td>
+<td>1) beast-mode econ, and 2) possible LF replacement</td>
+</tr>
+</tbody>
+</table>
+<h2><a id="user-content-abstract" class="anchor" href="https://github.com/gparmer/ANRsim/blob/master/02_changing_meta/article.md#abstract"></a><em>Abstract</em></h2>
+<p>How does one economic engine fall out of favor in the meta, and how does another come to prominence? In this installment of ANR analysis of runner economies, I&#8217;m going to look at how previous changes in the card pool impacted the meta, and I&#8217;ll look forward to determine how the meta will change when Order and Chaos drops. Importantly, I&#8217;ll assess each economic engine&#8217;s trade-offs between draws and credits. This is a quantitative analysis, and must be pared with a qualitative analysis to determine if any given economic package is for your deck.  If you have no interest in the investigation and analysis, skip to the conclusions, but I think they are not very meaningful without the qualifications throughout.</p>
+<h2><a id="user-content-beware--assumptions-ahead" class="anchor" href="https://github.com/gparmer/ANRsim/blob/master/02_changing_meta/article.md#beware--assumptions-ahead"></a>Beware: Assumptions Ahead</h2>
+<p>Any simulation of sufficiently complex systems is based on a model of the system. That model is not perfectly accurate. For a list of assumptions, please see the first article. A few responses to that article pointed out a few additional assumptions. The main addition one is that I&#8217;m assuming that dirty laundry uses a resource click. This is obviously wrong if you have access to a server and want an access. So take this with a grain of salt. This information must be paired with your intuition, and other sources to determine what&#8217;s best for your deck &#8211; it is only an additional input into the netrunner collective consciousness, not the final word.</p>
+<p>This article isn&#8217;t an analysis of every economic engine, and this one, like the first, focuses on the Shaper economy as it is, in many ways, the easiest to understand. To run an experiment, we have to tweak a small number of free variables, thus we&#8217;re taking this a small step at a time. If you want to skip to the punchline comparing all econs, you&#8217;ll have to wait a while. Future articles will delve further into a variety of econs. The next will look specifically at new Anarch event-based econ options.</p>
+<h2><a id="user-content-the-rise-of-an-economic-engine" class="anchor" href="https://github.com/gparmer/ANRsim/blob/master/02_changing_meta/article.md#the-rise-of-an-economic-engine"></a>The Rise of an Economic Engine</h2>
+<p>I remember seeing the first Prepaid Voice Pad (PVP) decks on netrunnerdb, and appreciating the synergy. At that time, they were a mishmash of previous Kate decks with significantly less of an emphasis on a balance between events and traditional Shaper goodness than the current prominent decks. What was the key to the Prepaid economic revolution that made this deck prototype competitive? PVP had been out for a while, as had most of the moving pieces. However, when Lucky Find came out, it provided the third major form of event economy that made the Prepaids tick. We know (historically) that the meta shifted significantly when Lucky Find appeared, so lets look at the underlying efficiency changes that motivated this change. This will let us quantify and better understand when these shifts in the meta happen.</p>
+<p>For the details about what we&#8217;re plotting here, please see my <a title="previous article" href="/a-comparison-of-event-based-runner-economies-in-anr/" target="_blank">previous article</a> on the analysis of the event economic engines in ANR. Notably, you must understand what I mean by &#8220;resource clicks&#8221;, &#8220;quality draws&#8221;, and &#8220;credit/draw efficiency&#8221;. Quoting from the previous article, &#8220;this article looks at the <strong>resource click efficiency of gaining both credits and quality draws</strong> for various economic packages&#8221;. If this doesn&#8217;t make sense, please check out the first article.</p>
+<p>The amount of credits generated (y-axis) for of prepaid decks both with and without Lucky Finds is shown here over a number of resource clicks (x-axis). The lines represent the following economic packages:</p>
+<ul class="task-list">
+<li><strong>evts</strong> is Sure Gamble, Dirty Laundry, and Lucky Find.</li>
+<li><strong>draw</strong> is Diesel and Quality Time.</li>
+<li><strong>pvp</strong> is Prepaid Voice Pad, and here we look at Kate who gets the PVP for cheap. In the previous article, we compared this versus non-Kate PVP.</li>
+<li><strong>oldevts</strong> is Sure Gamble and Dirty Laundry. An age before the finds were lucky!</li>
+</ul>
+<p><img loading="lazy" decoding="async" class="aligncenter wp-image-6407" src="/wp-content/uploads/2015/01/mean01.png" alt="mean0" width="500" height="375" srcset="/wp-content/uploads/2015/01/mean01.png 800w, /wp-content/uploads/2015/01/mean01-300x225.png 300w, /wp-content/uploads/2015/01/mean01-150x113.png 150w" sizes="(max-width: 500px) 100vw, 500px" /></p>
+<p><strong>Discussion.</strong></p>
+<ul class="task-list">
+<li><strong>pvp</strong> adds efficiency to both the old and the new economic engines. Interestingly, it adds more efficiency to the inferior economic package as PVP plays a larger role in the economy received (for example, it helps Dirty Laundry more than Lucky Find). It still has a relatively small tempo hit.</li>
+<li>Using Lucky Find has a huge impact on the economic efficiency both with and without PVP. It has an offset of at least 3 credits, and has a significant slope increase (i.e. efficiency increase). Each click provides 0.4 clicks per draw more, a huge increase!</li>
+</ul>
+<p>Looking at the data another way, here is a direct representation of the click efficiency (i.e. the derivative of the curve):</p>
+<p><a href="https://github.com/gparmer/ANRsim/blob/master/02_changing_meta/vs_old/mean1.png" target="_blank"><img loading="lazy" decoding="async" class="aligncenter wp-image-6408" src="/wp-content/uploads/2015/01/mean11.png" alt="mean1" width="500" height="375" srcset="/wp-content/uploads/2015/01/mean11.png 800w, /wp-content/uploads/2015/01/mean11-300x225.png 300w, /wp-content/uploads/2015/01/mean11-150x113.png 150w" sizes="(max-width: 500px) 100vw, 500px" /></a></p>
+<p>We see again that <strong>pvp</strong> helps increase efficiency, but that Lucky Find really does offer a huge increase in credit efficiency. Lets look at draw:</p>
+<p><a href="https://github.com/gparmer/ANRsim/blob/master/02_changing_meta/vs_old/qdraw1.png" target="_blank"><img loading="lazy" decoding="async" class="aligncenter wp-image-6410" src="/wp-content/uploads/2015/01/qdraw11.png" alt="qdraw1" width="500" height="375" srcset="/wp-content/uploads/2015/01/qdraw11.png 800w, /wp-content/uploads/2015/01/qdraw11-300x225.png 300w, /wp-content/uploads/2015/01/qdraw11-150x113.png 150w" sizes="(max-width: 500px) 100vw, 500px" /></a></p>
+<p><strong>Discussion.</strong></p>
+<ul class="task-list">
+<li>Regardless if PVPs are used, Lucky Find seems to decrease quality draw efficiency by 0.2 quality draws per click. This is due to the draw plus two clicks to play for each Lucky find. However, this quality draw decrease compared to the 0.4 credits per click increase that Lucky Find provides is not prohibitive.</li>
+<li>Note that the fall off at the end of the <strong>oldevts+draw</strong> is due to running out of cards.</li>
+</ul>
+<p>So what does a change in the economic meta look like? We know that a 0.4 credits per resource click increase, accompanied by a 0.2 quality draws per resource click will do the trick. We also know that it is often worth the 6 influence cost, an otherwise significant cost.</p>
+<h2><a id="user-content-a-disturbance-in-the-meta" class="anchor" href="https://github.com/gparmer/ANRsim/blob/master/02_changing_meta/article.md#a-disturbance-in-the-meta"></a>A Disturbance in the Meta</h2>
+<p>Though a few key cards are coming (or recently dropped) concerning card draw, I&#8217;m interested here in understanding how Day Job is going to impact the meta. Will it redefine the Prepaid VoicePad runner event economy compositions? Will it fall at the way-side due to insufficient efficiency? Or will its card art make it tier one, independent of any other factor?</p>
+<p>Additionally, we recently saw the drop of influence-free draw in the form of the Earthrise Hotel. Many have speculated that it has a place in many decks. Within PVP, with Shaper draw cards, it seems unlikely to be needed. Lets confirm or refute this hypothesis. The following graphs include:</p>
+<ul class="task-list">
+<li><strong>DJ</strong> when they include Day Job.</li>
+<li><strong>EH</strong> when they include Earthrise Hotel.</li>
+<li><strong>procons</strong> includes Professional Contacts.</li>
+</ul>
+<p>The <strong>evts+procons</strong> and <strong>evts+draw</strong> decks are a baseline you can use for comparison with the previous article. They represent interesting trade-offs between credit and quality draw efficiency.</p>
+<p><img loading="lazy" decoding="async" class="aligncenter wp-image-6411" src="/wp-content/uploads/2015/01/mean02.png" alt="mean0" width="500" height="375" srcset="/wp-content/uploads/2015/01/mean02.png 800w, /wp-content/uploads/2015/01/mean02-300x225.png 300w, /wp-content/uploads/2015/01/mean02-150x113.png 150w" sizes="(max-width: 500px) 100vw, 500px" /></p>
+<p><strong>Discussion.</strong></p>
+<ul class="task-list">
+<li>Adding Earthrise Hotel does not do good things for credit resource click efficiency. It causes a constant shift of the curve downwards due to its high cost.</li>
+<li>On the other hand, Day Job has a huge impact.</li>
+<li>Neither is as efficient as the Professional Contacts deck, but it should be pointed out that the <strong>procons</strong> deck doesn&#8217;t reach the credit level gain by 30 resource clicks of the Day Job deck. Sure, it may be more efficient click-for-click, but the tempo hit makes it less efficient in absolute terms.</li>
+</ul>
+<p>Another view of the same, focusing on credit click efficiency.</p>
+<p><a href="https://github.com/gparmer/ANRsim/blob/master/02_changing_meta/vs_new/mean1.png" target="_blank"><img loading="lazy" decoding="async" class="aligncenter wp-image-6412" src="/wp-content/uploads/2015/01/mean12.png" alt="mean1" width="500" height="375" srcset="/wp-content/uploads/2015/01/mean12.png 800w, /wp-content/uploads/2015/01/mean12-300x225.png 300w, /wp-content/uploads/2015/01/mean12-150x113.png 150w" sizes="(max-width: 500px) 100vw, 500px" /><br />
+</a></p>
+<p><strong>Discussion.</strong></p>
+<ul class="task-list">
+<li>Earthrise Hotel has a tempo hit, and we can see the Earthrise Hotel + draw trails off at the end. This is because the entire deck is drawn. A great point is that we probably don&#8217;t want Quality Time and Earthrise Hotel in the same deck. I&#8217;ll look at other impacts of Earthrise in other decks in this and subsequent articles.</li>
+<li>Day Job has a large impact on credit click efficiency. Unlike Lucky find which had a 0.4 credit/click increase in efficiency, Day Job has about a 0.3 credit/click increase. Most remarkably, it practically seems to do better than the <strong>procons+evt</strong> deck that dominated in terms of credit efficiency in the previous analysis. We&#8217;ll see how PVP impacts Day Job soon.</li>
+</ul>
+<p>How do Day Job and Earthrise Hotel impact quality card draw efficiency? Lets see!</p>
+<p><a href="https://github.com/gparmer/ANRsim/blob/master/02_changing_meta/vs_new/qdraw1.png" target="_blank"><img loading="lazy" decoding="async" class="aligncenter wp-image-6413" src="/wp-content/uploads/2015/01/qdraw12.png" alt="qdraw1" width="500" height="375" srcset="/wp-content/uploads/2015/01/qdraw12.png 800w, /wp-content/uploads/2015/01/qdraw12-300x225.png 300w, /wp-content/uploads/2015/01/qdraw12-150x113.png 150w" sizes="(max-width: 500px) 100vw, 500px" /></a></p>
+<p><strong>Discussion.</strong></p>
+<ul class="task-list">
+<li>Earthrise Hotel significantly increases card draw by between 0.3 cards/click (with Day Job) and 0.4 cards/click (without Day Job).</li>
+<li>Day Job significantly deteriorates quality draw efficiency by a comparable amount to how much Earthrise Hotel increases it.</li>
+<li>All approaches draw more than <strong>procons+evt</strong>. This is actually pretty significant: whereas previous economies could not approach the click efficiency of <strong>evt+procons</strong>, we finally have an engine that is better for both credits <em>and</em> quality draws!</li>
+</ul>
+<p>So far, it seems like Day Job is going to make a splash, and it is unclear how much of an impact Earthrise will have. Note that, for the sake of the simulation, we assume two resource clicks each turn. Thus Earthrise is yielding two cards every two clicks within the graphs. I believe this is reasonable as drawing two cards places some pressure on the runner to play two, or play one and run.</p>
+<h2><a id="user-content-future-economic-engines" class="anchor" href="https://github.com/gparmer/ANRsim/blob/master/02_changing_meta/article.md#future-economic-engines"></a>Future Economic Engines</h2>
+<p>So once O&amp;C hits, how will it change established economic engines? I&#8217;ll defer the question of if it will create new economic engines to the next article, and continue the focus on Prepaid Kate. I know, my Shaper bias is showing through.</p>
+<p>Lets compare three new economic packages to existing ones. First, lets simply add Day Job to a Prepaid Kate deck. Second, any Kate deck that can add a free Imp is pretty happy, so lets see what cutting the two influence Lucky Finds, and replacing them with the one influence Day Jobs. Third, lets check out a similar replacement strategy for <strong>procons </strong>decks. In the following graphs, the existing economies are the yellow lines.</p>
+<p><a href="https://github.com/gparmer/ANRsim/blob/master/02_changing_meta/new_econs/mean0.png" target="_blank"><img loading="lazy" decoding="async" class="aligncenter wp-image-6414" src="/wp-content/uploads/2015/01/mean03.png" alt="mean0" width="500" height="375" srcset="/wp-content/uploads/2015/01/mean03.png 800w, /wp-content/uploads/2015/01/mean03-300x225.png 300w, /wp-content/uploads/2015/01/mean03-150x113.png 150w" sizes="(max-width: 500px) 100vw, 500px" /></a></p>
+<p><strong>Discussion.</strong></p>
+<ul class="task-list">
+<li>The traditional Prepaid Kate economy is nearly identical to the one where Lucky Find is replaced with Day Job. It looks like Kate just got 3 more influence to play with. O&amp;C has improved Kate decks! It seems that Anarchs are again gifting other factions will goodies.</li>
+<li>Add Day Job (for a total of 9 influence) to an existing Prepaid Kate deck creates an economic monster.</li>
+<li>Day Job seems like a great Lucky Find replacement in terms of credit efficiency when influence is short in <strong>procons </strong>decks as well.</li>
+</ul>
+<p>The click efficiency-centric representation:</p>
+<p><a href="https://github.com/gparmer/ANRsim/blob/master/02_changing_meta/new_econs/mean1.png" target="_blank"><img loading="lazy" decoding="async" class="aligncenter wp-image-6415" src="/wp-content/uploads/2015/01/mean13.png" alt="mean1" width="500" height="375" srcset="/wp-content/uploads/2015/01/mean13.png 800w, /wp-content/uploads/2015/01/mean13-300x225.png 300w, /wp-content/uploads/2015/01/mean13-150x113.png 150w" sizes="(max-width: 500px) 100vw, 500px" /></a></p>
+<p><strong>Discussion.</strong></p>
+<ul class="task-list">
+<li>We see three distinct clusters. Again, with the Lucky Find Prepaid deck clustering with the Day Job Prepaid deck, and both <strong>procons</strong> decks also clustering together. The only downside is that it has a slight tempo hit during the initial clicks.</li>
+<li>The efficiency of the Lucky Find + Day Job Prepaid economy matches the efficiency of the Professional Contacts deck! This, while being positively offset above the <strong>procons</strong> deck (previous graph) by at least 5 credits.</li>
+<li>A downside worth mentioning of the Lucky Find + Day Job deck, in addition to the influence expenditure, is the number of card slots devoted to economy: 21 whopping cards!</li>
+</ul>
+<p>Lets check out quality draw efficiency.</p>
+<p><a href="https://github.com/gparmer/ANRsim/blob/master/02_changing_meta/new_econs/qdraw1.png" target="_blank"><img loading="lazy" decoding="async" class="aligncenter wp-image-6416" src="/wp-content/uploads/2015/01/qdraw13.png" alt="qdraw1" width="500" height="375" srcset="/wp-content/uploads/2015/01/qdraw13.png 800w, /wp-content/uploads/2015/01/qdraw13-300x225.png 300w, /wp-content/uploads/2015/01/qdraw13-150x113.png 150w" sizes="(max-width: 500px) 100vw, 500px" /></a></p>
+<p><strong>Discussion.</strong></p>
+<ul class="task-list">
+<li>Now we see the downside of Day Job. All three decks that don&#8217;t use Day Job have higher quality draw efficiencies.</li>
+<li>The Day Job versions of the existing decks seem offset down by around 0.2 quality draws per click. Note, we&#8217;ve seen this value before when investigating why Prepaid Kate with Lucky Find came into the meta, so I don&#8217;t think this downside is debilitating.</li>
+<li>Offset the lowest is the economy based on both Lucky find and Day Job. We spend a large number of clicks on economy, at the expense of draw.</li>
+</ul>
+<p>I&#8217;ll restate that this is a simple quantitative analysis on click efficiency. There will certainly be some Kate decks that don&#8217;t want to cede all pressure for a turn to hit the &#8216;ol Day Job. Such qualitative constraints must be balanced with the quantitative analysis provided here.</p>
+<h2><a id="user-content-conclusions-and-guidance-for-deck-building" class="anchor" href="https://github.com/gparmer/ANRsim/blob/master/02_changing_meta/article.md#conclusions-and-guidance-for-deck-building"></a>Conclusions and Guidance for Deck Building</h2>
+<p>We&#8217;ve investigated a previous shift in the meta when Lucky Find was released, and have analyzed a shake-up in the meta that, given this analysis, seems likely when Day Job hits with O&amp;C. The judgment is still pending on Earthrise Hotel, and we&#8217;ll investigate that in future articles. What have we concluded?</p>
+<ol class="task-list">
+<li>When Lucky Find hit, it represented a 0.4 increase in credit efficiency and a 0.2 decrease in quality draw efficiency. This was enough to motivate a new runner economy based on Prepaid Voice Pad.</li>
+<li>We&#8217;ve recently been gifted Earthrise Hotel. It has a significant tempo hit, but it does increase quality draw efficiently significantly. It might be appropriate for slower decks. I&#8217;ll hypothesize at this point that it is mainly useful due to its lack of influence, and we&#8217;ll investigate its role in Anarch economies in future articles.</li>
+<li>Day Job is a beast. It actually generates economic engines that are more efficient than decks with Professional Contacts with credit-gain events. Generally, it increases credit efficiency by between 0.2 and 0.3 credits per click. However, it comes at a draw cost of around 0.2 quality draws per click due to the four draw-less clicks it requires.</li>
+<li>Day Job can replace Lucky Find in both Prepaid and ProCons decks. In such cases, the credit efficiency is relatively unchanged, but the gain in influence is paid for in quality draw efficiency (around 0.2 quality draws per click less).</li>
+<li>Comparing Day Job to when Lucky Find hit the meta, we see that its impact is a little more nuanced. It doesn&#8217;t represent the credit per click efficiency increase that Lucky Find did. However, the increase it does provide is over <em>an already amazing economic engine</em>. Runners are being given beast-mode economies. The trade-off is in quality draw efficiency which is negatively offset by 0.1 to 0.2 quality draws per click. An intriguing possibility is to replace Lucky Finds with Day Jobs to gain three influence. Credit efficiency increases, while quality draw efficiency is somewhat negatively offset. This effectively trades influence for draw efficiency, which might be appropriate in some decks (i.e. those with many tutors&#8230;otherwise known as Prepaid Kate).</li>
+</ol>
+<p>That&#8217;s it for this installment. The next installment will investigate all aspects of the newly forming Anarch economies. No longer will Anarchs be credit and draw starved!</p>
+<h2><a id="user-content-improvements-for-the-future" class="anchor" href="https://github.com/gparmer/ANRsim/blob/master/02_changing_meta/article.md#improvements-for-the-future"></a>Improvements for the Future</h2>
+<p>I&#8217;ve received a great many suggestions for how to improve the analysis in the future. Most good answers start with questions, and these include:</p>
+<ul class="task-list">
+<li>How can we take tempo and opportunity cost into account? The cost of event cards doesn&#8217;t impact the curves if they never go below the event&#8217;s cost. In the event economies, if we never go below 5 credits, then we never see the downside of Sure Gamble&#8217;s cost.</li>
+<li>Is there a way to investigate &#8220;quality credits&#8221; in addition to quality draws? This is related to the previous question and might factor into the credit curve the cost of cards.</li>
+<li>What about programs? How does playing them impact this analysis?</li>
+<li>Can we study consistency as a whole?</li>
+<li>What about my economic package of X, Y, and Z?</li>
+</ul>
+<p>I believe that all of these considerations can be taken into account. For the time being, I&#8217;m looking at the simpler questions (that there isn&#8217;t a pre-existing answer to), and with time, I&#8217;ll develop the software to consider more of the depths of the game. To state it in another way, I&#8217;m constantly look at a way to increase the complexity of the model of the game, while keeping the simulation tractable. Please keep the suggestions coming.</p>

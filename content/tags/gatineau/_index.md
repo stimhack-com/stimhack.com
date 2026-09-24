@@ -1,0 +1,5 @@
+---
+title: Gatineau
+slug: gatineau
+---
+

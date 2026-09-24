@@ -1,0 +1,5 @@
+---
+title: Rules
+slug: rules
+---
+

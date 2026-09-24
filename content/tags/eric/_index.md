@@ -1,0 +1,5 @@
+---
+title: Eric
+slug: eric
+---
+

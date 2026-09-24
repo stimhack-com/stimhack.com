@@ -1,0 +1,121 @@
+---
+title: 'QuantANR: The Next Generation of Anarch Event-Based Economies'
+slug: quantanr-the-next-generation-of-anarch-event-based-economies
+date: '2015-01-25T16:37:36-07:00'
+lastmod: '2015-01-25T16:38:16-07:00'
+authors:
+- ycombinator
+categories:
+- articles
+tags: []
+summary: Order and Chaos is right around the bend. This article investigates the possibility for the new Anarch econ engines that come with it.
+featured_image: /wp-content/uploads/2015/01/dayjob.png
+thumbnail: /wp-content/uploads/2015/01/dayjob-215x300.png
+wp_id: 6448
+---
+<h1>The Next Generation of Anarch Event-Based Economies</h1>
+<p>Order and Chaos is going to change things.  Anarch econs are <em>strong</em>. The following are the efficiency changes versus a traditional economic package of Dirty Laundry, Sure Gamble, Lucky Find, Diesel, and Quality Time. Please note that the following chart gives efficiency numbers for the later clicks in the game; for the rest of the game, keep reading!</p>
+<table bgcolor="#444444">
+<thead>
+<tr>
+<th>Economy</th>
+<th>Credits/click</th>
+<th>Quality draws/click</th>
+<th>Compared to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SG+DL+LF+DJ+SS+INJ</td>
+<td>+0.5</td>
+<td>-0.4</td>
+<td>Shaper Events: SG+DL+LF+Diesel+QT</td>
+</tr>
+<tr>
+<td>SG+DL+DJ+SS+INJ</td>
+<td>+0.2</td>
+<td>-0.3</td>
+<td>Shaper Events</td>
+</tr>
+<tr>
+<td>SG+DL+LF+DJ+SS+INJ+PVP</td>
+<td>+0.3</td>
+<td>-0.3</td>
+<td>Prepaid Kate Events</td>
+</tr>
+</tbody>
+</table>
+<p>Anarchs are getting an economic engine that rivals powerful current economic engines. Can they pay the decrease in draw, and the tempo hit of having a Day Job?</p>
+<ul class="task-list">
+<li>SG = Sure Gamble</li>
+<li>DL = Dirty Laundry</li>
+<li>LF = Lucky Find</li>
+<li>DJ = Day Job</li>
+<li>SS = Steelskin</li>
+<li>INJ = Inject</li>
+<li>PVP = Prepaid Voice Pad</li>
+<li>QT = Quality Time</li>
+</ul>
+<h2><a id="user-content-abstract" class="anchor" href="https://github.com/gparmer/ANRsim/blob/master/03_anarch_econ/article.md#abstract"></a><em>Abstract</em></h2>
+<p>With the new card draw in the form of Steelskin and Inject, and a new event for credit generation in Day Job, the Anarchs are looking to cast off their traditional weaknesses: draw and economy. Does this add up to an economic powerhouse, or does it track the Anarch history of lagging behind?</p>
+<p>Quoting from the first article, &#8220;this article looks at the <strong>resource click efficiency of gaining both credits and quality draws</strong> for various economic packages&#8221;. If this doesn&#8217;t make sense, please check out the <a href="/a-comparison-of-event-based-runner-economies-in-anr/">first article</a>.</p>
+<h2><a id="user-content-a-warning-simulation-limits-ahead" class="anchor" href="https://github.com/gparmer/ANRsim/blob/master/03_anarch_econ/article.md#a-warning-simulation-limits-ahead"></a>A Warning: Simulation Limits Ahead</h2>
+<p>When reading this article, you have to be particularly aware of the weaknesses of the simulation. A large downside to Day Job is the four click cost. Though I&#8217;m often happy to &#8220;click for eight&#8221; with Opus, I&#8217;m not sure Anarchs should be quite as willing to do the same. Additionally, we&#8217;ll see that Inject is a crazy card. From an economic standpoint, it is. You draw efficiently, or you get money. When you get money, it is &#8220;free&#8221; from an economic perspective in the sense that you aren&#8217;t discarding any of your econ cards (they&#8217;re all hardware &#8211; PVP &#8211; and events). For an event economy, and from the perspective of drawing and getting credits, Inject is insane. However, this analysis ignores the realistic downsides to discarding the programs.</p>
+<p>Long story short, please be wary when reading this. Understand that we are assessing the economic potential of the new Anarch econs. However, they are anarchistic, and their downsides are difficult to analyze here. As always, use this as one of the many sources of information you use when assessing how good cards are for your deck.</p>
+<p>Also please see the limitations of the simulation and FAQ from the <a href="/a-comparison-of-event-based-runner-economies-in-anr/">first article</a>.</p>
+<h2><a id="user-content-the-new-anarch-economies" class="anchor" href="https://github.com/gparmer/ANRsim/blob/master/03_anarch_econ/article.md#the-new-anarch-economies"></a>The New Anarch Economies</h2>
+<p>Four cards will have a significant impact on Anarch economies (credits <em>and</em> draw) come Order and Chaos (O&amp;C).</p>
+<ul class="task-list">
+<li>Inject (INJ)</li>
+<li>Steelskin (SS)</li>
+<li>Day Job (DJ)</li>
+</ul>
+<p>These paired with the existing event economies and resources can be quite powerful. Existing cards include:</p>
+<ul class="task-list">
+<li>Sure Gamble (SG)</li>
+<li>Dirty Laundry (DL)</li>
+<li>Lucky Find (LF)</li>
+<li>Earthrise Hotel (EH)</li>
+</ul>
+<p>We have invested in previous articles the difficult trade-off that each economic engine makes when trading credit efficiency for draw efficiency. Day Job is a perfect example of this. The clicks spent doing Day Job are quite efficient in terms of credits. However, they are clicks that provided zero draw. Diesel is the opposite. Inject is bonkers because it is both.</p>
+<p>In the following graphs, the Red line is a mystery line. It is an economy that makes a decent trade between credit and quality draw efficiency.</p>
+<p>Lets look at some combinations of these cards and compare them to traditional event economies. In the following graphs, the old economic engines are in Yellow.</p>
+<ul class="task-list">
+<li><strong>evts</strong> = SG+DL+LF</li>
+<li><strong>draw</strong> = QT+Diesel</li>
+<li><strong>adraw</strong> = SS+INJ</li>
+</ul>
+<p>First credit generation:</p>
+<p><img loading="lazy" decoding="async" class="aligncenter wp-image-6450" src="/wp-content/uploads/2015/01/mean04.png" alt="mean0" width="500" height="375" srcset="/wp-content/uploads/2015/01/mean04.png 800w, /wp-content/uploads/2015/01/mean04-300x225.png 300w, /wp-content/uploads/2015/01/mean04-150x113.png 150w" sizes="(max-width: 500px) 100vw, 500px" /></p>
+<p>Sorry for the legend cutting off some of the lines.  I assure you that they do exactly the predictable thing given what&#8217;s visible.  Second, focus on click efficiency for credits:</p>
+<p><img loading="lazy" decoding="async" class="aligncenter wp-image-6452" src="/wp-content/uploads/2015/01/mean14.png" alt="mean1" width="500" height="375" srcset="/wp-content/uploads/2015/01/mean14.png 800w, /wp-content/uploads/2015/01/mean14-300x225.png 300w, /wp-content/uploads/2015/01/mean14-150x113.png 150w" sizes="(max-width: 500px) 100vw, 500px" /></p>
+<p>Third, draw efficiency:</p>
+<p><img loading="lazy" decoding="async" class="aligncenter wp-image-6454" src="/wp-content/uploads/2015/01/qdraw14.png" alt="qdraw1" width="500" height="375" srcset="/wp-content/uploads/2015/01/qdraw14.png 800w, /wp-content/uploads/2015/01/qdraw14-300x225.png 300w, /wp-content/uploads/2015/01/qdraw14-150x113.png 150w" sizes="(max-width: 500px) 100vw, 500px" /></p>
+<p><em>Discussion.</em></p>
+<ul class="task-list">
+<li>The solid Green and solid Yellow lines are telling an interesting story. The economic packages are the same, except that the draw uses Anarch cards, instead of shaper cards. Inject does work. It alone makes the anarch economies yield 0.1 credit per click more! However, as Steelskin is not quality draw compared to Quality Time, the draw efficiency takes a 0.15 quality draw/click hit.</li>
+<li>Earthrise Hotel helps with this issue to some degree by further increasing credit efficiency, and also helping draws. It might be reasonable to replace EH with QT if you have the influence, but there is a hidden advantage to a cost of four credits: If the credits/click efficiency of the deck is high, those four credits are cheaper in terms of clicks. We see this, as the stronger credit economy (with LF) gets more of a benefit from EH.</li>
+<li>The Blue dotted line and Yellow also tell an interesting story. Their credit click efficiency, and quality draw efficiency are quite similar. The only downside to the anarch version is the credit hit at the beginning for not having LF in the deck. An anarch econ that is <em>influence-free</em> based on SG, DL, DJ, SS, INJ, and EH is competitive with an already powerful economic engine further augmented with DJ (note, that package in shaper would be 9 influence!).</li>
+<li>Throwing all the tricks in, we have an anarch economy that can gain more than 1.3 credits per click, with the downside of only getting ~0.5 quality draws per click.</li>
+</ul>
+<h2><a id="user-content-add-prepaid-get-efficiency" class="anchor" href="https://github.com/gparmer/ANRsim/blob/master/03_anarch_econ/article.md#add-prepaid-get-efficiency"></a>Add Prepaid, get Efficiency</h2>
+<p>Now lets add Prepaid Voice Pads (PVP) into the mix. We know that Prepaid Kate is amazing. How does she compare to these Anarch economies?</p>
+<p>First credit generation:</p>
+<p><img loading="lazy" decoding="async" class="aligncenter wp-image-6449" src="/wp-content/uploads/2015/01/mean0-1.png" alt="mean0 (1)" width="500" height="375" srcset="/wp-content/uploads/2015/01/mean0-1.png 800w, /wp-content/uploads/2015/01/mean0-1-300x225.png 300w, /wp-content/uploads/2015/01/mean0-1-150x113.png 150w" sizes="(max-width: 500px) 100vw, 500px" /></p>
+<p>Second, focus on click efficiency for credits:</p>
+<p><img loading="lazy" decoding="async" class="aligncenter wp-image-6451" src="/wp-content/uploads/2015/01/mean1-1.png" alt="mean1 (1)" width="500" height="375" srcset="/wp-content/uploads/2015/01/mean1-1.png 800w, /wp-content/uploads/2015/01/mean1-1-300x225.png 300w, /wp-content/uploads/2015/01/mean1-1-150x113.png 150w" sizes="(max-width: 500px) 100vw, 500px" /></p>
+<p>Third, draw efficiency:</p>
+<p><img loading="lazy" decoding="async" class="aligncenter wp-image-6453" src="/wp-content/uploads/2015/01/qdraw1-1.png" alt="qdraw1 (1)" width="500" height="375" srcset="/wp-content/uploads/2015/01/qdraw1-1.png 800w, /wp-content/uploads/2015/01/qdraw1-1-300x225.png 300w, /wp-content/uploads/2015/01/qdraw1-1-150x113.png 150w" sizes="(max-width: 500px) 100vw, 500px" /></p>
+<p><strong>Discussion.</strong></p>
+<ul class="task-list">
+<li>As it turns out, you throw PVP in with a bunch of events, and out pops some pretty amazing economic engines. The efficiency of the blue line is truly amazing for credit generation, topping out at 1.7 credits per click. Unfortunately, we can see that the draw is pretty weak, floating around 0.35 quality draws per click. Note that this is getting to be due to the fact that there are so many econ cards in the deck, that it is hard to find a quality draw.</li>
+<li>The economic package that uses EH for draw, but drops LF actually does pretty great. It is a little slower to get going, but is competitive with the PVP Kate (+DJ) economy. That&#8217;s quite an about-face for Anarch that now have a brilliant <em>influence-free</em> package that yields fantastic credit, and good quality draw potential. Of course, it is not always straight-forward to decide if EH is good for your deck. I think Steven Wooley stated it best in The Source discussion on <a href="http://runlastclick.blogspot.com/2015/01/episode-24-on-source.html">Run Last Click</a> &#8211; it really depends on your deck.</li>
+</ul>
+<h2><a id="user-content-whats-the-mystery-econ-package" class="anchor" href="https://github.com/gparmer/ANRsim/blob/master/03_anarch_econ/article.md#whats-the-mystery-econ-package"></a>What&#8217;s the Mystery Econ Package?</h2>
+<p>Heavy influence: LF + SG + DJ + SS + INJ + QT. We drop the Dirty Laundries to increase the quality draw, and import Quality Time to also increase both draw efficiency and synergy with the PVPs. It seems to make a decent trade between draw and credits, but is pretty heavy on the influence.</p>
+<h2><a id="user-content-an-implicit-cost" class="anchor" href="https://github.com/gparmer/ANRsim/blob/master/03_anarch_econ/article.md#an-implicit-cost"></a>An Implicit Cost</h2>
+<p>A cost to these economic packages is one that I haven&#8217;t emphasized much: many event econs require quite a few cards. Many people want to avoid playing upwards of 18 or more economy cards in their deck. Event econ decks are not for everyone, and not for every deck. I discuss the quantitative implications of this by investigating quality draw efficiency. However, this is one of the areas that your own qualitative reasoning will have to be used. In future articles, we&#8217;ll discuss other economic engines beyond event-based economy.</p>
+<h2><a id="user-content-the-future" class="anchor" href="https://github.com/gparmer/ANRsim/blob/master/03_anarch_econ/article.md#the-future"></a>The Future</h2>
+<p>Please see the <a href="/quantanr-analysis-of-a-changing-meta/">second article</a> for some future improvements, when I have the time. A few people on the forums had some great insights into how to take into account the costs of runs and asset trashing. Check out the forums for that article, and continue the discussion for this one. Thanks @PeekaySK, @Nordicstrike, and the others. Hopefully I can integrate them over time.</p>
+<p>There will likely be a significant delay before I can get the next batch of results out, so please keep the comments coming, and I&#8217;ll post when I can.</p>
+<p>&#8211; Gabe &#8220;YCombinator&#8221; Parmer</p>

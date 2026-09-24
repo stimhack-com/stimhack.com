@@ -1,0 +1,5 @@
+---
+title: SMC
+slug: smc
+---
+

@@ -1,0 +1,4184 @@
+- pack: Blood Money
+  location: Games of Berkeley, Berkeley, CA
+  url: /gnk-games-of-berkeley-berkeley-ca-14-players/
+  type: GNK
+  players: 14
+  winner: aleph_c
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'SYNC: Everything, Everywhere'
+- pack: 23 Seconds
+  location: Gamespace Kashiwagi
+  url: /gnk-gamespace-kashiwagi-6-players/
+  type: Store Champs
+  players: 6
+  winner: Angus13
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Haarpsichord Studios: Entertainment Unleashed'
+- pack: 23 Seconds
+  location: Ropecon, Helsinki, Finland
+  url: /regional-ropecon-helsinki-finland-23-players/
+  type: Regional
+  players: 23
+  winner: Artturi Piipponen
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'NBN: Controlling the Message'
+- pack: The Liberated Mind
+  location: Sparta Games Arena
+  url: /gnk-sparta-games-arena-9-players/
+  type: GNK
+  players: 9
+  winner: Calvin "sigma83" Wong
+  runner: 'Chaos Theory: Wünderkind'
+  corp: 'Argus Security: Protection Guaranteed'
+- pack: Fear the Masses
+  location: Auckland
+  url: /regional-auckland-18-players/
+  type: Regional
+  players: 18
+  winner: Will Turner
+  runner: 'Hayley Kaplan: Universal Scholar'
+  corp: 'SYNC: Everything, Everywhere'
+- pack: The Liberated Mind
+  location: Gamespace Kashiwagi
+  url: /store-champs-gamespace-kashiwagi-14-players/
+  type: Store Champs
+  players: 14
+  winner: Rokirusu
+  runner: 'Hayley Kaplan: Universal Scholar'
+  corp: 'Harmony Medtech: Biomedical Pioneer'
+- pack: Fear the Masses
+  location: Malmö, Sweden
+  url: /regional-malmo-sweden-15-players/
+  type: Regional
+  players: 15
+  winner: Christian Vestergaard
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'SYNC: Everything, Everywhere'
+- pack: Fear the Masses
+  location: Toruń, Poland
+  url: /regional-torun-poland-8-players/
+  type: Regional
+  players: 8
+  winner: Piotr "romanoSoprano" Romanowski
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Salsette Island
+  location: Tartu, Estonia
+  url: /store-champs-tartu-estonia-9-players/
+  type: Store Champs
+  players: 9
+  winner: v01d
+  runner: 'Armand Geist Walker: Tech Lord'
+  corp: 'Argus Security: Protection Guaranteed'
+- pack: The Liberated Mind
+  location: Oslo
+  url: /regional-oslo-20-players/
+  type: Regional
+  players: 20
+  winner: Nikolai Hansen
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Cerebral Imaging: Infinite Frontiers'
+- pack: The Liberated Mind
+  location: GUF Brisbane, Qld. Australia
+  url: /regional-guf-brisbane-qld-australia-33-players/
+  type: Regional
+  players: 33
+  winner: Alex Marchuk
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Liberated Mind
+  location: Brussels
+  url: /regional-brussels-22-players/
+  type: Regional
+  players: 22
+  winner: Brian Wynants (aka ryanbantwins)
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Gagarin Deep Space: Expanding the Horizon'
+- pack: The Liberated Mind
+  location: London
+  url: /regional-london-77-players/
+  type: Regional
+  players: 77
+  winner: Brendan Jackson
+  runner: 'Armand Geist Walker: Tech Lord'
+  corp: 'New Angeles Sol: Your News'
+- pack: The Liberated Mind
+  location: Brno
+  url: /regional-brno-19-players/
+  type: Regional
+  players: 19
+  winner: Jacek "hsiale" Wieszaczewski
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Haarpsichord Studios: Entertainment Unleashed'
+- pack: Salsette Island
+  location: Katowice
+  url: /regional-katowice-18-players/
+  type: Regional
+  players: 18
+  winner: Jacek "hsiale" Wieszaczewski
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Industrial Genomics: Growing Solutions'
+- pack: Fear the Masses
+  location: Connection Games, Vancouver, BC
+  url: /regional-connection-games-vancouver-bc-30-players/
+  type: Regional
+  players: 30
+  winner: Kyle James / Bluebird503
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Gagarin Deep Space: Expanding the Horizon'
+- pack: The Liberated Mind
+  location: Gamespace Kashiwagi, Tokyo
+  url: /store-champs-gamespace-kashiwagi-tokyo-14-players/
+  type: Store Champs
+  players: 14
+  winner: Rokirusu
+  runner: 'Hayley Kaplan: Universal Scholar'
+  corp: 'Harmony Medtech: Biomedical Pioneer'
+- pack: The Liberated Mind
+  location: Wrocław
+  url: /regional-wroclaw-26-players/
+  type: Regional
+  players: 26
+  winner: Mateusz "Matuszczak" Radecki
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Haarpsichord Studios: Entertainment Unleashed'
+- pack: Salsette Island
+  location: Athens, Greece
+  url: /regional-athens-greece-28-players/
+  type: Regional
+  players: 28
+  winner: Kostas "Fabregus" Retalis
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Liberated Mind
+  location: Swansea
+  url: /regional-swansea-34-players/
+  type: Regional
+  players: 34
+  winner: Laurie Poulter
+  runner: 'Hayley Kaplan: Universal Scholar'
+  corp: 'Pālanā Foods: Sustainable Growth'
+- pack: The Liberated Mind
+  location: Euregio Championship V Essen
+  url: /casual-euregio-championship-v-essen-47-players/
+  type: Casual
+  players: 47
+  winner: JackMade
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Liberated Mind
+  location: Dallas, TX
+  url: /regional-dallas-tx-25-players/
+  type: Regional
+  players: 25
+  winner: Andrew Furst
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Haarpsichord Studios: Entertainment Unleashed'
+- pack: The Liberated Mind
+  location: The Wasteland Gaming, Duluth, GA
+  url: /regional-the-wasteland-gaming-duluth-ga-40-players/
+  type: Regional
+  players: 40
+  winner: Zachary Cavis
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Liberated Mind
+  location: Hiveworld, Cologne (Germany)
+  url: /regional-hiveworld-cologne-germany-36-players/
+  type: Regional
+  players: 36
+  winner: Jürgen 'Axul' Marx
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'SYNC: Everything, Everywhere'
+- pack: The Liberated Mind
+  location: The Board Room Game Café (Halifax, Canada)
+  url: /regional-the-board-room-game-cafe-halifax-canada-25-players/
+  type: Regional
+  players: 25
+  winner: Rob B
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Pālanā Foods: Sustainable Growth'
+- pack: The Liberated Mind
+  location: Tacoma Convention Center
+  url: /regional-tacoma-convention-center-39-players/
+  type: Regional
+  players: 39
+  winner: Zane Greening
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'New Angeles Sol: Your News'
+- pack: The Liberated Mind
+  location: Desert Sky Games, Gilbert AZ
+  url: /regional-desert-sky-games-gilbert-az-37-players/
+  type: Regional
+  players: 37
+  winner: Jayson Rickel
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Salsette Island
+  location: Bangor, Northern Ireland
+  url: /regional-bangor-northern-ireland-26-players/
+  type: Regional
+  players: 26
+  winner: Ben Fox
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Salsette Island
+  location: Gent
+  url: /regional-gent-13-players/
+  type: Regional
+  players: 13
+  winner: Okkdoko
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Gagarin Deep Space: Expanding the Horizon'
+- pack: Salsette Island
+  location: Settlers Hamilton
+  url: /regional-settlers-hamilton-33-players/
+  type: Regional
+  players: 33
+  winner: Seamus Peter Johnstone Macleod
+  runner: 'Rielle Kit Peddler: Transhuman'
+  corp: 'Argus Security: Protection Guaranteed'
+- pack: Salsette Island
+  location: Liège
+  url: /regional-liege-22-players-2/
+  type: Regional
+  players: 22
+  winner: Ron Zacapa
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Democracy and Dogma
+  location: Gamespace Kashiwagi, Tokyo
+  url: /store-champs-gamespace-kashiwagi-tokyo-11-players/
+  type: Store Champs
+  players: 11
+  winner: Angus13
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Jinteki: Personal Evolution'
+- pack: Salsette Island
+  location: Stockholm, Sweden
+  url: /anr-pro-circuit-stockholm-sweden-18-players/
+  type: ANR Pro Circuit
+  players: 18
+  winner: Asger Sloth Sørensen
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Industrial Genomics: Growing Solutions'
+- pack: Salsette Island
+  location: Fantasy Flight Games Center
+  url: /regional-fantasy-flight-games-center-42-players/
+  type: Regional
+  players: 42
+  winner: Jesse Bluem
+  runner: 'Ken Express Tenma: Disappeared Clone'
+  corp: 'New Angeles Sol: Your News'
+- pack: Salsette Island
+  location: Good Game
+  url: /store-champs-good-game-8-players/
+  type: Store Champs
+  players: 8
+  winner: Mishari al Faris
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Salsette Island
+  location: Birmingham, UK
+  url: /regional-birmingham-uk-59-players/
+  type: Regional
+  players: 59
+  winner: Alice Rees
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Salsette Island
+  location: Las Vegas, NV
+  url: /regional-las-vegas-nv-35-players/
+  type: Regional
+  players: 35
+  winner: Timmy Wong
+  runner: 'Whizzard: Master Gamer'
+  corp: 'SYNC: Everything, Everywhere'
+- pack: Salsette Island
+  location: Portland, OR
+  url: /regional-portland-or-35-players/
+  type: Regional
+  players: 35
+  winner: Kyle James
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Industrial Genomics: Growing Solutions'
+- pack: Business First
+  location: Linköping, Sweden
+  url: /store-champs-linkoping-sweden-6-players/
+  type: Store Champs
+  players: 6
+  winner: Jonas Hietala
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'New Angeles Sol: Your News'
+- pack: Business First
+  location: I'm Board Madison, WI
+  url: /regional-im-board-madison-wi-58-players/
+  type: Regional
+  players: 58
+  winner: Jordan Morris
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Democracy and Dogma
+  location: Huntsville, Alabama
+  url: /regional-huntsville-alabama-29-players/
+  type: Regional
+  players: 29
+  winner: Ahmed Abbasi
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Democracy and Dogma
+  location: Tampere, Finland
+  url: /casual-tampere-finland-9-players/
+  type: Casual
+  players: 9
+  winner: Artturi Piipponen
+  runner: 'Gabriel Santiago: Consummate Professional'
+  corp: 'SYNC: Everything, Everywhere'
+- pack: Democracy and Dogma
+  location: Blakfyre Games, Utah
+  url: /regional-blakfyre-games-utah-26-players/
+  type: Regional
+  players: 26
+  winner: Spencer Healey
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Democracy and Dogma
+  location: gothenburg, Sweden
+  url: /anr-pro-circuit-gothenburg-sweden-18-players/
+  type: ANR Pro Circuit
+  players: 18
+  winner: Gabriel Fielder
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Industrial Genomics: Growing Solutions'
+- pack: Democracy and Dogma
+  location: Namur, Belgium
+  url: /store-champs-namur-belgium-16-players/
+  type: Store Champs
+  players: 16
+  winner: Ron Zacapa
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Pālanā Foods: Sustainable Growth'
+- pack: Democracy and Dogma
+  location: Gamespace Kashiwagi, Tokyo
+  url: /store-champs-gamespace-kashiwagi-tokyo-6-players/
+  type: Store Champs
+  players: 6
+  winner: Ayabane
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Jinteki Biotech: Life Imagined'
+- pack: Salsette Island
+  location: Millennium Games, Rochester, NY
+  url: /national-millennium-games-rochester-ny-41-players/
+  type: Regional
+  players: 41
+  winner: Josh Wilson
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Pālanā Foods: Sustainable Growth'
+- pack: Democracy and Dogma
+  location: Durham, NC
+  url: /regional-durham-nc-56-players/
+  type: Regional
+  players: 56
+  winner: Jesse Vandover
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Industrial Genomics: Growing Solutions'
+- pack: Democracy and Dogma
+  location: Michigan, USA
+  url: /regional-michigan-usa-43-players/
+  type: Regional
+  players: 43
+  winner: Zach  Jacobsen
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Democracy and Dogma
+  location: Pleasant Grove, UT
+  url: /regional-pleasant-grove-ut-26-players/
+  type: Regional
+  players: 26
+  winner: Spencer Healey
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Business First
+  location: Budapest
+  url: /store-champs-budapest-14-players/
+  type: Store Champs
+  players: 14
+  winner: Peter Dinya "percomis"
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Pālanā Foods: Sustainable Growth'
+- pack: Business First
+  location: Aachen
+  url: /store-champs-aachen-6-players/
+  type: Store Champs
+  players: 6
+  winner: JackMade
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Business First
+  location: Dortmund
+  url: /store-champs-dortmund-14-players/
+  type: Store Champs
+  players: 14
+  winner: Jackmade
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Democracy and Dogma
+  location: Wrexham, UK
+  url: /gnk-wrexham-uk-7-players/
+  type: GNK
+  players: 7
+  winner: James McIver
+  runner: 'Rielle Kit Peddler: Transhuman'
+  corp: 'Pālanā Foods: Sustainable Growth'
+- pack: Business First
+  location: Madrid, Spain
+  url: /casual-madrid-spain-41-players/
+  type: Casual
+  players: 41
+  winner: Christian "Pelos" García
+  runner: 'Hayley Kaplan: Universal Scholar'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Kala Ghoda
+  location: Saint-Petersburg, Russia
+  url: /store-champs-saint-petersburg-russia-28-players-2/
+  type: Store Champs
+  players: 28
+  winner: Anton Volodin
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Democracy and Dogma
+  location: Louisville, KY
+  url: /regional-louisville-ky-38-players/
+  type: Regional
+  players: 38
+  winner: Corwin Brindley
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Democracy and Dogma
+  location: Cambridge, MA
+  url: /regional-cambridge-ma-53-players/
+  type: Regional
+  players: 53
+  winner: Toby Forman
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Kala Ghoda
+  location: Cairns, QLD, Australia
+  url: /store-champs-cairns-qld-australia-16-players/
+  type: Store Champs
+  players: 16
+  winner: Matthew Tait
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Business First
+  location: Gamezilla Fredericton, NB, Canada
+  url: /store-champs-gamezilla-fredericton-nb-canada-6-players/
+  type: Store Champs
+  players: 6
+  winner: David Hutchin
+  runner: 'Apex: Invasive Predator'
+  corp: 'Spark Agency: Worldswide Reach'
+- pack: Business First
+  location: Warsaw
+  url: /store-champs-warsaw-14-players/
+  type: Store Champs
+  players: 14
+  winner: Mateusz "Matuszczak" Radecki
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Pālanā Foods: Sustainable Growth'
+- pack: Kala Ghoda
+  location: Bochum
+  url: /store-champs-bochum-8-players/
+  type: Store Champs
+  players: 8
+  winner: kephalopode
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Business First
+  location: Uncle's Tacoma
+  url: /store-champs-uncles-tacoma-12-players/
+  type: Store Champs
+  players: 12
+  winner: Derek
+  runner: 'Jesminder Sareen: Girl Behind the Curtain'
+  corp: 'Titan Transnational: Investing In Your Future'
+- pack: Kala Ghoda
+  location: Athens, Greece
+  url: /store-champs-athens-greece-10-players/
+  type: Store Champs
+  players: 10
+  winner: Yorgos-Alexandros Petridis
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Business First
+  location: Horsham
+  url: /store-champs-horsham-12-players/
+  type: Store Champs
+  players: 12
+  winner: David Saiya
+  runner: 'Hayley Kaplan: Universal Scholar'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Kala Ghoda
+  location: JC's House of Cards - Madison, AL
+  url: /store-champs-jcs-house-of-cards-madison-al-18-players/
+  type: Store Champs
+  players: 18
+  winner: Francisco Mehlhaff
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Blue Sun: Powering the Future'
+- pack: Business First
+  location: Mastermind Models and Miniatures - Huntsville, AL
+  url: /store-champs-mastermind-models-and-miniatures-huntsville-al-9-players/
+  type: Store Champs
+  players: 9
+  winner: Corey Waugh
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Kala Ghoda
+  location: Spartan Games Arena, Kuala Lumpur
+  url: /store-champs-spartan-games-arena-kuala-lumpur-19-players/
+  type: Store Champs
+  players: 19
+  winner: Yeng Hong Qing
+  runner: 'Hayley Kaplan: Universal Scholar'
+  corp: 'New Angeles Sol: Your News'
+- pack: Business First
+  location: Raleigh
+  url: /store-champs-raleigh-19-players/
+  type: Store Champs
+  players: 19
+  winner: Jesse Nicholson
+  runner: 'Hayley Kaplan: Universal Scholar'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Business First
+  location: Thessaloniki, Greece
+  url: /store-champs-thessaloniki-greece-10-players/
+  type: Store Champs
+  players: 10
+  winner: Vasilis "PsymonTheWizard" Zitros
+  runner: 'Sunny Lebeau: Security Specialist'
+  corp: 'Pālanā Foods: Sustainable Growth'
+- pack: Business First
+  location: Stockholm, Sweden
+  url: /store-champs-stockholm-sweden-21-players/
+  type: Store Champs
+  players: 21
+  winner: Gabriel Fiedler
+  runner: 'Armand Geist Walker: Tech Lord'
+  corp: 'Pālanā Foods: Sustainable Growth'
+- pack: Business First
+  location: Standish, ME
+  url: /store-champs-standish-me-11-players/
+  type: Store Champs
+  players: 11
+  winner: Patrick Maguire
+  runner: 'Hayley Kaplan: Universal Scholar'
+  corp: 'Industrial Genomics: Growing Solutions'
+- pack: Business First
+  location: Cape Coral, Florida
+  url: /store-champs-cape-coral-florida-3-players/
+  type: Store Champs
+  players: 3
+  winner: Stephen Ball
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Business First
+  location: Poromagia, Helsinki, Finland
+  url: /store-champs-poromagia-helsinki-finland-16-players/
+  type: Store Champs
+  players: 16
+  winner: Niklas Virkkala
+  runner: 'Hayley Kaplan: Universal Scholar'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Business First
+  location: Cloud Cap Games, Portland
+  url: /store-champs-cloud-cap-games-portland-13-players/
+  type: Store Champs
+  players: 13
+  winner: Raj
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Pālanā Foods: Sustainable Growth'
+- pack: Business First
+  location: Brave New World, Cologne, Germany
+  url: /store-champs-brave-new-world-cologne-germany-12-players/
+  type: Store Champs
+  players: 12
+  winner: Jaro "MonkeyML" M.
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Spark Agency: Worldswide Reach'
+- pack: Democracy and Dogma
+  location: Planszak, Wrocław
+  url: /store-champs-planszak-wroclaw-19-players/
+  type: Store Champs
+  players: 19
+  winner: Krzysztof Grodecki
+  runner: 'Hayley Kaplan: Universal Scholar'
+  corp: 'Industrial Genomics: Growing Solutions'
+- pack: Business First
+  location: Wasteland Gaming Atlanta, GA
+  url: /store-champs-wasteland-gaming-atlanta-ga-28-players/
+  type: Store Champs
+  players: 28
+  winner: Ahmed Abbasi
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Business First
+  location: Brighton
+  url: /store-champs-brighton-31-players/
+  type: Store Champs
+  players: 31
+  winner: Laurie Poulter
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Kala Ghoda
+  location: SC Krefeld
+  url: /store-champs-sc-krefeld-14-players/
+  type: Store Champs
+  players: 14
+  winner: Axul
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Kala Ghoda
+  location: Vienna
+  url: /store-champs-vienna-10-players/
+  type: Store Champs
+  players: 10
+  winner: Ákos Varga
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Jinteki: Personal Evolution'
+- pack: Business First
+  location: Game On Chattanooga
+  url: /store-champs-game-on-chattanooga-18-players/
+  type: Store Champs
+  players: 18
+  winner: Richard Baxter
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Kala Ghoda
+  location: Good Games Newcastle
+  url: /store-champs-good-games-newcastle-13-players/
+  type: Store Champs
+  players: 13
+  winner: Les Milwain
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Argus Security: Protection Guaranteed'
+- pack: Kala Ghoda
+  location: Games Shop Charlestown
+  url: /store-champs-games-shop-charlestown-4-players/
+  type: Store Champs
+  players: 4
+  winner: Les Milwain
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'New Angeles Sol: Your News'
+- pack: Business First
+  location: Gamer's Armory, Cary, NC
+  url: /store-champs-gamers-armory-cary-nc-17-players/
+  type: Store Champs
+  players: 17
+  winner: Josh Epperson
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Business First
+  location: 4 Horsemen Comics, Morgantown WV
+  url: /store-champs-4-horsemen-comics-morgantown-wv-10-players/
+  type: Store Champs
+  players: 10
+  winner: Ben Blum
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Cerebral Imaging: Infinite Frontiers'
+- pack: Business First
+  location: Millennium Games, Rochester, NY
+  url: /store-champs-millennium-games-rochester-ny-15-players/
+  type: Store Champs
+  players: 15
+  winner: Tim Baran
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Kala Ghoda
+  location: Outpost Ghent, Belgium
+  url: /store-champs-outpost-ghent-belgium-17-players/
+  type: Store Champs
+  players: 17
+  winner: Ron Zacapa
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Business First
+  location: Beyond Comics
+  url: /store-champs-beyond-comics-8-players/
+  type: Store Champs
+  players: 8
+  winner: Ethan Rodkin
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Pālanā Foods: Sustainable Growth'
+- pack: Business First
+  location: Uncle's Games, Redmond, WA
+  url: /store-champs-uncles-games-redmond-wa-15-players/
+  type: Store Champs
+  players: 15
+  winner: Stephen DeSanto
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Kala Ghoda
+  location: 4th Planet Games, Wrexham
+  url: /store-champs-4th-planet-games-wrexham-10-players/
+  type: Store Champs
+  players: 10
+  winner: Phil Lancaster
+  runner: 'Armand Geist Walker: Tech Lord'
+  corp: 'Cerebral Imaging: Infinite Frontiers'
+- pack: Kala Ghoda
+  location: CUBE, Kraków, Poland
+  url: /store-champs-cube-krakow-poland-13-players/
+  type: Store Champs
+  players: 13
+  winner: Sebastian "coma" Mianowski
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Business First
+  location: Planszóweczka vol. 2, Wrocław
+  url: /store-champs-planszoweczka-vol-2-wroclaw-10-players/
+  type: Store Champs
+  players: 10
+  winner: Krzysztof Grodecki
+  runner: 'Hayley Kaplan: Universal Scholar'
+  corp: 'Pālanā Foods: Sustainable Growth'
+- pack: Kala Ghoda
+  location: Badland Games, Sioux Falls SD
+  url: /store-champs-badland-games-sioux-falls-sd-11-players/
+  type: Store Champs
+  players: 11
+  winner: Nicholas Leeman
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Kala Ghoda
+  location: Athens, Greece
+  url: /store-champs-athens-greece-27-players/
+  type: Store Champs
+  players: 27
+  winner: Kostas "Fabregus" Retalis
+  runner: 'Hayley Kaplan: Universal Scholar'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Business First
+  location: Grajfer (Torun, Poland)
+  url: /store-champs-grajfer-torun-poland-14-players/
+  type: Store Champs
+  players: 14
+  winner: Apo
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Kala Ghoda
+  location: Darmstadt
+  url: /store-champs-darmstadt-14-players/
+  type: Store Champs
+  players: 14
+  winner: Mateusz "Matuszczak" Radecki
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Haarpsichord Studios: Entertainment Unleashed'
+- pack: Kala Ghoda
+  location: Spielkultur, Münster, Germany
+  url: /store-champs-spielkultur-munster-germany-15-players/
+  type: Store Champs
+  players: 15
+  winner: Carsten "mythras" P.
+  runner: 'Rielle Kit Peddler: Transhuman'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Kala Ghoda
+  location: Adelaide, Australia
+  url: /store-champs-adelaide-australia-16-players/
+  type: Store Champs
+  players: 16
+  winner: Alex
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Kala Ghoda
+  location: Hiveworld, Cologne, Germany
+  url: /store-champs-hiveworld-cologne-germany-27-players/
+  type: Store Champs
+  players: 27
+  winner: Carsten "mythras" P.
+  runner: 'Rielle Kit Peddler: Transhuman'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Kala Ghoda
+  location: Terminal City Convention 2016, Vancouver, BC, Canada
+  url: /casual-terminal-city-convention-2016-vancouver-bc-canada-16-players/
+  type: Casual
+  players: 16
+  winner: David Cheng
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Kala Ghoda
+  location: Magic Stronghold Games, Vancouver, BC, Canada
+  url: /store-champs-magic-stronghold-games-vancouver-bc-canada-21-players/
+  type: Store Champs
+  players: 21
+  winner: David Cheng
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Kala Ghoda
+  location: Curious Too! Gamecentral, Victoria, BC, Canada
+  url: /store-champs-curious-too-gamecentral-victoria-bc-canada-14-players/
+  type: Store Champs
+  players: 14
+  winner: David Cheng
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Kala Ghoda
+  location: Dortmund (Germany)
+  url: /store-champs-dortmund-germany-10-players/
+  type: Store Champs
+  players: 10
+  winner: Dalhill
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Haarpsichord Studios: Entertainment Unleashed'
+- pack: Kala Ghoda
+  location: Salt Lake City, Utah
+  url: /store-champs-salt-lake-city-utah-21-players/
+  type: Store Champs
+  players: 21
+  winner: Austen Anderson
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'New Angeles Sol: Your News'
+- pack: Data and Destiny
+  location: Augsburg, Germany
+  url: /store-champs-augsburg-germany-12-players/
+  type: Store Champs
+  players: 12
+  winner: Dag D.
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Kala Ghoda
+  location: Face 2 Face Games Toronto
+  url: /gnk-face-2-face-games-toronto-14-players/
+  type: GNK
+  players: 14
+  winner: Daniel Joseph
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Jinteki: Personal Evolution'
+- pack: Kala Ghoda
+  location: Leiden (Netherlands)
+  url: /store-champs-leiden-netherlands-10-players/
+  type: Store Champs
+  players: 10
+  winner: ff0x
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Kala Ghoda
+  location: Athens, Greece
+  url: /store-champs-athens-greece-15-players/
+  type: Store Champs
+  players: 15
+  winner: Kostas "Fabregus" Retalis
+  runner: 'Hayley Kaplan: Universal Scholar'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Kala Ghoda
+  location: FFG Event Center
+  url: /store-champs-ffg-event-center-45-players/
+  type: Store Champs
+  players: 45
+  winner: Jeff Schoenberg
+  runner: 'Chaos Theory: Wünderkind'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Kala Ghoda
+  location: Comic Hunter, Moncton NB
+  url: /casual-comic-hunter-moncton-nb-11-players/
+  type: Casual
+  players: 11
+  winner: Chris "Kiv" MacLeod
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Cerebral Imaging: Infinite Frontiers'
+- pack: Kala Ghoda
+  location: At Ease Games.
+  url: /store-champs-at-ease-games-16-players/
+  type: Store Champs
+  players: 16
+  winner: Dylan
+  runner: 'Ken Express Tenma: Disappeared Clone'
+  corp: 'New Angeles Sol: Your News'
+- pack: Kala Ghoda
+  location: Cleveland, OH
+  url: /store-champs-cleveland-oh-11-players/
+  type: Store Champs
+  players: 11
+  winner: Ben Blum
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Cerebral Imaging: Infinite Frontiers'
+- pack: Kala Ghoda
+  location: Spartan Games Arena, Kuala Lumpur
+  url: /gnk-spartan-games-arena-kuala-lumpur-13-players-2/
+  type: GNK
+  players: 13
+  winner: Yeng Hong Qing
+  runner: 'Hayley Kaplan: Universal Scholar'
+  corp: 'New Angeles Sol: Your News'
+- pack: Kala Ghoda
+  location: Helsinki (Finland)
+  url: /regional-helsinki-finland-14-players/
+  type: Regional
+  players: 14
+  winner: Artturi Piipponen
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Data and Destiny
+  location: Fantasy Store Euskirchen, Germany
+  url: /store-champs-fantasy-store-euskirchen-germany-21-players/
+  type: Store Champs
+  players: 21
+  winner: Bitstream
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Haarpsichord Studios: Entertainment Unleashed'
+- pack: Kala Ghoda
+  location: Atlanta, GA
+  url: /store-champs-atlanta-ga-27-players/
+  type: Store Champs
+  players: 27
+  winner: Ahmed Abbasi
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Kala Ghoda
+  location: Metagamez - Fredericton, NB, Canada
+  url: /store-champs-metagamez-fredericton-nb-canada-10-players/
+  type: Store Champs
+  players: 10
+  winner: Rob B
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Harmony Medtech: Biomedical Pioneer'
+- pack: Kala Ghoda
+  location: Uncles Games, Bellevue, Wa
+  url: /store-champs-uncles-games-bellevue-wa-17-players/
+  type: Store Champs
+  players: 17
+  winner: Chris Martin
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Gagarin Deep Space: Expanding the Horizon'
+- pack: Kala Ghoda
+  location: Gigabytes Atlanta, GA
+  url: /store-champs-gigabytes-atlanta-ga-37-players/
+  type: Store Champs
+  players: 37
+  winner: Pacer Stringfellow
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Kala Ghoda
+  location: Planszóweczka, Wrocław
+  url: /store-champs-planszoweczka-wroclaw-20-players/
+  type: Store Champs
+  players: 20
+  winner: Krzysztof Grodecki
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Kala Ghoda
+  location: Hockley, UK
+  url: /store-champs-hockley-uk-16-players/
+  type: Store Champs
+  players: 16
+  winner: David Saiya
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Kala Ghoda
+  location: Corpus Christi, Tx.
+  url: /store-champs-corpus-christi-tx-6-players/
+  type: Store Champs
+  players: 6
+  winner: James Cruz
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Kala Ghoda
+  location: Atomic Empire (Raleigh)
+  url: /store-champs-atomic-empire-raleigh-21-players/
+  type: Store Champs
+  players: 21
+  winner: Michael Tichy
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Data and Destiny
+  location: Auenland, Dortmund
+  url: /store-champs-auenland-dortmund-16-players/
+  type: Casual
+  players: 16
+  winner: Carsten "mythras" P.
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Kala Ghoda
+  location: All Aboard CGC, Petaling Jaya
+  url: /gnk-all-aboard-cgc-petaling-jaya-17-players/
+  type: GNK
+  players: 17
+  winner: Yeng Hong Qing
+  runner: 'Ken Express Tenma: Disappeared Clone'
+  corp: 'New Angeles Sol: Your News'
+- pack: Kala Ghoda
+  location: Helsinki, Finland
+  url: /store-champs-helsinki-finland-14-players/
+  type: Store Champs
+  players: 14
+  winner: Artturi Piipponen
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Kala Ghoda
+  location: Jyväskylä, Finland
+  url: /store-champs-jyvaskyla-finland-10-players/
+  type: Store Champs
+  players: 10
+  winner: Artturi Piipponen
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Kala Ghoda
+  location: Game Shoppe Omaha, NE
+  url: /store-champs-game-shoppe-omaha-ne-11-players/
+  type: Store Champs
+  players: 11
+  winner: CJ Heintz
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Kala Ghoda
+  location: http://rivendellbooksandgames.com/
+  url: /store-champs-httprivendellbooksandgames-com-17-players/
+  type: Store Champs
+  players: 17
+  winner: Jason Hamner
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Data and Destiny
+  location: Oslo, Norway
+  url: /store-champs-oslo-norway-16-players/
+  type: Store Champs
+  players: 16
+  winner: Nikolai Hansen
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Kala Ghoda
+  location: Victory Point Cafe.  Berkeley, CA
+  url: /store-champs-victory-point-cafe-berkeley-ca-28-players/
+  type: Store Champs
+  players: 28
+  winner: Jamie Kennedy
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Harmony Medtech: Biomedical Pioneer'
+- pack: Kala Ghoda
+  location: Ace Comics & Games, QLD, AUS.
+  url: /store-champs-ace-comics-games-qld-aus-20-players/
+  type: Store Champs
+  players: 20
+  winner: Daryl Russell
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Argus Security: Protection Guaranteed'
+- pack: Kala Ghoda
+  location: Emerald Knights, Burbank, CA
+  url: /store-champs-emerald-knights-burbank-ca-22-players/
+  type: Store Champs
+  players: 22
+  winner: Raphael Nishimura
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Kala Ghoda
+  location: Battleground Games, Plainville MA
+  url: /store-champs-battleground-games-plainville-ma-42-players/
+  type: Store Champs
+  players: 42
+  winner: Max Gillett
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Kala Ghoda
+  location: Meeple Madness, Flowery Branch GA
+  url: /store-champs-meeple-madness-flowery-branch-ga-21-players/
+  type: Store Champs
+  players: 21
+  winner: Benjamin Torell
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'SYNC: Everything, Everywhere'
+- pack: Kala Ghoda
+  location: Warrants Workshop, Northampton, UK
+  url: /store-champs-warrants-workshop-northampton-uk-26-players/
+  type: Store Champs
+  players: 26
+  winner: Sam "Circadia" Burdock
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Blue Sun: Powering the Future'
+- pack: Kala Ghoda
+  location: Mgła, Katowice
+  url: /store-champs-mgla-katowice-13-players/
+  type: Store Champs
+  players: 13
+  winner: Jacek "hsiale" Wieszaczewski
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Data and Destiny
+  location: Good Game
+  url: /gnk-good-game-10-players/
+  type: GNK
+  players: 10
+  winner: Meshari Al Faris
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Kala Ghoda
+  location: Just Games, Rochester, NY
+  url: /store-champs-just-games-rochester-ny-14-players/
+  type: Store Champs
+  players: 14
+  winner: Sean Perry
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Kala Ghoda
+  location: Game Café, Independence, MO
+  url: /store-champs-game-cafe-independence-mo-24-players/
+  type: Store Champs
+  players: 24
+  winner: Brodie
+  runner: 'Gabriel Santiago: Consummate Professional'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Kala Ghoda
+  location: Cambridge, MN
+  url: /store-champs-cambridge-mn-19-players/
+  type: Store Champs
+  players: 19
+  winner: Raja Doake (ajar)
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Kala Ghoda
+  location: London, Ontario
+  url: /store-champs-london-ontario-9-players/
+  type: Store Champs
+  players: 9
+  winner: Dirty Dan
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Haarpsichord Studios: Entertainment Unleashed'
+- pack: Kala Ghoda
+  location: The Portland Game Store, Portland, OR
+  url: /casual-the-portland-game-store-portland-or-8-players/
+  type: Casual
+  players: 8
+  winner: Brian "Saan" Williams
+  runner: 'Ken Express Tenma: Disappeared Clone'
+  corp: 'Blue Sun: Powering the Future'
+- pack: Kala Ghoda
+  location: Norfolk, VA
+  url: /store-champs-norfolk-va-8-players/
+  type: Store Champs
+  players: 8
+  winner: Wobbs
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Data and Destiny
+  location: Meeples Games
+  url: /store-champs-meeples-games-29-players/
+  type: Store Champs
+  players: 29
+  winner: Jared H
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Kala Ghoda
+  location: Emerald Tavern, Austin TX
+  url: /store-champs-emerald-tavern-austin-tx-22-players/
+  type: Store Champs
+  players: 22
+  winner: Brad McCoy
+  runner: 'Sunny Lebeau: Security Specialist'
+  corp: 'Blue Sun: Powering the Future'
+- pack: Kala Ghoda
+  location: Arkham Comics and Games, Houston, TX
+  url: /store-champs-arkham-comics-and-games-houston-tx-20-players/
+  type: Store Champs
+  players: 20
+  winner: Max Brown
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Kala Ghoda
+  location: Toys and Things Danvers, MA
+  url: /store-champs-toys-and-things-danvers-ma-26-players/
+  type: Store Champs
+  players: 26
+  winner: Kevin Irving
+  runner: 'Whizzard: Master Gamer'
+  corp: 'New Angeles Sol: Your News'
+- pack: Kala Ghoda
+  location: Waterloo
+  url: /store-champs-waterloo-13-players/
+  type: Store Champs
+  players: 13
+  winner: Aaron Celovsky
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Kala Ghoda
+  location: Brooklyn Strategist
+  url: /store-champs-brooklyn-strategist-18-players/
+  type: Store Champs
+  players: 18
+  winner: Alex D
+  runner: 'Jesminder Sareen: Girl Behind the Curtain'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Kala Ghoda
+  location: Blakfyre Games
+  url: /gnk-blakfyre-games-15-players/
+  type: GNK
+  players: 15
+  winner: Spencer Healey
+  runner: 'The Professor: Keeper of Knowledge'
+  corp: 'Blue Sun: Powering the Future'
+- pack: Data and Destiny
+  location: Darmstadt
+  url: /casual-darmstadt-10-players/
+  type: Casual
+  players: 10
+  winner: Mateusz "Matuszczak" Radecki
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Blue Sun: Powering the Future'
+- pack: Kala Ghoda
+  location: Strategies + Terminal7, Vancouver, BC, Canada
+  url: /store-champs-strategies-terminal7-vancouver-bc-canada-25-players/
+  type: Store Champs
+  players: 25
+  winner: David Cheng
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Kala Ghoda
+  location: Realms of Gaming, IL
+  url: /store-champs-realms-of-gaming-il-32-players/
+  type: Store Champs
+  players: 32
+  winner: Tony Schreiber
+  runner: 'Hayley Kaplan: Universal Scholar'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Data and Destiny
+  location: Malmö, Sweden
+  url: /store-champs-malmo-sweden-22-players/
+  type: Store Champs
+  players: 22
+  winner: Sam 'Elusive' Gullman
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Jinteki: Personal Evolution'
+- pack: Kala Ghoda
+  location: Bournemouth UK
+  url: /store-champs-bournemouth-uk-13-players/
+  type: Store Champs
+  players: 13
+  winner: David Saiya
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Kala Ghoda
+  location: Tyche's Games
+  url: /store-champs-tyches-games-14-players/
+  type: Store Champs
+  players: 14
+  winner: Gordie Murphy
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Data and Destiny
+  location: Infinity Games
+  url: /gnk-infinity-games-15-players/
+  type: GNK
+  players: 15
+  winner: Alex Forndran
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Kala Ghoda
+  location: Gameology - Montclair, CA
+  url: /store-champs-gameology-montclair-ca-34-players/
+  type: Store Champs
+  players: 34
+  winner: Gerry S.
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Haarpsichord Studios: Entertainment Unleashed'
+- pack: Kala Ghoda
+  location: Multizone SC - Gatineau
+  url: /store-champs-multizone-sc-gatineau-20-players/
+  type: Store Champs
+  players: 20
+  winner: Alexandre Bradley
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Kala Ghoda
+  location: Worthing
+  url: /store-champs-worthing-15-players/
+  type: Store Champs
+  players: 15
+  winner: Laurie Poulter
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Kala Ghoda
+  location: Gamers Gambit - CT
+  url: /store-champs-gamers-gambit-ct-23-players/
+  type: Store Champs
+  players: 23
+  winner: Kenny D
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Kala Ghoda
+  location: Huntsville, Alabama USA
+  url: /store-champs-huntsville-alabama-usa-20-players/
+  type: Store Champs
+  players: 20
+  winner: Francisco Mehlhaff
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Kala Ghoda
+  location: Galactic Models, Derby, UK
+  url: /store-champs-galactic-models-derby-uk-22-players/
+  type: Store Champs
+  players: 22
+  winner: Robin Lewis
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Data and Destiny
+  location: A-Z Gaming Glub, Camp Zama, Tokyo
+  url: /casual-a-z-gaming-glub-camp-zama-tokyo-8-players/
+  type: Casual
+  players: 8
+  winner: Carl Wennstam
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Kala Ghoda
+  location: The Guild House  - Bellfower, CA
+  url: /store-champs-the-guild-house-bellfower-ca-21-players/
+  type: Store Champs
+  players: 21
+  winner: Evan Hill
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Jinteki: Personal Evolution'
+- pack: Kala Ghoda
+  location: Bellevue, WA
+  url: /store-champs-bellevue-wa-27-players/
+  type: Store Champs
+  players: 27
+  winner: Noah Podolske
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Kala Ghoda
+  location: Mead Hall Comics and Games
+  url: /store-champs-mead-hall-comics-and-games-48-players/
+  type: Store Champs
+  players: 48
+  winner: Abram Jopp
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Kala Ghoda
+  location: Guardian Games - Portland, OR
+  url: /gnk-guardian-games-portland-or-10-players/
+  type: GNK
+  players: 10
+  winner: Paul Lantow
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Kala Ghoda
+  location: Black Moon Game - Lebanon NH
+  url: /store-champs-black-moon-game-lebanon-nh-13-players/
+  type: Store Champs
+  players: 13
+  winner: Matt Darling
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Data and Destiny
+  location: Strefa Gry - Bielsko-Biała
+  url: /store-champs-strefa-gry-bielsko-biala-17-players/
+  type: Store Champs
+  players: 17
+  winner: Jakub "Jander" Pożarski
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Kala Ghoda
+  location: Heroes' World
+  url: /store-champs-heroes-world-22-players/
+  type: Store Champs
+  players: 22
+  winner: Sungho Lee
+  runner: 'Hayley Kaplan: Universal Scholar'
+  corp: 'Gagarin Deep Space: Expanding the Horizon'
+- pack: Data and Destiny
+  location: Barcelona (Catalonia)
+  url: /store-champs-barcelona-catalonia-18-players/
+  type: Store Champs
+  players: 18
+  winner: Marc Valles
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Data and Destiny
+  location: Berlin
+  url: /store-champs-berlin-22-players/
+  type: Store Champs
+  players: 22
+  winner: Mark
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Kala Ghoda
+  location: Portland, OR
+  url: /gnk-portland-or-18-players/
+  type: GNK
+  players: 18
+  winner: Brian Williams (Saan)
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Titan Transnational: Investing In Your Future'
+- pack: Data and Destiny
+  location: Element Games, UK
+  url: /store-champs-element-games-uk-32-players/
+  type: Store Champs
+  players: 32
+  winner: David 'Katsushika' Whittaker
+  runner: 'Hayley Kaplan: Universal Scholar'
+  corp: 'Spark Agency: Worldswide Reach'
+- pack: Kala Ghoda
+  location: Eternal Games - Warren, MI
+  url: /store-champs-eternal-games-warren-mi-34-players/
+  type: Store Champs
+  players: 34
+  winner: Chris Goodis
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Data and Destiny
+  location: Netherworld Games
+  url: /gnk-netherworld-games-23-players/
+  type: GNK
+  players: 23
+  winner: Brian Kirklin
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'New Angeles Sol: Your News'
+- pack: Data and Destiny
+  location: Lisbon
+  url: /casual-lisbon-9-players/
+  type: Casual
+  players: 9
+  winner: Carlos Ferreira
+  runner: 'Chaos Theory: Wünderkind'
+  corp: 'SYNC: Everything, Everywhere'
+- pack: Data and Destiny
+  location: Singapore
+  url: /store-champs-singapore-19-players/
+  type: Store Champs
+  players: 19
+  winner: Gerald Poh
+  runner: 'Hayley Kaplan: Universal Scholar'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Data and Destiny
+  location: Wanfang Caca City, Taipei, Taiwain
+  url: /gnk-wanfang-caca-city-taipei-taiwain-12-players/
+  type: GNK
+  players: 12
+  winner: Craig Bednar
+  runner: 'Hayley Kaplan: Universal Scholar'
+  corp: 'SYNC: Everything, Everywhere'
+- pack: Data and Destiny
+  location: Gamer's HQ Berlin
+  url: /gnk-gamers-hq-berlin-14-players/
+  type: GNK
+  players: 14
+  winner: Dome
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Kala Ghoda
+  location: Spartan Games Arena, Kuala Lumpur
+  url: /gnk-spartan-games-arena-kuala-lumpur-21-players/
+  type: GNK
+  players: 21
+  winner: Yeng Hong Qing
+  runner: 'Ken Express Tenma: Disappeared Clone'
+  corp: 'New Angeles Sol: Your News'
+- pack: Kala Ghoda
+  location: Iowa City, IA, USA
+  url: /store-champs-iowa-city-ia-usa-11-players/
+  type: Store Champs
+  players: 11
+  winner: Erik Hasse
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'SYNC: Everything, Everywhere'
+- pack: Kala Ghoda
+  location: Warp 2 Edmonton Alberta
+  url: /gnk-warp-2-edmonton-alberta-13-players/
+  type: GNK
+  players: 13
+  winner: Steven Carlson
+  runner: 'Hayley Kaplan: Universal Scholar'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Kala Ghoda
+  location: The Game Shoppe, Bellevue, NE
+  url: /store-champs-the-game-shoppe-bellevue-ne-16-players/
+  type: Store Champs
+  players: 16
+  winner: Sean Trundle
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Kala Ghoda
+  location: Whose Turn Is It? Games
+  url: /store-champs-whose-turn-is-it-games-20-players/
+  type: Store Champs
+  players: 20
+  winner: John Hatfield
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Kala Ghoda
+  location: Bluegrass Magic Shop
+  url: /anr-pro-circuit-bluegrass-magic-shop-39-players/
+  type: ANR Pro Circuit
+  players: 39
+  winner: Josh Wilson
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Kala Ghoda
+  location: Johnson City, NY
+  url: /store-champs-johnson-city-ny-26-players/
+  type: Store Champs
+  players: 26
+  winner: Dan Pearson
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Data and Destiny
+  location: Brighton, UK
+  url: /store-champs-brighton-uk-55-players/
+  type: Store Champs
+  players: 55
+  winner: Kester Jarvis
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Haarpsichord Studios: Entertainment Unleashed'
+- pack: Data and Destiny
+  location: Settlers
+  url: /gnk-settlers-10-players/
+  type: GNK
+  players: 10
+  winner: Matthew Addison
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Data and Destiny
+  location: Köln
+  url: /gnk-koln-15-players/
+  type: GNK
+  players: 15
+  winner: JackMade
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Haarpsichord Studios: Entertainment Unleashed'
+- pack: Data and Destiny
+  location: Linköping, Sweden
+  url: /gnk-linkoping-sweden-14-players/
+  type: GNK
+  players: 14
+  winner: Jonas Hietala
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Data and Destiny
+  location: Tucson Games & Gadgets
+  url: /store-champs-tucson-games-gadgets-14-players/
+  type: Store Champs
+  players: 14
+  winner: Jayson Rickel
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Data and Destiny
+  location: Warboar Games, London
+  url: /gnk-warboar-games-london-14-players/
+  type: GNK
+  players: 14
+  winner: David Rogers
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Data and Destiny
+  location: Varient Edition Edmonton Alberta Canada
+  url: /gnk-varient-edition-edmonton-alberta-canada-15-players/
+  type: GNK
+  players: 15
+  winner: Steven Carlson
+  runner: 'Hayley Kaplan: Universal Scholar'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Data and Destiny
+  location: Edinburgh Games Hub
+  url: /gnk-edinburgh-games-hub-16-players/
+  type: GNK
+  players: 16
+  winner: Seamus Johnstone Macleod
+  runner: 'Adam: Compulsive Hacker'
+  corp: 'Argus Security: Protection Guaranteed'
+- pack: Data and Destiny
+  location: Gilbert, AZ
+  url: /store-champs-gilbert-az-21-players/
+  type: Store Champs
+  players: 21
+  winner: Josh Fullmer
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Data and Destiny
+  location: Des Moines
+  url: /store-champs-des-moines-15-players/
+  type: Store Champs
+  players: 15
+  winner: Peter Dixon
+  runner: 'Quetzal: Free Spirit'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Data and Destiny
+  location: Rosenheim
+  url: /gnk-rosenheim-7-players/
+  type: GNK
+  players: 7
+  winner: Severin aka Foxtrott
+  runner: 'Adam: Compulsive Hacker'
+  corp: 'New Angeles Sol: Your News'
+- pack: Data and Destiny
+  location: Maitland Florida
+  url: /casual-maitland-florida-12-players/
+  type: Casual
+  players: 12
+  winner: Ve Herrmann
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Data and Destiny
+  location: Mainz
+  url: /store-champs-mainz-26-players/
+  type: Store Champs
+  players: 26
+  winner: Daniel "Labbes" Vomland
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Data and Destiny
+  location: Mage Store - Düsseldorf (Germany)
+  url: /store-champs-mage-store-dusseldorf-germany-22-players/
+  type: Store Champs
+  players: 22
+  winner: ff0x
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Data and Destiny
+  location: Cleveland, OH
+  url: /gnk-cleveland-oh-9-players/
+  type: GNK
+  players: 9
+  winner: Matt Drabik
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Data and Destiny
+  location: Rayleigh, Essex, UK
+  url: /store-champs-rayleigh-essex-uk-18-players-2/
+  type: Store Champs
+  players: 18
+  winner: Tagore (tomdidiot) Nakornchai
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Data and Destiny
+  location: Athens
+  url: /gnk-athens-14-players/
+  type: GNK
+  players: 14
+  winner: Fotis Giakoump
+  runner: 'Apex: Invasive Predator'
+  corp: 'Spark Agency: Worldswide Reach'
+- pack: Data and Destiny
+  location: The Portal - Manchester, CT
+  url: /store-champs-the-portal-manchester-ct-26-players/
+  type: Store Champs
+  players: 26
+  winner: Alex Konecky
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Titan Transnational: Investing In Your Future'
+- pack: Data and Destiny
+  location: Gamesville Tabletop (Gainesville, FL)
+  url: /gnk-gamesville-tabletop-gainesville-fl-22-players/
+  type: GNK
+  players: 22
+  winner: Rainey Lund
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Data and Destiny
+  location: Nürnberg, Germany
+  url: /store-champs-nurnberg-germany-15-players/
+  type: Store Champs
+  players: 15
+  winner: Tradon
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Data and Destiny
+  location: London
+  url: /store-champs-london-80-players/
+  type: Store Champs
+  players: 77
+  winner: Laurie Poulter
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Data and Destiny
+  location: Days of Knight (Newark, DE)
+  url: /gnk-days-of-knight-newark-de-16-players/
+  type: GNK
+  players: 16
+  winner: Nathan 0
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Data and Destiny
+  location: Tabletop Shop - Newington, CT
+  url: /store-champs-tabletop-shop-newington-ct-22-players/
+  type: Store Champs
+  players: 22
+  winner: Gabe Moss
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Data and Destiny
+  location: Reading, UK
+  url: /gnk-reading-uk-21-players/
+  type: GNK
+  players: 21
+  winner: Brendan Jackson
+  runner: 'Armand Geist Walker: Tech Lord'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Data and Destiny
+  location: Play More Games (Gaithersburg, MD)
+  url: /gnk-play-more-games-gaithersburg-md-9-players/
+  type: GNK
+  players: 9
+  winner: Jonas Wilson
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'SYNC: Everything, Everywhere'
+- pack: Data and Destiny
+  location: Porto
+  url: /gnk-porto-8-players/
+  type: GNK
+  players: 8
+  winner: Rui Barreiro
+  runner: 'Hayley Kaplan: Universal Scholar'
+  corp: 'Gagarin Deep Space: Expanding the Horizon'
+- pack: Data and Destiny
+  location: Oberonn Hasselt
+  url: /gnk-oberonn-hasselt-16-players/
+  type: GNK
+  players: 16
+  winner: Brian Wynants (aka ryanbantwins)
+  runner: 'Sunny Lebeau: Security Specialist'
+  corp: 'Spark Agency: Worldswide Reach'
+- pack: Data and Destiny
+  location: Hiveworld Cologne
+  url: /gnk-hiveworld-cologne-11-players/
+  type: GNK
+  players: 11
+  winner: guybrush
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Data and Destiny
+  location: Huzzah Hobbies, Ashburn, VA
+  url: /gnk-huzzah-hobbies-ashburn-va-16-players/
+  type: GNK
+  players: 16
+  winner: Ran Cao
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Data and Destiny
+  location: Atomic Empire - Durham, NC
+  url: /gnk-atomic-empire-durham-nc-7-players/
+  type: GNK
+  players: 7
+  winner: Demetri "Chuftbot" Ballas
+  runner: 'Chaos Theory: Wünderkind'
+  corp: 'Haarpsichord Studios: Entertainment Unleashed'
+- pack: Data and Destiny
+  location: Santa Clara, CA
+  url: /gnk-santa-clara-ca-16-players/
+  type: GNK
+  players: 16
+  winner: Dylan Wilde
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Spark Agency: Worldswide Reach'
+- pack: Data and Destiny
+  location: Madrid , Spain
+  url: /gnk-madrid-spain-8-players/
+  type: GNK
+  players: 8
+  winner: Luis Escudero "Kojku"
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Titan Transnational: Investing In Your Future'
+- pack: Data and Destiny
+  location: Singapore
+  url: /national-singapore-40-players/
+  type: National
+  players: 40
+  winner: Edmund Ho
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Haarpsichord Studios: Entertainment Unleashed'
+- pack: Data and Destiny
+  location: Hamburg
+  url: /casual-hamburg-16-players/
+  type: Casual
+  players: 16
+  winner: Marcel 'marsellus' Heymuth
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'New Angeles Sol: Your News'
+- pack: Data and Destiny
+  location: Chicago
+  url: /gnk-chicago-13-players/
+  type: GNK
+  players: 13
+  winner: Chris Bartolomei
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Titan Transnational: Investing In Your Future'
+- pack: Data and Destiny
+  location: Würfelkiste, Aachen (Germany)
+  url: /gnk-wurfelkiste-aachen-germany-6-players/
+  type: GNK
+  players: 6
+  winner: ff0x
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Data and Destiny
+  location: Adelaide, Australia
+  url: /gnk-adelaide-australia-11-players/
+  type: GNK
+  players: 11
+  winner: Alex Forndran
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Haarpsichord Studios: Entertainment Unleashed'
+- pack: Data and Destiny
+  location: Covenant Tulsa
+  url: /anr-pro-circuit-covenant-tulsa-28-players/
+  type: ANR Pro Circuit
+  players: 28
+  winner: Steven Wooley
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Haarpsichord Studios: Entertainment Unleashed'
+- pack: Data and Destiny
+  location: Arkham Comics & Games - Pearland TX
+  url: /gnk-arkham-comics-games-pearland-tx-8-players-2/
+  type: GNK
+  players: 8
+  winner: Chris B.
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Haarpsichord Studios: Entertainment Unleashed'
+- pack: Data and Destiny
+  location: Underdog Tournament - Madrid, Spain
+  url: /casual-underdog-tournament-madrid-spain-37-players/
+  type: Casual
+  players: 37
+  winner: Christopher Shimko
+  runner: 'Hayley Kaplan: Universal Scholar'
+  corp: 'Titan Transnational: Investing In Your Future'
+- pack: Data and Destiny
+  location: Rockville, MD
+  url: /gnk-rockville-md-11-players/
+  type: GNK
+  players: 11
+  winner: Ran Cao
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Data and Destiny
+  location: Budapest, Hungary
+  url: /gnk-budapest-hungary-8-players/
+  type: GNK
+  players: 8
+  winner: Ákos "Shadowhawk" Varga
+  runner: 'Gabriel Santiago: Consummate Professional'
+  corp: 'Spark Agency: Worldswide Reach'
+- pack: Data and Destiny
+  location: DoppioGioco - Rome, Italy
+  url: /gnk-doppiogioco-rome-italy-8-players/
+  type: GNK
+  players: 8
+  winner: Gabriele "gabsnow18" Arra
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Blue Sun: Powering the Future'
+- pack: Data and Destiny
+  location: Empire Central - League City, TX
+  url: /casual-empire-central-league-city-tx-6-players/
+  type: Casual
+  players: 6
+  winner: Lastris
+  runner: 'Armand Geist Walker: Tech Lord'
+  corp: 'Spark Agency: Worldswide Reach'
+- pack: Data and Destiny
+  location: Cologne, Germany
+  url: /gnk-cologne-germany-14-players/
+  type: GNK
+  players: 14
+  winner: Jan P.
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Data and Destiny
+  location: Sparta Games Arena, Kuala Lumpur
+  url: /national-sparta-games-arena-kuala-lumpur-29-players/
+  type: National
+  players: 29
+  winner: Arnold Lim
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Data and Destiny
+  location: GeekLife Houston, TX
+  url: /anr-pro-circuit-geeklife-houston-tx-14-players/
+  type: ANR Pro Circuit
+  players: 14
+  winner: Max Brown
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Data and Destiny
+  location: Toronto, ON
+  url: /gnk-toronto-on-14-players/
+  type: GNK
+  players: 14
+  winner: Dien Tran
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Industrial Genomics: Growing Solutions'
+- pack: Data and Destiny
+  location: Cardiff
+  url: /gnk-cardiff-13-players/
+  type: GNK
+  players: 13
+  winner: Sean 'Dr_Madhatter'
+  runner: 'Sunny Lebeau: Security Specialist'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Data and Destiny
+  location: Darmstadt
+  url: /gnk-darmstadt-14-players/
+  type: GNK
+  players: 14
+  winner: Mateusz "Matuszczak" Radecki
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Data and Destiny
+  location: Atomic Empire - Durham, NC
+  url: /gnk-atomic-empire-durham-nc-10-players/
+  type: GNK
+  players: 10
+  winner: Demetri "Chuftbot" Ballas
+  runner: 'Ken Express Tenma: Disappeared Clone'
+  corp: 'Spark Agency: Worldswide Reach'
+- pack: Data and Destiny
+  location: King of Servers
+  url: /casual-king-of-servers-128-players/
+  type: Casual
+  players: 128
+  winner: Team Sponsorship + turing test
+  runner: 'Apex: Invasive Predator'
+  corp: 'Argus Security: Protection Guaranteed'
+- pack: The Universe of Tomorrow
+  location: Spartan Games Arena, Kuala Lumpur
+  url: /gnk-spartan-games-arena-kuala-lumpur-13-players/
+  type: GNK
+  players: 13
+  winner: Hong Qing Yeng
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Data and Destiny
+  location: Portland, OR
+  url: /gnk-portland-or-12-players/
+  type: GNK
+  players: 12
+  winner: Brian Williams (Saan)
+  runner: 'Edward Kim: Humanity''s Hammer'
+  corp: 'Gagarin Deep Space: Expanding the Horizon'
+- pack: The Universe of Tomorrow
+  location: Good Game
+  url: /gnk-good-game-14-players/
+  type: GNK
+  players: 14
+  winner: Eissa Al Qadeeri
+  runner: 'Exile: Streethawk'
+  corp: 'GRNDL: Power Unleashed'
+- pack: The Universe of Tomorrow
+  location: Stockholm, Sweden
+  url: /casual-stockholm-sweden-23-players/
+  type: Casual
+  players: 23
+  winner: Gabriel Fiedler
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Universe of Tomorrow
+  location: Kuala Lumpur, Malaysia
+  url: /gnk-kuala-lumpur-malaysia-13-players/
+  type: GNK
+  players: 13
+  winner: Hong Qing Yeng
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Data and Destiny
+  location: Total Escape Games, Broomfield, CO, USA
+  url: /gnk-total-escape-games-broomfield-co-usa-11-players/
+  type: GNK
+  players: 11
+  winner: Matt Dawkins
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Universe of Tomorrow
+  location: Hasselt (Belgium)
+  url: /gnk-hasselt-belgium-13-players/
+  type: GNK
+  players: 13
+  winner: Olivier 'clercqie' De Clercq
+  runner: 'Gabriel Santiago: Consummate Professional'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Data and Destiny
+  location: Dallas
+  url: /anr-pro-circuit-dallas-11-players/
+  type: ANR Pro Circuit
+  players: 11
+  winner: Sam Suied
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Spark Agency: Worldswide Reach'
+- pack: The Universe of Tomorrow
+  location: Arkham Comics & Games Pearland, TX
+  url: /gnk-arkham-comics-games-pearland-tx-8-players/
+  type: GNK
+  players: 8
+  winner: Danejah
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Chrome City
+  location: Neutral Grounds Centris, Quezon City, Philippines
+  url: /national-neutral-grounds-centris-quezon-city-philippines-36-players/
+  type: National
+  players: 36
+  winner: Dale Quimpo
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: The Universe of Tomorrow
+  location: Sparta Games Arena, Kuala Lumpur
+  url: /gnk-sparta-games-arena-kuala-lumpur-13-players/
+  type: GNK
+  players: 13
+  winner: Bernard Ng
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: The Universe of Tomorrow
+  location: 401 Games, Toronto
+  url: /gnk-401-games-toronto-14-players/
+  type: GNK
+  players: 14
+  winner: Daniel Joseph
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Data and Destiny
+  location: Aachen, Germany
+  url: /gnk-aachen-germany-6-players/
+  type: GNK
+  players: 6
+  winner: ff0x
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: The Universe of Tomorrow
+  location: Moscow
+  url: /national-moscow-31-players/
+  type: National
+  players: 31
+  winner: Mukhin Anatoliy
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: The Universe of Tomorrow
+  location: Oxford, UK
+  url: /gnk-oxford-uk-19-players/
+  type: GNK
+  players: 19
+  winner: Brendan
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Gagarin Deep Space: Expanding the Horizon'
+- pack: Data and Destiny
+  location: Roseville, MN
+  url: /worlds-roseville-mn-269-players/
+  type: Worlds - Dan Shop
+  players: 269
+  winner: Dan D'Argenio
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Data and Destiny
+  location: KHG Aachen
+  url: /casual-khg-aachen-37-players/
+  type: Casual
+  players: 37
+  winner: guybrush
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: The Underway
+  location: Interactivity Board Game Cafe, Victoria, BC, Canada
+  url: /anr-pro-circuit-interactivity-board-game-cafe-victoria-bc-canada-18-players/
+  type: ANR Pro Circuit
+  players: 18
+  winner: Tang Yao (David) Cheng
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Chrome City
+  location: Folks Co-Gaming Space, Jakarta (Indonesia)
+  url: /casual-folks-co-gaming-space-jakarta-indonesia-12-players/
+  type: Casual
+  players: 12
+  winner: Vito Budiman
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Jinteki: Personal Evolution'
+- pack: Chrome City
+  location: Munich
+  url: /gnk-munich-9-players/
+  type: GNK
+  players: 9
+  winner: Tradon
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Underway
+  location: Warwick University, UK
+  url: /anr-pro-circuit-warwick-university-uk-27-players/
+  type: ANR Pro Circuit
+  players: 27
+  winner: Donald Bowden (Raveladvice)
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'GRNDL: Power Unleashed'
+- pack: The Universe of Tomorrow
+  location: Örebro, Sweden
+  url: /casual-orebro-sweden-11-players/
+  type: Casual
+  players: 11
+  winner: André Nilsson
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: The Universe of Tomorrow
+  location: Athens, Greece
+  url: /national-athens-51-players/
+  type: National
+  players: 51
+  winner: Laurie Poulter
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Universe of Tomorrow
+  location: San Antonio
+  url: /anr-pro-circuit-san-antonio-10-players/
+  type: ANR Pro Circuit
+  players: 10
+  winner: Allen H.
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: The Universe of Tomorrow
+  location: Tabletop Game and Hobby, Overland Park, KS
+  url: /anr-pro-circuit-tabletop-game-and-hobby-overland-park-ks-15-players/
+  type: ANR Pro Circuit
+  players: 15
+  winner: Brodie
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Data & Destiny
+  location: The PSI Games
+  url: /the-psi-games-44-players/
+  type: ANR Pro Circuit
+  players: 44
+  winner: vinegarymink
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Universe of Tomorrow
+  location: Game Kastle Santa Clara
+  url: /gnk-game-kastle-santa-clara-11-players/
+  type: GNK
+  players: 11
+  winner: Nate Gertsch
+  runner: 'Rielle Kit Peddler: Transhuman'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Universe of Tomorrow
+  location: Gamespace Kashiwagi, Tokyo
+  url: /store-champs-gamespace-kashiwagi-tokyo-9-players/
+  type: Store Champs
+  players: 9
+  winner: David Rogers
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: The Universe of Tomorrow
+  location: Austin, TX
+  url: /anr-pro-circuit-austin-tx-20-players/
+  type: ANR Pro Circuit
+  players: 20
+  winner: Steven K.
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: The Universe of Tomorrow
+  location: Wayland's Forge, Birmingham, UK
+  url: /gnk-waylands-forge-birmingham-uk-21-players/
+  type: GNK
+  players: 21
+  winner: Andrew Hynes
+  runner: 'Gabriel Santiago: Consummate Professional'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Universe of Tomorrow
+  location: Arkham Comics & Games Pearland, TX
+  url: /gnk-arkham-comics-games-pearland-tx-6-players/
+  type: GNK
+  players: 6
+  winner: Danejah
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: The Universe of Tomorrow
+  location: Madison, Wi
+  url: /gnk-madison-wi-14-players/
+  type: GNK
+  players: 14
+  winner: Andrew Maier
+  runner: 'Armand Geist Walker: Tech Lord'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Universe of Tomorrow
+  location: Plan-sza, Poznań
+  url: /gnk-plan-sza-poznan-9-players/
+  type: GNK
+  players: 9
+  winner: Jacek "hsiale" Wieszaczewski
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Universe of Tomorrow
+  location: Bratislava, Slovakia
+  url: /national-bratislava-slovakia-38-players/
+  type: National
+  players: 38
+  winner: Anton Lapygin
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Old Hollywood
+  location: Darksphere, London, UK
+  url: /anr-pro-circuit-darksphere-london-uk-32-players/
+  type: ANR Pro Circuit
+  players: 32
+  winner: Tim Fowler
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Universe of Tomorrow
+  location: Auckland, NZ
+  url: /national-auckland-nz-27-players/
+  type: National
+  players: 27
+  winner: William Turner
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: The Universe of Tomorrow
+  location: Arkham Comics & Games
+  url: /gnk-arkham-comics-games-6-players/
+  type: GNK
+  players: 6
+  winner: Lastris
+  runner: 'Gabriel Santiago: Consummate Professional'
+  corp: 'Argus Security: Protection Guaranteed'
+- pack: The Universe of Tomorrow
+  location: Aachen, Germany
+  url: /gnk-aachen-germany-8-players/
+  type: GNK
+  players: 8
+  winner: ff0x
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: The Universe of Tomorrow
+  location: ChiLo City Grudge Match North - GLC LCQ
+  url: /anr-pro-circuit-chilo-city-grudge-match-north-glc-lcq-43-players/
+  type: ANR Pro Circuit
+  players: 43
+  winner: spags
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Universe of Tomorrow
+  location: Gamezilla, Fredericton NB
+  url: /gnk-gamezilla-fredericton-nb-8-players/
+  type: GNK
+  players: 8
+  winner: Chris "Kiv" MacLeod
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: The Universe of Tomorrow
+  location: Play More Games, Gaithersburg, MD
+  url: /gnk-play-more-games-gaithersburg-md-10-players/
+  type: GNK
+  players: 10
+  winner: Ran Cao
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Blue Sun: Powering the Future'
+- pack: The Universe of Tomorrow
+  location: Hiveworld - Cologne (Germany)
+  url: /gnk-hiveworld-cologne-germany-15-players/
+  type: GNK
+  players: 15
+  winner: ff0x
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: The Universe of Tomorrow
+  location: Sparta Games Arena, Kuala Lumpur
+  url: /gnk-sparta-games-arena-kuala-lumpur-19-players/
+  type: GNK
+  players: 19
+  winner: Rocky
+  runner: 'Reina Roja: Freedom Fighter'
+  corp: 'Blue Sun: Powering the Future'
+- pack: The Universe of Tomorrow
+  location: Compleat Strategist, NYC
+  url: /gnk-compleat-strategist-nyc-8-players/
+  type: GNK
+  players: 8
+  winner: Kenny D
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: The Universe of Tomorrow
+  location: Madrid (Spain)
+  url: /national-madrid-spain-41-players/
+  type: National
+  players: 41
+  winner: Miguel "Tre" Dorrego
+  runner: 'Ken Express Tenma: Disappeared Clone'
+  corp: 'Blue Sun: Powering the Future'
+- pack: Old Hollywood
+  location: Helsinki (Finland)
+  url: /finnish-nationals-helsinki-finland-29-players/
+  type: National
+  players: 29
+  winner: Tomi Leino
+  runner: 'Hayley Kaplan: Universal Scholar'
+  corp: 'Blue Sun: Powering the Future'
+- pack: Old Hollywood
+  location: Eidhoven, NL
+  url: /dutch-nationals-eindhoven-nl-54-players/
+  type: National
+  players: 54
+  winner: kephalopode
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: The Universe of Tomorrow
+  location: Giga-Bytes Tabletop Gaming Cafe
+  url: /anr-pro-circuit-giga-bytes-tabletop-gaming-cafe-24-players/
+  type: ANR Pro Circuit
+  players: 24
+  winner: Gordie Murphy
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: The Universe of Tomorrow
+  location: Deland, Florida
+  url: /gnk-deland-florida-16-players/
+  type: GNK
+  players: 16
+  winner: Ve Herrmann
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Old Hollywood
+  location: Enchanted Grounds, Littleton, CO, USA
+  url: /gnk-enchanted-grounds-littleton-co-usa-14-players/
+  type: GNK
+  players: 14
+  winner: Matt Dawkins
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: Haarpsichord Studios
+- pack: Old Hollywood
+  location: Warsaw (Poland)
+  url: /national-warsaw-poland-72-players/
+  type: National
+  players: 72
+  winner: Pavel "prozz"
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Argus Security: Protection Guaranteed'
+- pack: The Underway
+  location: Warp 2 Comics And Games, Edmonton
+  url: /gnk-warp-2-comics-and-games-edmonton-12-players/
+  type: GNK
+  players: 12
+  winner: Steve Carlson
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Underway
+  location: Tallinn, Estonia
+  url: /regional-tallinn-estonia-15-players/
+  type: Regional
+  players: 15
+  winner: Arto Heinonen
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Old Hollywood
+  location: Loading Bar, London
+  url: /anr-pro-circuit-loading-bar-london-49-players/
+  type: ANR Pro Circuit
+  players: 49
+  winner: Tim Anderson
+  runner: 'Rielle Kit Peddler: Transhuman'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: The Underway
+  location: Sydney, Australia.
+  url: /national-sydney-australia-74-players/
+  type: National
+  players: 74
+  winner: Daryl Russell
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Jinteki: Personal Evolution'
+- pack: The Underway
+  location: Sparta Games Arena, Kuala Lumpur
+  url: /regional-sparta-games-arena-kuala-lumpur-27-players/
+  type: Regional
+  players: 27
+  winner: Bernard Ng
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Old Hollywood
+  location: St. Louis
+  url: /gnk-st-louis-6-players/
+  type: GNK
+  players: 6
+  winner: Sara Bronson
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: Haarpsichord Studios
+- pack: Old Hollywood
+  location: Adelaide, Australia
+  url: /gnk-adelaide-australia-14-players/
+  type: GNK
+  players: 14
+  winner: Alex Forndran
+  runner: 'Hayley Kaplan: Universal Scholar'
+  corp: Haarpsichord Studios
+- pack: Old Hollywood
+  location: Mead Hall Games and Comics
+  url: /anr-pro-circuit-mead-hall-games-and-comics-20-players/
+  type: ANR Pro Circuit
+  players: 20
+  winner: Abram Jopp
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Underway
+  location: Johnny Cee Cards
+  url: /anr-pro-circuit-johnny-cee-cards-33-players/
+  type: ANR Pro Circuit
+  players: 33
+  winner: Joe Delessandro
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Old Hollywood
+  location: Desert Sky Games
+  url: /anr-pro-circuit-desert-sky-games-21-players/
+  type: ANR Pro Circuit
+  players: 21
+  winner: Michael Clement
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Titan Transnational: Investing In Your Future'
+- pack: Old Hollywood
+  location: Vancouver, Canada
+  url: /national-vancouver-canada-39-players/
+  type: National
+  players: 39
+  winner: Jason Deng
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Old Hollywood
+  location: Dark Sphere, London
+  url: /gnk-dark-sphere-london-34-players/
+  type: GNK
+  players: 34
+  winner: Mike Wood
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Argus Security: Protection Guaranteed'
+- pack: Old Hollywood
+  location: Passtimes, Niles, Illinois
+  url: /anr-pro-circuit-passtimes-niles-illinois-25-players/
+  type: ANR Pro Circuit
+  players: 25
+  winner: Andrew Barrett
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Old Hollywood
+  location: Labryinth Games, Washington, D.C.
+  url: /anr-pro-circuit-labryinth-games-washington-d-c-20-players/
+  type: ANR Pro Circuit
+  players: 20
+  winner: Tim Rafalco
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Titan Transnational: Investing In Your Future'
+- pack: Chrome City
+  location: Chicago, IL
+  url: /regional-chicago-il-83-players/
+  type: Regional
+  players: 83
+  winner: Josh Wilson
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Chrome City
+  location: Buenos Aires Argentina
+  url: /gnk-buenos-aires-argentina-19-players/
+  type: GNK
+  players: 19
+  winner: Marco Dure
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Underway
+  location: Freusburg, Germany
+  url: /national-freusburg-germany-32-players/
+  type: National
+  players: 32
+  winner: Heinzel
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: The Underway
+  location: Nordic National Championship, Denmark
+  url: /national-nordic-national-championship-denmark-63-players/
+  type: National
+  players: 63
+  winner: Gary 'Evilgaz' Bowerbank
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Old Hollywood
+  location: Leisure Games
+  url: /gnk-leisure-games-17-players-2/
+  type: GNK
+  players: 17
+  winner: JAK
+  runner: 'Armand Geist Walker: Tech Lord'
+  corp: 'Cerebral Imaging: Infinite Frontiers'
+- pack: Old Hollywood
+  location: Comic Hunter Moncton, New Brunswick
+  url: /gnk-comic-hunter-moncton-new-brunswick-15-players/
+  type: GNK
+  players: 15
+  winner: Chris "Kiv" MacLeod
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: The Underway
+  location: GenCon
+  url: /national-gencon-243-players/
+  type: National
+  players: 243
+  winner: Lucas Muxi Li
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Underway
+  location: Kuching, Malaysia
+  url: /casual-kuching-malaysia-8-players/
+  type: Casual
+  players: 8
+  winner: Billy Chin
+  runner: 'Gabriel Santiago: Consummate Professional'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Underway
+  location: Eternal Games, Warren, MI
+  url: /gnk-eternal-games-warren-mi-6-players/
+  type: GNK
+  players: 6
+  winner: Chris Lakatos
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Underway
+  location: Northampton Wargames Workshop
+  url: /gnk-northampton-wargames-workshop-12-players/
+  type: GNK
+  players: 13
+  winner: Daniel Plummer
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: The Underway
+  location: Game Empire Pasadena, Pasadena, CA
+  url: /regional-game-empire-pasadena-pasadena-ca-89-players/
+  type: Regional
+  players: 89
+  winner: Timmy Wong
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Blue Sun: Powering the Future'
+- pack: Chrome City
+  location: Munich (Germany)
+  url: /gnk-munich-germany-9-players/
+  type: GNK
+  players: 9
+  winner: Tradon
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Underway
+  location: The Adventurer's Guild - Harrisburg, PA
+  url: /gnk-the-adventurers-guild-harrisburg-pa-10-players/
+  type: GNK
+  players: 10
+  winner: Jake Tunstall
+  runner: 'Quetzal: Free Spirit'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: The Underway
+  location: Madness Games & Comics
+  url: /regional-madness-games-comics-62-players/
+  type: Regional
+  players: 62
+  winner: Brad M (hi_impact)
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Chrome City
+  location: The Appraisery @Cubao Expo, Philippines
+  url: /regional-the-appraisery-cubao-expo-philippines-15-players/
+  type: Regional
+  players: 15
+  winner: Mon Tan
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: The Underway
+  location: The Connection games, Vancouver, Canada
+  url: /gnk-the-connection-games-vancouver-canada-10-players-2/
+  type: GNK
+  players: 10
+  winner: Keith Gaudry-Gardner
+  runner: 'Nasir Meidan: Cyber Explorer'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: The Underway
+  location: St. Louis
+  url: /regional-st-louis-60-players/
+  type: Regional
+  players: 60
+  winner: Lucas Muxi Li
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Underway
+  location: Adelaide, Australia
+  url: /gnk-adelaide-australia-18-players/
+  type: GNK
+  players: 18
+  winner: Alex Forndran
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Underway
+  location: Get Your Game On, Ann Arbor, MI
+  url: /gnk-get-your-game-on-ann-arbor-mi-14-players/
+  type: GNK
+  players: 14
+  winner: Raphael Nishimura
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Tennin Institute: The Secrets Within'
+- pack: The Underway
+  location: Tokyo, Gamespace kashiwagi
+  url: /store-champs-tokyo-gamespace-kashiwagi-12-players/
+  type: Store Champs
+  players: 12
+  winner: David Rogers
+  runner: 'Rielle Kit Peddler: Transhuman'
+  corp: 'Weyland Consortium: Building a Better World'
+- pack: The Underway
+  location: Hiveworld - Cologne, Germany
+  url: /gnk-hiveworld-cologne-germany-11-players/
+  type: GNK
+  players: 11
+  winner: ff0X
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: The Underway
+  location: Seattle
+  url: /gnk-seattle-12-players/
+  type: GNK
+  players: 12
+  winner: cspieker
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Titan Transnational: Investing In Your Future'
+- pack: The Underway
+  location: Atomic Empire, Durham, NC
+  url: /regional-atomic-empire-durham-nc-69-players/
+  type: Regional
+  players: 70
+  winner: Dan D'Argenio
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: The Underway
+  location: Leisure Games, London
+  url: /gnk-leisure-games-london-13-players/
+  type: GNK
+  players: 13
+  winner: Mike Wood
+  runner: 'Quetzal: Free Spirit'
+  corp: 'Argus Security: Protection Guaranteed'
+- pack: The Underway
+  location: Petrie's Family Games, Colorado Springs, CO, USA
+  url: /gnk-petries-family-games-colorado-springs-co-usa-8-players-2/
+  type: GNK
+  players: 8
+  winner: Rick Rowcotsky
+  runner: 'Edward Kim: Humanity''s Hammer'
+  corp: 'Jinteki: Personal Evolution'
+- pack: The Underway
+  location: Eudemonia, Berkeley, CA
+  url: /gnk-eudemonia-berkeley-ca-16-players/
+  type: GNK
+  players: 16
+  winner: Neil Fitzgerald (RedScharlach)
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Underway
+  location: Dortmund, Germany
+  url: /gnk-dortmund-germany-7-players/
+  type: GNK
+  players: 7
+  winner: Lemmi
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Blue Sun: Powering the Future'
+- pack: Chrome City
+  location: Zagreb, Croatia
+  url: /regional-zagreb-croatia-12-players/
+  type: Regional
+  players: 12
+  winner: Goran
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Chrome City
+  location: York, UK
+  url: /anr-pro-circuit-york-uk-19-players/
+  type: ANR Pro Circuit
+  players: 19
+  winner: Neil G (Vapo)
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Blue Sun: Powering the Future'
+- pack: The Underway
+  location: Dresden, Germany
+  url: /regional-dresden-germany-15-players/
+  type: Regional
+  players: 15
+  winner: Francesco "Dippy"
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Chrome City
+  location: Brussel
+  url: /national-brussel-45-players/
+  type: National
+  players: 45
+  winner: Xavier Bustamante
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Chrome City
+  location: Berlin
+  url: /regionals-berlin-germany-29-players/
+  type: Casual
+  players: 29
+  winner: Mark
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Chrome City
+  location: Norwich, UK
+  url: /anr-pro-circuit-norwich-uk-12-players/
+  type: ANR Pro Circuit
+  players: 12
+  winner: Tagore Nakornchai (Tomdidiot)
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Valley
+  location: '"La Comarca", Las Palmas de Gran Canaria (Spain)'
+  url: /gnk-la-comarca-las-palmas-de-gran-canaria-spain-13-players/
+  type: GNK
+  players: 13
+  winner: Alberto H
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Blue Sun: Powering the Future'
+- pack: Chrome City
+  location: Wanfang Caca City, Taipei, Taiwain
+  url: /gnk-wanfang-caca-city-taipei-taiwain-14-players/
+  type: GNK
+  players: 14
+  winner: KOKOYO
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'NBN: Making News'
+- pack: Chrome City
+  location: Ulm, Germany
+  url: /gnk-ulm-germany-10-players/
+  type: GNK
+  players: 10
+  winner: Tradon
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Breaker Bay
+  location: French National Championship, Angers
+  url: /regional-french-national-championship-angers-66-players/
+  type: National
+  players: 66
+  winner: Calimsha
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Chrome City
+  location: Wrocław
+  url: /regional-wroclaw-30-players/
+  type: Regional
+  players: 30
+  winner: Mateusz "Matuszczak" Radecki
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Chrome City
+  location: Imperial Outpost, Glendale, AZ
+  url: /anr-pro-circuit-imperial-outpost-glendale-az-13-players/
+  type: ANR Pro Circuit
+  players: 13
+  winner: Jayson Rickel
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Breaker Bay
+  location: Dragons Lair, Stockholm
+  url: /regional-dragons-lair-stockholm-34-players/
+  type: Regional
+  players: 34
+  winner: Niclas Ledin
+  runner: 'Chaos Theory: Wünderkind'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Chrome City
+  location: Adelaide, Australia
+  url: /gnk-adelaide-australia-10-players/
+  type: GNK
+  players: 10
+  winner: Alex Forndran
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Chrome City
+  location: Pandemonium Books & Games, Cambridge, MA
+  url: /regional-pandemonium-books-games-cambridge-ma-73-players/
+  type: Regional
+  players: 73
+  winner: Jason Deng
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Breaker Bay
+  location: Tacoma, WA
+  url: /regional-tacoma-wa-47-players/
+  type: Regional
+  players: 47
+  winner: Kyle James (Bluebird503)
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Chrome City
+  location: Montreal
+  url: /regional-montreal-28-players/
+  type: Regional
+  players: 28
+  winner: Hany
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Chrome City
+  location: Philadelphia, PA
+  url: /regional-philadelphia-pa-94-players/
+  type: Regional
+  players: 94
+  winner: Ben Blum
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Chrome City
+  location: Zürich
+  url: /regional-zurich-24-players/
+  type: Regional
+  players: 24
+  winner: Tradon
+  runner: 'Reina Roja: Freedom Fighter'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Breaker Bay
+  location: St. Petersburg, Russia
+  url: /regional-st-petersburg-russia-22-players/
+  type: Regional
+  players: 22
+  winner: Anton Lapygin
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: First Contact
+  location: Fat Ogre Games, Woodlands, TX
+  url: /casual-fat-ogre-games-woodlands-tx-10-players/
+  type: Casual
+  players: 10
+  winner: Max Brown
+  runner: 'Chaos Theory: Wünderkind'
+  corp: 'The Foundry: Refining the Process'
+- pack: Breaker Bay
+  location: Dadi e Sudore - Giochi Uniti, Spilamberto (MO), Italy
+  url: /regional-dadi-e-sudore-giochi-uniti-spilamberto-mo-italy-36-players/
+  type: Regional
+  players: 36
+  winner: Mattia 'Guaina' Guainazzi
+  runner: 'Ken Express Tenma: Disappeared Clone'
+  corp: 'Blue Sun: Powering the Future'
+- pack: Chrome City
+  location: Regionals - Louisiana
+  url: /regional-regionals-louisiana-28-players/
+  type: Regional
+  players: 28
+  winner: Greg Feeney
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Breaker Bay
+  location: Eindhoven, Netherlands
+  url: /regional-eindhoven-netherlands-26-players/
+  type: Regional
+  players: 26
+  winner: Okkdoko
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Chrome City
+  location: Liege, Belgium
+  url: /regional-liege-belgium-26-players/
+  type: Regional
+  players: 26
+  winner: ff0X
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Chrome City
+  location: Bilbao (Spain)
+  url: /regional-bilbao-spain-27-players/
+  type: Regional
+  players: 27
+  winner: Miguel Dorrego
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Blue Sun: Powering the Future'
+- pack: Chrome City
+  location: Toronto - Legends Warehouse
+  url: /regional-toronto-legends-warehouse-34-players/
+  type: Regional
+  players: 34
+  winner: Aaron Celovsky
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Chrome City
+  location: Huzzah Hobbies, Northern VA
+  url: /anr-pro-circuit-huzzah-hobbies-northern-va-18-players/
+  type: ANR Pro Circuit
+  players: 18
+  winner: Ben Mason
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'NBN: The World is Yours*'
+- pack: Chrome City
+  location: Strefa Gry, Bielsko-Biała, Poland
+  url: /regional-strefa-gry-bielsko-biala-poland-20-players/
+  type: Regional
+  players: 20
+  winner: Krzysztof Grodecki
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Chrome City
+  location: Adelaide, Australia
+  url: /regional-adelaide-australia-25-players/
+  type: Regional
+  players: 25
+  winner: Alex Forndran
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Chrome City
+  location: +1 Gaming
+  url: /gnk-1-gaming-10-players/
+  type: GNK
+  players: 10
+  winner: Will Morell
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Chrome City
+  location: 2015 Detroit Regional - Eternal Games
+  url: /regional-2015-detroit-regional-eternal-games-63-players/
+  type: Regional
+  players: 63
+  winner: Eric Caoili
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Chrome City
+  location: Toronto, ON
+  url: /regional-toronto-on-44-players/
+  type: Regional
+  players: 44
+  winner: Victor Naqvi
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Chrome City
+  location: Little Wars, Baton Rouge
+  url: /gnk-little-wars-baton-rouge-18-players/
+  type: GNK
+  players: 18
+  winner: Will Morell
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Chrome City
+  location: 'Rainy Day Games: Portland Oregon'
+  url: /regional-rainy-day-games-portland-oregon-33-players/
+  type: Regional
+  players: 33
+  winner: Justin Gordon
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Chrome City
+  location: Dothan, Alabama
+  url: /gnk-dothan-alabama-15-players/
+  type: GNK
+  players: 15
+  winner: Jeremy R. Hager
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Argus Security: Protection Guaranteed'
+- pack: Breaker Bay
+  location: Good Game
+  url: /regional-good-game-12-players/
+  type: Regional
+  players: 12
+  winner: Mishari Al Faris
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Breaker Bay
+  location: Riga, Latvia
+  url: /store-champs-riga-latvia-18-players/
+  type: Store Champs
+  players: 18
+  winner: Haralds Baunis
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Chrome City
+  location: Madison, WI
+  url: /regional-madison-wi-71-players/
+  type: Regional
+  players: 71
+  winner: Aaron Andries
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Blue Sun: Powering the Future'
+- pack: Chrome City
+  location: Vancouver
+  url: /regional-vancouver-43-players/
+  type: Regional
+  players: 43
+  winner: Lawson Lim
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Breaker Bay
+  location: Madrid
+  url: /regional-madrid-29-players/
+  type: Regional
+  players: 29
+  winner: Daniel García
+  runner: 'Chaos Theory: Wünderkind'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Chrome City
+  location: The Sentry Box - Calgary, AB
+  url: /regional-the-sentry-box-calgary-ab-29-players/
+  type: Regional
+  players: 29
+  winner: Colin Zimmerman
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Chrome City
+  location: Flat Land Games, Wixom, MI
+  url: /anr-pro-circuit-flat-land-games-wixom-mi-25-players/
+  type: ANR Pro Circuit
+  players: 25
+  winner: Raphael Nishimura
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Breaker Bay
+  location: Metagame Kártyabolt - Budapest, Hungary
+  url: /regional-metagame-kartyabolt-24-players/
+  type: Regional
+  players: 24
+  winner: Marko Antonić (Malvolio)
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Breaker Bay
+  location: Böblingen (Germany)
+  url: /regional-boblingen-germany-35-players/
+  type: Regional
+  players: 35
+  winner: Patrik K. (Tradon)
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Breaker Bay
+  location: UK Nationals
+  url: /national-uk-nationals-156-players/
+  type: National
+  players: 156
+  winner: Alexander White (Vinegarymink)
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Breaker Bay
+  location: Uroboros Cup 2015, Birmingham
+  url: /casual-uroboros-cup-2015-birmingham-67-players/
+  type: Casual
+  players: 67
+  winner: Nicole Campbell
+  runner: 'Hayley Kaplan: Universal Scholar'
+  corp: 'Blue Sun: Powering the Future'
+- pack: Chrome City
+  location: Dogs of War Gaming Palm Bay FL
+  url: /regional-dogs-of-war-gaming-palm-bay-fl-40-players/
+  type: Regional
+  players: 40
+  winner: Pacer Stringfellow
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Breaker Bay
+  location: The Adventurer's Guild, Harrisburg, PA
+  url: /casual-the-adventurers-guild-harrisburg-pa-25-players/
+  type: Casual
+  players: 25
+  winner: Dan D'Argenio
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Breaker Bay
+  location: Frogtown Hobbies, Toledo, Ohio
+  url: /gnk-frogtown-hobbies-toledo-ohio-19-players/
+  type: GNK
+  players: 19
+  winner: Kyle Gordon
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Breaker Bay
+  location: Oberonn, Hasselt
+  url: /regional-oberonn-hasselt-26-players/
+  type: Regional
+  players: 26
+  winner: Calimsha
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Blue Sun: Powering the Future'
+- pack: Breaker Bay
+  location: Fun 4 All, Ypsilanti, MI
+  url: /gnk-fun-4-all-ypsilanti-mi-9-players/
+  type: GNK
+  players: 9
+  winner: Raphael Nishimura
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Breaker Bay
+  location: Game Kastle Santa Clara
+  url: /regional-game-kastle-santa-clara-89-players/
+  type: Regional
+  players: 89
+  winner: Noah McKee (Nobo715)
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Breaker Bay
+  location: Good Games Town Hall, Sydney
+  url: /regional-good-games-town-hall-sydney-37-players/
+  type: Regional
+  players: 37
+  winner: Syntax Lost
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Chrome City
+  location: Millennium Games, Rochester, NY
+  url: /regional-millennium-games-rochester-ny-45-players/
+  type: Regional
+  players: 45
+  winner: Dien Tran
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Breaker Bay
+  location: Good Game Town Hall, Sydney
+  url: /gnk-good-game-town-hall-sydney-9-players/
+  type: GNK
+  players: 9
+  winner: Huw
+  runner: 'Rielle Kit Peddler: Transhuman'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Breaker Bay
+  location: 7 Heroes Murcia (Spain)
+  url: /regional-7-heroes-murcia-spain-20-players/
+  type: Regional
+  players: 20
+  winner: Octavio Cimas
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Breaker Bay
+  location: Comic Hunter, Moncton
+  url: /gnk-comic-hunter-moncton-8-players-2/
+  type: GNK
+  players: 8
+  winner: Chris "Kiv" MacLeod
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Breaker Bay
+  location: Vienna, Austria
+  url: /regional-vienna-austria-18-players/
+  type: Regional
+  players: 18
+  winner: StevenSlater
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Breaker Bay
+  location: Board Room Game Cafe
+  url: /gnk-board-room-game-cafe-11-players/
+  type: GNK
+  players: 11
+  winner: Justin P.
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Breaker Bay
+  location: Aachen
+  url: /euregio-aachen-43-players/
+  type: Regional
+  players: 43
+  winner: Frederic Arnold
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Breaker Bay
+  location: Galway, Ireland
+  url: /regional-galway-ireland-30-players/
+  type: Regional
+  players: 30
+  winner: Sean Lucey
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Breaker Bay
+  location: Warsaw, Poland
+  url: /regional-warsaw-poland-27-players/
+  type: Regional
+  players: 27
+  winner: Jakub "Jander" Pożarski
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Breaker Bay
+  location: The Game Shoppe, Omaha, NE
+  url: /regional-the-game-shoppe-omaha-ne-29-players/
+  type: Regional
+  players: 29
+  winner: Sean Trundle
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Order and Chaos
+  location: Good Games Rockingham, Perth
+  url: /store-champs-good-games-rockingham-perth-13-players/
+  type: Store Champs
+  players: 13
+  winner: Nicholas Grando
+  runner: 'Chaos Theory: Wünderkind'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Breaker Bay
+  location: LinCon Sweden
+  url: /regional-lincon-sweden-32-players/
+  type: Regional
+  players: 32
+  winner: Niclas L
+  runner: 'Ken Express Tenma: Disappeared Clone'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Breaker Bay
+  location: RPC Cologne
+  url: /qualifier-german-nationals-rpc-cologne-22-players/
+  type: Regional
+  players: 22
+  winner: d0me_
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Breaker Bay
+  location: Edinburgh
+  url: /regional-edinburgh-42-players/
+  type: Regional
+  players: 42
+  winner: Laurie Poulter
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Breaker Bay
+  location: Athena Games, Norwich, UK
+  url: /gnk-athena-games-norwich-uk-14-players/
+  type: GNK
+  players: 14
+  winner: JCDenton71
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Breaker Bay
+  location: The Connection Games, Vancouver, Canada
+  url: /gnk-the-connection-games-vancouver-canada-10-players/
+  type: GNK
+  players: 10
+  winner: Keith Gaudry-Gardner
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Breaker Bay
+  location: Eudemonia, Berkeley, CA
+  url: /gnk-eudemonia-berkeley-ca-15-players/
+  type: GNK
+  players: 15
+  winner: Adam Cabrera
+  runner: 'Hayley Kaplan: Universal Scholar'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Breaker Bay
+  location: Louisville, Kentucky
+  url: /regional-louisville-kentucky-50-players/
+  type: Regional
+  players: 50
+  winner: Ross Freitag
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Breaker Bay
+  location: Göttingen
+  url: /regional-gottingen-40-players/
+  type: Regional
+  players: 40
+  winner: Axul
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Breaker Bay
+  location: Planszak Wrocław, Poland
+  url: /gnk-planszak-wroclaw-poland-7-players/
+  type: GNK
+  players: 7
+  winner: Krzysztof Grodecki
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Breaker Bay
+  location: Espoo, Finland
+  url: /regional-espoo-finland-29-players/
+  type: Regional
+  players: 29
+  winner: Kari Lehikoinen
+  runner: 'Reina Roja: Freedom Fighter'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Breaker Bay
+  location: Augsburg, Germany
+  url: /gnk-augsburg-germany-8-players/
+  type: GNK
+  players: 8
+  winner: Sean H.
+  runner: 'Iain Stirling: Retired Spook'
+  corp: 'Blue Sun: Powering the Future'
+- pack: Breaker Bay
+  location: Games of Berkeley, Berkeley, CA
+  url: /gnk-games-of-berkeley-berkeley-ca-11-players/
+  type: GNK
+  players: 11
+  winner: Adam Cabrera
+  runner: 'Hayley Kaplan: Universal Scholar'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Breaker Bay
+  location: Halifax, NS-Monster Comics Lounge
+  url: /gnk-halifax-ns-monster-comics-lounge-15-players/
+  type: GNK
+  players: 15
+  winner: Matt Settle
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Nisei Division: The Next Generation'
+- pack: The Valley
+  location: Montecchio Maggiore, IT
+  url: /casual-montecchio-maggiore-it-10-players/
+  type: Casual
+  players: 10
+  winner: Damiano Fiscato
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Blue Sun: Powering the Future'
+- pack: Breaker Bay
+  location: Atlanta, GA
+  url: /regional-atlanta-ga-47-players/
+  type: Regional
+  players: 47
+  winner: Zachary Cavis
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Breaker Bay
+  location: All About Games , Boise, Idaho
+  url: /regional-all-about-games-boise-idaho-25-players/
+  type: Regional
+  players: 25
+  winner: Kyle James (Bluebird503)
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Breaker Bay
+  location: Joensuu
+  url: /casual-joensuu-12-players/
+  type: Casual
+  players: 12
+  winner: Niko Hassinen
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Blue Sun: Powering the Future'
+- pack: Breaker Bay
+  location: Comic Hunter, Moncton
+  url: /gnk-comic-hunter-moncton-8-players/
+  type: GNK
+  players: 8
+  winner: Chris "Kiv" MacLeod
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Jinteki Biotech: Life Imagined'
+- pack: Breaker Bay
+  location: Nottingham
+  url: /gnk-nottingham-14-players/
+  type: GNK
+  players: 14
+  winner: Rob Lewis
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Breaker Bay
+  location: Petrie's Family Games (Colorado Springs, CO, USA)
+  url: /regional-petries-family-games-colorado-springs-co-usa-39-players/
+  type: Regional
+  players: 39
+  winner: Nick Hansen
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Breaker Bay
+  location: Wausau, WI
+  url: /regional-wausau-wi-32-players/
+  type: Regional
+  players: 32
+  winner: spags
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Breaker Bay
+  location: Oxford, UK
+  url: /regional-oxford-uk-64-players-2/
+  type: Regional
+  players: 64
+  winner: Samuel Pay
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Breaker Bay
+  location: Pegaz Bydgoszcz
+  url: /regional-pegaz-bydgoszcz-22-players/
+  type: Regional
+  players: 22
+  winner: Jacek "hsiale" Wieszaczewski
+  runner: 'Chaos Theory: Wünderkind'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: The Valley
+  location: Leiden, the Netherlands
+  url: /regional-leiden-the-netherlands-21-players/
+  type: Regional
+  players: 21
+  winner: Adriaan Zwiebel
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: The Valley
+  location: Dortmund, Germany
+  url: /regional-dortmund-germany-35-players/
+  type: Regional
+  players: 35
+  winner: JanK
+  runner: 'Rielle Kit Peddler: Transhuman'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Breaker Bay
+  location: Dortmund, Germany
+  url: /gnk-dortmund-germany-10-players/
+  type: GNK
+  players: 10
+  winner: Necro
+  runner: 'Hayley Kaplan: Universal Scholar'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Breaker Bay
+  location: Tulsa, OK
+  url: /regional-tulsa-ok-64-players/
+  type: Regional
+  players: 59
+  winner: Pacer Stringfellow
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Order and Chaos
+  location: Titan Games and Comics  Duluth, GA
+  url: /store-champs-titan-games-and-comics-duluth-ga-32-players/
+  type: Store Champs
+  players: 32
+  winner: Ahmed Abbasi
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Order and Chaos
+  location: Augusta Book Exchange  Augusta,GA
+  url: /store-champs-augusta-book-exchange-augustaga-22-players/
+  type: Store Champs
+  players: 22
+  winner: Ahmed Abbasi
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Order and Chaos
+  location: Wasteland Gaming Altanta, GA
+  url: /store-champs-wasteland-gaming-altanta-ga-21-players/
+  type: Store Champs
+  players: 21
+  winner: Ahmed Abbasi
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Source
+  location: Giga-Bites Cafe Marietta, GA
+  url: /store-champs-giga-bites-cafe-marietta-ga-47-players/
+  type: Store Champs
+  players: 47
+  winner: Ahmed Abbasi
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Valley
+  location: Outpost Brussels, Belgium
+  url: /regional-outpost-brussels-belgium-32-players/
+  type: Regional
+  players: 32
+  winner: Brian Wynants (aka ryanbantwins)
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Jinteki Biotech: Life Imagined'
+- pack: Breaker Bay
+  location: Faraos Cigarer, Copenhagen
+  url: /regional-faraos-cigarer-copenhagen-29-players/
+  type: Regional
+  players: 29
+  winner: Jakob Helms
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: The Valley
+  location: DM-Qualifier Ludwigshafen, Germany
+  url: /regional-dm-qualifier-ludwigshafen-germany-18-players/
+  type: Regional
+  players: 18
+  winner: Philip "Putzlappen" K.
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Order and Chaos
+  location: Newcastle upon Tyne
+  url: /store-champs-newcastle-upon-tyne-10-players/
+  type: Store Champs
+  players: 10
+  winner: Tom Smith
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Order and Chaos
+  location: Gamezilla Moncton, NB
+  url: /store-champs-gamezilla-moncton-nb-8-players/
+  type: Store Champs
+  players: 8
+  winner: Chris "Kiv" MacLeod
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Blue Sun: Powering the Future'
+- pack: Order and Chaos
+  location: Moncton, NB
+  url: /store-champs-moncton-nb-12-players/
+  type: Store Champs
+  players: 12
+  winner: Chris "Kiv" MacLeod
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Breaker Bay
+  location: The Yellow King (Colorado Springs, CO, USA)
+  url: /gnk-the-yellow-king-colorado-springs-co-usa-18-players/
+  type: GNK
+  players: 18
+  winner: Matt Dawkins
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Blue Sun: Powering the Future'
+- pack: Breaker Bay
+  location: Magic Stronghold Games, Vancouve, BC
+  url: /gnk-magic-stronghold-games-vancouve-bc-6-players/
+  type: GNK
+  players: 6
+  winner: Tang Yao (David) Cheng
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Jinteki Biotech: Life Imagined'
+- pack: The Valley
+  location: Hamburg, Germany
+  url: /gnk-hamburg-germany-12-players/
+  type: GNK
+  players: 12
+  winner: Marcel Heymuth
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Breaker Bay
+  location: Epic Loot Comics & Games (Dayton, OH)
+  url: /gnk-epic-loot-comics-games-dayton-oh-12-players/
+  type: GNK
+  players: 12
+  winner: Eric Caoili
+  runner: 'Reina Roja: Freedom Fighter'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: The Valley
+  location: The Dragon's Hoard (Staunton, VA, USA)
+  url: /store-champs-the-dragons-hoard-staunton-va-usa-7-players/
+  type: Store Champs
+  players: 7
+  winner: Bradley Hammitt
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: The Valley
+  location: Manchester
+  url: /regional-manchester-63-players/
+  type: Regional
+  players: 63
+  winner: Alexander White
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: The Valley
+  location: Saint Petersburg, Hobbit Games
+  url: /gnk-saint-petersburg-hobbit-games-10-players/
+  type: GNK
+  players: 10
+  winner: Ermolaev Alexey
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Jinteki: Personal Evolution'
+- pack: The Valley
+  location: London
+  url: /regional-london-56-players/
+  type: Regional
+  players: 56
+  winner: Zach Eaton-Rosen (Groober)
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: The Valley
+  location: Tempest Games (Cedar Rapids, IA, USA)
+  url: /store-champs-tempest-games-cedar-rapids-ia-usa-9-players/
+  type: GNK
+  players: 9
+  winner: Dan Kaiser
+  runner: 'Ken Express Tenma: Disappeared Clone'
+  corp: 'Jinteki: Personal Evolution'
+- pack: Order and Chaos
+  location: Köln
+  url: /store-champs-koln-26-players/
+  type: Store Champs
+  players: 26
+  winner: JackMade
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Valley
+  location: Dream Wizards (Rockville, MD)
+  url: /gnk-dream-wizards-rockville-md-14-players/
+  type: GNK
+  players: 14
+  winner: GMan
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Order and Chaos
+  location: Magic Stronghold Games
+  url: /store-champs-magic-stronghold-games-16-players/
+  type: Store Champs
+  players: 16
+  winner: Tang Yao (David) Cheng
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: The Valley
+  location: Danbury, Connecticut
+  url: /gnk-danbury-connecticut-8-players/
+  type: GNK
+  players: 8
+  winner: El-ad David Amir
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Order and Chaos
+  location: Seattle, WA
+  url: /store-champs-seattle-wa-24-players/
+  type: Store Champs
+  players: 24
+  winner: Stephen McCray
+  runner: 'Exile: Streethawk'
+  corp: 'Gagarin Deep Space: Expanding the Horizon'
+- pack: The Valley
+  location: 401 Games
+  url: /gnk-401-games-20-players/
+  type: GNK
+  players: 20
+  winner: Dien Tran
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Blue Sun: Powering the Future'
+- pack: Order and Chaos
+  location: Modena, Italy
+  url: /store-champs-modena-italy-46-players/
+  type: Store Champs
+  players: 46
+  winner: Manuel Asnicar
+  runner: 'Quetzal: Free Spirit'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Valley
+  location: Petrie's Family Games, Colorado Springs, CO, USA
+  url: /gnk-petries-family-games-colorado-springs-co-usa-8-players/
+  type: GNK
+  players: 8
+  winner: Matt Dawkins
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Blue Sun: Powering the Future'
+- pack: Order and Chaos
+  location: Tempe, AZ
+  url: /store-champs-tempe-az-37-players/
+  type: Store Champs
+  players: 37
+  winner: Matt McKinley
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: The Valley
+  location: Just By Chance Games
+  url: /gnk-just-by-chance-games-6-players/
+  type: GNK
+  players: 6
+  winner: Dave Annable
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Blue Sun: Powering the Future'
+- pack: The Valley
+  location: Interactivity Board Game Cafe, Victoria, BC
+  url: /gnk-interactivity-board-game-cafe-victoria-bc-10-players/
+  type: GNK
+  players: 10
+  winner: Tang Yao (David) Cheng
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Order and Chaos
+  location: Saint Petersburg, Hobbit Games
+  url: /gnk-saint-petersburg-hobbit-games-12-players/
+  type: GNK
+  players: 12
+  winner: Privalov Denis
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: The Valley
+  location: Eudemonia, Berkeley CA
+  url: /gnk-eudemonia-berkeley-ca-8-players/
+  type: GNK
+  players: 8
+  winner: Ian Nelson
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: The Valley
+  location: Atomic Empire
+  url: /gnk-atomic-empire-14-players/
+  type: GNK
+  players: 14
+  winner: Justin Novacek
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Order and Chaos
+  location: The Gameshelf
+  url: /store-champs-the-gameshelf-8-players/
+  type: Store Champs
+  players: 8
+  winner: Angus Davis
+  runner: 'Whizzard: Master Gamer'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Source
+  location: Manaleak, Worcester, England
+  url: /store-champs-manaleak-worcester-england-22-players/
+  type: Store Champs
+  players: 22
+  winner: Andrew Hynes
+  runner: 'Gabriel Santiago: Consummate Professional'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Order and Chaos
+  location: The Uncommons, New York City
+  url: /store-champs-the-uncommons-new-york-city-20-players/
+  type: Store Champs
+  players: 20
+  winner: Kenny D
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Order and Chaos
+  location: Game Corner, Christchurch, NZ
+  url: /store-champs-game-corner-christchurch-nz-12-players/
+  type: Store Champs
+  players: 12
+  winner: Divadus
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Blue Sun: Powering the Future'
+- pack: Order and Chaos
+  location: Leuze-en-Hainaut
+  url: /store-champs-leuze-en-hainaut-16-players/
+  type: Store Champs
+  players: 16
+  winner: Dries Van Puymbroeck
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Order and Chaos
+  location: Genoa, ITALY
+  url: /casual-genoa-italy-15-players/
+  type: Casual
+  players: 15
+  winner: Antonio Barbamalvagia Intrieri
+  runner: 'Quetzal: Free Spirit'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: The Valley
+  location: Dungeons and Donuts, Galway, Ireland
+  url: /gnk-dungeons-and-donuts-galway-ireland-14-players/
+  type: GNK
+  players: 14
+  winner: Nicole Campbell
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Blue Sun: Powering the Future'
+- pack: The Source
+  location: Fantasy Books & Games, Fairview Heights, Illinois
+  url: /store-champs-fantasy-books-games-fairview-heights-illinois-15-players/
+  type: Store Champs
+  players: 15
+  winner: Nicholas Ehlers
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Order and Chaos
+  location: Warcon, Ghent, Belgium
+  url: /gnk-warcon-ghent-belgium-9-players/
+  type: GNK
+  players: 9
+  winner: Ron Zacapa
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Order and Chaos
+  location: Brussels, Belgium
+  url: /store-champs-brussels-belgium-21-players/
+  type: Store Champs
+  players: 21
+  winner: Ron Zacapa
+  runner: 'Gabriel Santiago: Consummate Professional'
+  corp: 'Blue Sun: Powering the Future'
+- pack: The Valley
+  location: Hobbbymaster
+  url: /gnk-hobbbymaster-8-players/
+  type: GNK
+  players: 8
+  winner: William Turner
+  runner: 'Silhouette: Stealth Operative'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Order and Chaos
+  location: Good Games Newcastle, NSW, Australia
+  url: /store-champs-good-games-newcastle-nsw-australia-12-players/
+  type: Store Champs
+  players: 12
+  winner: RJorb
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Order and Chaos
+  location: Athens, Greece
+  url: /store-champs-athens-23-players/
+  type: Store Champs
+  players: 23
+  winner: Letsaros
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Argus Security: Protection Guaranteed'
+- pack: Order and Chaos
+  location: Kalmar, Sweden
+  url: /store-champs-kalmar-sweden-12-players/
+  type: Store Champs
+  players: 12
+  winner: Christian Vestergaard
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Order and Chaos
+  location: Comix Cafè, Grosseto, Italy
+  url: /store-champs-comix-cafe-grosseto-italy-14-players/
+  type: Store Champs
+  players: 14
+  winner: Gabriele Arra
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Jinteki: Personal Evolution'
+- pack: Order and Chaos
+  location: Rainy Day Games
+  url: /store-champs-rainy-day-games-18-players/
+  type: Store Champs
+  players: 18
+  winner: Kyle James
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: The Source
+  location: Forever Knight Games | Olympia, WA
+  url: /store-champs-forever-knight-games-olympia-wa-10-players/
+  type: Store Champs
+  players: 10
+  winner: Kyle James
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Order and Chaos
+  location: Meeples Games | Seattle, WA
+  url: /store-champs-meeples-games-seattle-wa-24-players/
+  type: Store Champs
+  players: 24
+  winner: Kyle James
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: The Valley
+  location: Games of Berkeley, Berkeley, CA
+  url: /gnk-games-of-berkeley-berkeley-ca-10-players/
+  type: GNK
+  players: 10
+  winner: Ian Nelson
+  runner: 'Chaos Theory: Wünderkind'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Order and Chaos
+  location: Eudemonia, Berkeley, CA
+  url: /store-champs-eudemonia-berkeley-ca-26-players/
+  type: Store Champs
+  players: 26
+  winner: Matthew Harrison-Trainor
+  runner: 'Reina Roja: Freedom Fighter'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Order and Chaos
+  location: Oxford
+  url: /store-champs-oxford-24-players/
+  type: Store Champs
+  players: 24
+  winner: Neil G (Vapo)
+  runner: 'Valencia Estevez: The Angel of Cayambe'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Valley
+  location: Bar Vader , Madrid
+  url: /store-champs-bar-vader-madrid-14-players/
+  type: Store Champs
+  players: 14
+  winner: Luis Escudero
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Blue Sun: Powering the Future'
+- pack: Order and Chaos
+  location: Neutral Grounds Alabang Town Center, Muntinlupa City, Philippines
+  url: /store-champs-neutral-grounds-alabang-town-center-muntinlupa-city-philippines-10-players/
+  type: Store Champs
+  players: 10
+  winner: Dale Quimpo
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Cerebral Imaging: Infinite Frontiers'
+- pack: Order and Chaos
+  location: Moscow, Russia
+  url: /store-champs-moscow-russia-27-players/
+  type: Store Champs
+  players: 27
+  winner: Anton Lapygin
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Order and Chaos
+  location: Moscow, Russia
+  url: /gnk-moscow-russia-11-players-3/
+  type: GNK
+  players: 11
+  winner: Alexander Kovalev
+  runner: 'Chaos Theory: Wünderkind'
+  corp: 'Harmony Medtech: Biomedical Pioneer'
+- pack: The Source
+  location: Moscow, Russia
+  url: /gnk-moscow-russia-11-players-2/
+  type: GNK
+  players: 11
+  winner: Vasiliy Goltsov
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Valley
+  location: Stimhack Store Champions Invitational
+  url: /national-stimhack-store-champions-invitational-126-players/
+  type: National
+  players: 126
+  winner: Ahmed Abbasi
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: The Source
+  location: Saint-Petersburg, Russia
+  url: /store-champs-saint-petersburg-russia-28-players/
+  type: Store Champs
+  players: 28
+  winner: Dmitriy Zubko
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Up and Over
+  location: Moscow, Russia
+  url: /gnk-moscow-russia-14-players/
+  type: GNK
+  players: 14
+  winner: Egor Popov
+  runner: 'Gabriel Santiago: Consummate Professional'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Up and Over
+  location: Moscow, Russia
+  url: /gnk-moscow-russia-11-players/
+  type: GNK
+  players: 11
+  winner: Anton Rogozin
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: The Spaces Between
+  location: Moscow, Russia
+  url: /national-moscow-russia-28-players/
+  type: National
+  players: 28
+  winner: Egor Popov
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Source
+  location: Huzzah Hobbies, Virginia, USA
+  url: /gnk-huzzah-hobbies-virginia-usa-14-players/
+  type: GNK
+  players: 14
+  winner: GMan
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Order and Chaos
+  location: Comics and Gaming, Virginia, USA
+  url: /store-champs-comics-and-gaming-virginia-usa-15-players/
+  type: Store Champs
+  players: 15
+  winner: GMan
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Order and Chaos
+  location: Emerald Tavern and Games
+  url: /store-champs-emerald-tavern-and-games-22-players/
+  type: Store Champs
+  players: 22
+  winner: John Hatfield
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Order and Chaos
+  location: The Appraisery, Cubao Expo, Quezon City, Philippines
+  url: /store-champs-the-appraisery-cubao-expo-quezon-city-philippines-18-players/
+  type: Store Champs
+  players: 18
+  winner: Dale Quimpo
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Order and Chaos
+  location: San Gabriel, CA
+  url: /store-champs-san-gabriel-ca-30-players/
+  type: Store Champs
+  players: 30
+  winner: Vicente Gonzaga
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Order and Chaos
+  location: Mead Hall, Minneapolis, MN
+  url: /store-champs-mead-hall-minneapolis-mn-48-players/
+  type: Store Champs
+  players: 48
+  winner: Alex Carder
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: The Source
+  location: Madrid, Spain
+  url: /store-champs-madrid-spain-27-players/
+  type: Store Champs
+  players: 27
+  winner: Erik Twice
+  runner: 'Iain Stirling: Retired Spook'
+  corp: 'NBN: Making News'
+- pack: Order and Chaos
+  location: Berkeley
+  url: /store-champs-berkeley-55-players/
+  type: Store Champs
+  players: 55
+  winner: Matthew Harrison
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Order and Chaos
+  location: Taiwan,kaohsiung
+  url: /gnk-taiwankaohsiung-11-players/
+  type: GNK
+  players: 11
+  winner: DaChun
+  runner: 'Exile: Streethawk'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Order and Chaos
+  location: Gamescape, San Francisco, CA
+  url: /gnk-gamescape-san-francisco-ca-10-players/
+  type: GNK
+  players: 10
+  winner: Adam Cabrera
+  runner: 'Edward Kim: Humanity''s Hammer'
+  corp: 'The Foundry: Refining the Process'
+- pack: Order and Chaos
+  location: Toulon "l'Atanière" France
+  url: /store-champs-toulon-lataniere-france-20-players/
+  type: Store Champs
+  players: 20
+  winner: Jahz (Christophe VALLET)
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Valley
+  location: FFG Center, Roseville, MN
+  url: /gnk-ffg-center-roseville-mn-24-players/
+  type: GNK
+  players: 24
+  winner: Pippin Brown
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Argus Security: Protection Guaranteed'
+- pack: Order and Chaos
+  location: Marseille "La crypte du jeu " France
+  url: /store-champs-marseille-la-crypte-du-jeu-france-22-players/
+  type: Store Champs
+  players: 22
+  winner: Gaël "Slip" Pentecôte
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: The Source
+  location: Wizard's Well, Mannheim (Germany)
+  url: /gnk-wizards-well-mannheim-germany-18-players/
+  type: GNK
+  players: 18
+  winner: Claudio Coppini
+  runner: 'Ken Express Tenma: Disappeared Clone'
+  corp: 'The Foundry: Refining the Process'
+- pack: Order and Chaos
+  location: Petrie's Family Games, Colorado Springs, CO, USA
+  url: /gnk-petries-family-games-colorado-springs-co-usa-11-players/
+  type: GNK
+  players: 11
+  winner: Matt Dawkins
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Order and Chaos
+  location: Hermelijn, Aalst, Belgium
+  url: /store-champs-hermelijn-aalst-belgium-10-players/
+  type: Store Champs
+  players: 10
+  winner: Calimsha
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Order and Chaos
+  location: Total Escape Games, Broomfield, CO, USA
+  url: /store-champs-total-escape-games-broomfield-co-usa-18-players/
+  type: Store Champs
+  players: 18
+  winner: Josh Imobersteg
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: The Source
+  location: L'autre Monde, Liège, Belgium
+  url: /gnk-lautre-monde-liege-belgium-10-players/
+  type: GNK
+  players: 10
+  winner: Calimsha
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: The Valley
+  location: Faraos Cigarer, Copenhagen
+  url: /store-champs-faraos-cigarer-copenhagen-16-players/
+  type: Store Champs
+  players: 16
+  winner: Jakob Helms
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: Order and Chaos
+  location: Goblin Town Games
+  url: /store-champs-goblin-town-games-21-players/
+  type: Store Champs
+  players: 21
+  winner: Kenny K
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Order and Chaos
+  location: Mr. Nice Guy Games, Monroeville, PA, USA
+  url: /store-champs-mr-nice-guy-games-monroeville-pa-usa-14-players/
+  type: Store Champs
+  players: 14
+  winner: Jonathan Theys
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Blue Sun: Powering the Future'
+- pack: Order and Chaos
+  location: Critical Hit Games, Cleveland, OH, USA
+  url: /store-champs-critical-hit-games-cleveland-oh-usa-18-players/
+  type: Store Champs
+  players: 18
+  winner: Ben Blum
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Order and Chaos
+  location: Trotta's Hobbies, Barnegat NJ
+  url: /store-champs-trottas-hobbies-barnegat-nj-26-players/
+  type: Store Champs
+  players: 26
+  winner: Brendan H.
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Jinteki: Replicating Perfection'
+- pack: The Source
+  location: London, UK
+  url: /store-champs-london-uk-62-players/
+  type: Store Champs
+  players: 62
+  winner: Iain Reid
+  runner: 'Andromeda: Dispossessed Ristie'
+  corp: 'Blue Sun: Powering the Future'
+- pack: Order and Chaos
+  location: Seattle, Wa
+  url: /store-champs-seattle-wa-25-players/
+  type: Store Champs
+  players: 25
+  winner: Nicholas Miller
+  runner: 'Chaos Theory: Wünderkind'
+  corp: 'Tennin Institute: The Secrets Within'
+- pack: Order and Chaos
+  location: Poznań
+  url: /store-champs-poznan-20-players/
+  type: Store Champs
+  players: 20
+  winner: Krzysztof Grodecki
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Order and Chaos
+  location: Auckland, New Zealand
+  url: /store-champs-auckland-new-zealand-9-players/
+  type: Store Champs
+  players: 9
+  winner: willit
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Order and Chaos
+  location: Reading, UK
+  url: /store-champs-reading-uk-21-players/
+  type: Store Champs
+  players: 21
+  winner: Brendan Jackson
+  runner: 'Noise: Hacker Extraordinaire'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Order and Chaos
+  location: Harrisburg, PA
+  url: /store-champs-the-adventurers-guild-harrisburg-pa-15-players/
+  type: Store Champs
+  players: 15
+  winner: Dan D'Argenio
+  runner: 'MaxX: Maximum Punk Rock'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Order and Chaos
+  location: Santa Clara, CA
+  url: /store-champs-santa-clara-ca-18-players/
+  type: Store Champs
+  players: 18
+  winner: Weston Odom
+  runner: 'Kate Mac McCaffrey: Digital Tinker'
+  corp: 'Haas-Bioroid: Engineering the Future'
+- pack: Order and Chaos
+  location: Colorado Springs, CO
+  url: /gnk-colorado-springs-co-21-players/
+  type: Store Champs
+  players: 21
+  winner: Ryan Burke
+  runner: 'Quetzal: Free Spirit'
+  corp: 'The Foundry: Refining the Process'
+- pack: Order and Chaos
+  location: Ottawa
+  url: /gnk-ottawa-10-players/
+  type: Store Champs
+  players: 10
+  winner: Alex Bradley
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Near-Earth Hub: Broadcast Center'
+- pack: Order and Chaos
+  location: Ottawa
+  url: /store-champs-ottawa-12-players/
+  type: Store Champs
+  players: 12
+  winner: Alex Bradley
+  runner: 'Leela Patel: Trained Pragmatist'
+  corp: 'Near-Earth Hub: Broadcast Center'

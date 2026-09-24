@@ -1,0 +1,5 @@
+---
+title: Adam
+slug: adam
+---
+

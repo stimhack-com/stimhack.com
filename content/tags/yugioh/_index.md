@@ -1,0 +1,5 @@
+---
+title: yugioh
+slug: yugioh
+---
+

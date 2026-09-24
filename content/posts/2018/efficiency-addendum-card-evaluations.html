@@ -1,0 +1,335 @@
+---
+title: 'Efficiency Addendum: Card Evaluations'
+slug: efficiency-addendum-card-evaluations
+date: '2018-08-17T12:31:00-07:00'
+lastmod: '2018-08-17T12:31:00-07:00'
+authors:
+- sam-gullman
+categories:
+- articles
+tags: []
+summary: Back to Index of Articles -> For those of you who are not yet tired of math we can use the lessons of the previous article to do some fun analysis! Most players evaluate cards…
+featured_image: /wp-content/uploads/2018/08/eli.jpg
+thumbnail: /wp-content/uploads/2018/08/eli.jpg
+wp_id: 16080
+---
+<p><a href="/the-skills-of-netrunner-index/"><strong>Back to Index of Articles  -&gt;</strong></a></p>
+<p>For those of you who are not yet tired of math we can use the lessons of the previous article to do some fun analysis!</p>
+<p>Most players evaluate cards on &#8216;feeling&#8217;. This is built up over playing the game for a long time and carefully attuning your appreciation of a card to the situations where it felt good or bad playing it. When constructing a deck players then use this &#8216;feeling&#8217; to select which cards to include or not.</p>
+<p>The simple calculations we just learnt can be used to compare <em>some</em> cards to each-other in a more analytical way, and thus get you to the end-goal faster than playing with them for a long time learning the hard way. It also opens the lid on how card balance is maintained in the design-process, which i find fascinating! We will also look at some of the prominent design-mistakes that led to restrictions or bans.</p>
+<p>To make it easy i will define three terms to use in the evaluation. Credit efficiency is the total credits per click spent <em>fully playing the card</em>. Payout is the total net benefit of playing the card. Clicks are simply the clicks it takes to fully play out the card. Finally, Adjusted efficiency is the efficiency gained by fully playing out both cards, and clicking for credits with remaining clicks to bring them up to a comparison.</p>
+<p>&nbsp;</p>
+<p><img loading="lazy" decoding="async" class="wp-image-16085 aligncenter" src="/wp-content/uploads/2018/08/EMvsSG-1.png" alt="" width="521" height="278" /></p>
+<p>&nbsp;</p>
+<table width="289">
+<tbody>
+<tr>
+<td width="129"></td>
+<td width="74"><strong>Easy Mark</strong></td>
+<td width="86"><strong>Sure Gamble</strong></td>
+</tr>
+<tr>
+<td><strong>Card Efficiency</strong></td>
+<td>1,5</td>
+<td>2</td>
+</tr>
+<tr>
+<td><strong>Payout</strong></td>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td><strong>Clicks</strong></td>
+<td>2</td>
+<td>2</td>
+</tr>
+<tr>
+<td><strong>Adjusted efficiency</strong></td>
+<td>1,5</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p>In the beginning of the game&#8217;s history Easy Mark saw some play. However it quickly fell off and is rarely if ever spotted in modern decks in the full card-pool. Sure Game is actually rare to <em>not</em> spot in decks. Almost all runners bring 3 of this card. Why? It doesn&#8217;t seem like that much of a difference between 3 and four right? And playing from zero credits is surely nice?</p>
+<p>The reason, i believe, is apparent if you compare the credit-efficiency to the base action of 1 credit for 1 click. Easy mark improves that by 50%, while Sure Gamble improves it a whooping 100%. Sure Gamble is double the efficiency of the base action. This is a large difference.</p>
+<p>As the cardpool grew and cardslots became much tighter, as you want to squeeze in as much power as you can in your deck, easy-mark fell out over other options. It is enough that there are a couple of options with a credit efficiency higher than 1,5 for easy-mark to be the worse option. Also, many cards can offer both higher credit efficiency <em>and</em> a higher payout.</p>
+<p>The designers make sure that no card is entirely objectively better than another, and Easy mark is still one of the only cards that can be played from zero credits. The tactical value of this however has turned out not to be worth the deckslot.</p>
+<p><img loading="lazy" decoding="async" class="wp-image-16091 aligncenter" src="/wp-content/uploads/2018/08/KJvsRT.png" alt="" width="511" height="274" /></p>
+<table width="500">
+<tbody>
+<tr>
+<td width="129"></td>
+<td width="89"><strong>Kati Jones (3 uses)</strong></td>
+<td width="77"><strong>Kati Jones (5 uses)</strong></td>
+<td width="77"><strong>Kati Jones (7 uses)</strong></td>
+<td width="64"><strong>Liberated Accounts</strong></td>
+<td width="64"><strong>Armitage Codebusting</strong></td>
+</tr>
+<tr>
+<td><strong>Card Efficiency</strong></td>
+<td>1,17</td>
+<td>1,63</td>
+<td>1,9</td>
+<td>1,67</td>
+<td>1,375</td>
+</tr>
+<tr>
+<td><strong>Payout</strong></td>
+<td>7</td>
+<td>13</td>
+<td>19</td>
+<td>10</td>
+<td>11</td>
+</tr>
+<tr>
+<td><strong>Clicks</strong></td>
+<td>6</td>
+<td>8</td>
+<td>10</td>
+<td>6</td>
+<td>8</td>
+</tr>
+<tr>
+<td><strong>Adjusted efficiency (11 clicks)</strong></td>
+<td>1,09</td>
+<td>1,45</td>
+<td>1,81</td>
+<td>1,36</td>
+<td>1,27</td>
+</tr>
+</tbody>
+</table>
+<p><span style="font-size: 16px"><br />
+You can see above that Kati compares favorably to many economy-options, and offers a permanent efficient economy with some obvious downsides. I provided Liberated Accounts in the table above, and you can see that they are comparable on efficiency when using Kati 5 times. This is the type of power that Anarchs and Shapers have in-faction that is critical in dealing with glacier-type decks.For a long time in the game&#8217;s history the now rotated Kati Jones was an economy staple in many decks. Especially Criminals who lack good &#8216;safe&#8217; economy often included Kati to complement their powerful but fragile run-economy. As Kati rotated we noticed nothing, as Temujin Contracts was then legal to play, but once the Temujin-problem was fixed the air quickly went out of the criminal faction.</span></p>
+<p>Now, enter Kitara and Reign &amp; Reverie. A fresh batch of economy options injected into the criminal faction. Rogue trading offers the hope of giving criminal an anti-glacier late-game economy. The obvious downside being the tags you get. Now you can clear them manually or with some support, but that is a more complex analysis. Luckily, most glaciers don&#8217;t punish tags too heavily so only your own resources will suffer.</p>
+<table width="500">
+<tbody>
+<tr>
+<td width="129"></td>
+<td width="89"><strong>RT, Clear Tags</strong></td>
+<td width="77"><strong>RT, 2 tags</strong></td>
+<td width="77"><strong>RT, 3 tags</strong></td>
+<td width="64"><strong>RT, 1 use, 1 tag</strong></td>
+<td width="64"><strong>RT, 2 uses, 2 tags</strong></td>
+</tr>
+<tr>
+<td><strong>Card Efficiency</strong></td>
+<td>1,1</td>
+<td>1,78</td>
+<td>2,25</td>
+<td>1,5</td>
+<td>2</td>
+</tr>
+<tr>
+<td><strong>Payout</strong></td>
+<td>12</td>
+<td>16</td>
+<td>18</td>
+<td>6</td>
+<td>12</td>
+</tr>
+<tr>
+<td><strong>Clicks</strong></td>
+<td>11</td>
+<td>9</td>
+<td>8</td>
+<td>4</td>
+<td>6</td>
+</tr>
+<tr>
+<td><strong>Adjusted efficiency (11 clicks)</strong></td>
+<td>1,1</td>
+<td>1,63</td>
+<td>1,9</td>
+<td>1,18</td>
+<td>1,1</td>
+</tr>
+</tbody>
+</table>
+<p>Now looking at five different uses of Rogue Trading we can see that it differs greatly in power depending on the amount of tags you accept. The &#8216;safe&#8217; variant of clearing all tags manually looks very bad (column 1). Comparing to the generally unplayable Armitage Codebusting it is noticeably worse and just marginally better than clicking for credits.</p>
+<p>If we look at the full payout (column 3) without clearing tags it provides incredible efficiency! It is comparable to the adjusted efficiency of Kati Jones with 7 uses! Now, the obvious downside is that due to the design of the card, if you use it twice your opponent may trash it on their next turn, preventing you to get this full value. Thus, the completely safe way to use it is to use it once, clear the tag, then using it twice taking 2 tags (column 2).</p>
+<p>Looking at this case we are left with a very high card-efficiency still, and comparable to Kati Jones with 6 uses! This comes with the downside of two tags, but if you think you can play around that this surely makes the card valuable as a one or two-of in most criminal-decks.</p>
+<p>Now, look at the two &#8216;risky&#8217; cases where you use the card and keep the tags. If you use it once and the opponent trashes it (column 4) it is kind of bad, but still provides comparable efficiency to Liberated Accounts. It is the same as playing two Easy Mark&#8217;s. Using it twice and then letting the opponent trash it (column 5) is still good value however!</p>
+<p><img loading="lazy" decoding="async" class="wp-image-16096 aligncenter" src="/wp-content/uploads/2018/08/CvsPC.png" alt="" width="516" height="279" /></p>
+<p>Alright, now for something different! For the longest time the now-rotated Corroder was the best barrier-breaker in the game. It was vastly superior to all other options and if you had influence over there was little reason not to play it.</p>
+<p>Enter Paperclip.</p>
+<p>Almost immediately all competitive players switched to this new Damon-designed breaker instead of Corroder. As can be seen in the tables below, looking at purely simple barriers, Paperclip is equal to corroder for all single-subroutine barriers and superior for many high-strength multi-sub barriers.</p>
+<table width="512">
+<tbody>
+<tr>
+<td width="64"><strong>Corroder</strong></td>
+<td colspan="2" width="128"><strong>ICE Strength</strong></td>
+<td width="64"></td>
+<td width="64"></td>
+<td width="64"></td>
+<td width="64"></td>
+<td width="64"></td>
+</tr>
+<tr>
+<td><strong>ICE Subs</strong></td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+</tr>
+<tr>
+<td><strong>1</strong></td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+</tr>
+<tr>
+<td><strong>2</strong></td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+</tr>
+<tr>
+<td><strong>3</strong></td>
+<td>3</td>
+<td>3</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>7</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Paperclip</strong></td>
+<td colspan="2"><strong>ICE Strength</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>ICE Subs</strong></td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+</tr>
+<tr>
+<td><strong>1</strong></td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+</tr>
+<tr>
+<td><strong>2</strong></td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+</tr>
+<tr>
+<td><strong>3</strong></td>
+<td>3</td>
+<td>3</td>
+<td>3</td>
+<td>3</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+</tr>
+</tbody>
+</table>
+<p>Now, in good card-design, cards are supposed to come with downsides. The introduction of Paperclip was followed by a slight subsequent power-increase in barriers as well so the game overall was kept roughly stable. However, what usually is the design-philosophy for breakers is that, similar to economy cards, more efficient breakers have a higher initial cost to install.</p>
+<p>This balances their power with the tempo-loss of the install-cost, and makes them superior only after running ICE a couple of times.</p>
+<p>While Paperclip has 2 additional cost to play it is often discarded and installed without paying a click for the install. Experienced players often use a baseline of a click being worth ~2 credits. This is the efficiency of Sure Gamble and Hedge Fund.</p>
+<p>This means that if you value a click at 2 credits there is <em>no efficiency downside</em> to playing Paperclip! It has some minor disadvantages such as one more influence, needing to throw it away a turn before and clicks not <em>always</em> being worth 2 credits. Even considering this however most players switched to it permanently as in the vast majority of cases it is simply superior.</p>
+<p>Corroder maintains the small bonus of being able to keep in hand to surprise the Corp and costing less influence. I actually played it to third place in the 2016 Nordic Nationals instead of Paperclip. I earned many confused looks for this.. =)</p>
+<p>One might think Paperclip prepared Corroder being rotated out in the new Core 2.0 and that the cost of 4 then might be valid. However i would have preferred having Corroder left in the pool and Paperclip costing 5. This would be a slightly more interesting situation for the game to be in. Surely it is fascinating how much a single credit on card-cost can matter?</p>
+<p><img loading="lazy" decoding="async" class=" wp-image-16099 aligncenter" src="/wp-content/uploads/2018/08/TC.png" alt="" width="295" height="379" /></p>
+<table width="436">
+<tbody>
+<tr>
+<td width="129"></td>
+<td width="89"><strong>TC, Full value</strong></td>
+<td width="77"><strong>TC, 1 ICE cost</strong></td>
+<td width="77"><strong>TC, 3 Uses</strong></td>
+<td width="64"><strong>Day Job</strong></td>
+</tr>
+<tr>
+<td><strong>Card Efficiency</strong></td>
+<td>2,67</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+</tr>
+<tr>
+<td><strong>Payout</strong></td>
+<td>16</td>
+<td>12</td>
+<td>8</td>
+<td>8</td>
+</tr>
+<tr>
+<td><strong>Clicks</strong></td>
+<td>6</td>
+<td>6</td>
+<td>4</td>
+<td>4</td>
+</tr>
+<tr>
+<td><strong>Adjusted efficiency (6 clicks)</strong></td>
+<td>2,67</td>
+<td>2</td>
+<td>1,67</td>
+<td>1,67</td>
+</tr>
+</tbody>
+</table>
+<p>Alright, let&#8217;s talk one of the worst economy-mistakes of Netrunner history. Stay with me youngsters, ye who might not have experienced the power of Temujay. Temujin Contracts is a banned card released in the Flashpoint-cycle as Criminal run-economy. It was quickly ported as a 3-of in <em>all decks making runs early</em> and even some that weren&#8217;t.</p>
+<p>The idea with this card is to lock in run-economy on a single server and make the runner have to run there to fetch it. This would be vulnerable to ICE counterplay as the corp could quickly make runs there less effective. A good idea, and an excellent set of decision-points that leads to lots of deep game-decisions. However it can be played turn one on an open server and with no risk get 12 credits back. Further, it forces the corp to ICE there to prevent the Runner getting the full value on turn 2. Even worse, it is used in synergy with Criminal run economy such as Desperado (1 credit per run) and Dirty Laundry (3 credits).</p>
+<p>First, look at the base-case of full value. Comapre to the previous cards discussed in this article. It is 20% better than a full-value Rogue Trading with a higher payout! Even played agaisnt an open server and only used three times it is comparable to the mediocre economy-card Day Job. This leaves it on table with 8 credits for later use!</p>
+<p>Combine the best economy-card in the game with additiona lsynergy in the Criminal faction and you have a nightmare. The only matchup where this card was moderately balanced was against no open servers, i.e. Glacier. Even there it was a real pest. Remember i said people stopped slotting Kati Jones?</p>
+<p>One wonders how this could get past playtesting. It is ridiculous. There are rumors of the numbers being &#8216;spiced up&#8217; by upper management at FFG. It seems they learnt their lesson to stay the hell out of card-design after this.</p>
+<p>It is a shame, the design idea is very interesting, and i hope the NISEI design-effort reconsiders a balanced version.</p>
+<p><img loading="lazy" decoding="async" class=" wp-image-16101 aligncenter" src="/wp-content/uploads/2018/08/Z0.png" alt="" width="317" height="410" /></p>
+<p>Let&#8217;s talk about ZerO. A card-design that was just released and then just as quickly banned. Doing the math this card does not <em>seem</em> that overpowered, and it is an interesting case. I&#8217;ve found when talking to players some of the most egregious biases and misinterpretations of the numbers on a card i&#8217;ve ever seen.</p>
+<p>Comments like <em>&#8220;It&#8217;s just a better ProCo&#8221; </em>and <em>&#8220;</em><em>It draws 2 cards, the card discarded isn&#8217;t that big of a cost!</em><em>&#8221; or &#8220;Well damage is </em>good<em> for Anarchs! It only hits I&#8217;ve Had Worse anyway!&#8221;.</em></p>
+<p>While the above statements have some form of truth to them i beleive that players impressions of this card are massively shaped by the Clan Vengeance-combo being a completely ridiculous broken interaction. Just compare it to a similar effect such as Wanton Destruction.</p>
+<p>As ZerO is click-economy and very similar to ProCo it makes for a good comparison.</p>
+<p>Looking at base-value of using the card ProCo costs 5 and 2 clicks to install, and then improves your basic actions to giving a click and a credit any time you use them.</p>
+<p>ZerO costs 1, giving you a similar ability. You get <em>net</em> 1 card and 1 credit for a single click. However you lose a random card so while the <em>efficiency </em>is the same you introduce some variance. However it can only be used <em>once a turn</em> thus while you can earn your money back with ProCo relatively quickly it will take a couple of turns before ZerO starts being a net-benefit.</p>
+<p>ZerO has a hidden benefit however, while ProCo gives you 1 <em>deck access</em> per use ZerO gives you 2. You get to see 2 new cards from your deck. If your deck has a lot of duplicates and situation-dependent cards this is a <em>very</em> high upside. Anarchs are designed to build decks just this way which is likely why ZerO was printed.</p>
+<p>If you add to this the synergy with &#8216;heap breakers&#8217; and the ability to sometimes trigger I&#8217;ve Had Worse the single use can likely be said to be better than a single ProCo use <em>in anarch</em>. However discarding bin-breakers is not a <em>massive</em> advantage as the cost of overdrawing and then discarding them is the same. This is not as big of a benefit as people think, as overdrawing is very easy to accomplish and the downside of getting access to the breakers on the following turn is minor (as noted in the Corroder Vs Paperclip-discussion).</p>
+<p>This leaves the benefit of sometimes hitting I&#8217;ve Had Worse which is efficient but quite unreliable. It also loses you an important card versus damage-decks that try to kill you.</p>
+<p>Summing up i think that the benefits of ZerO seem to be balanced by its downsides, and while powerful i think the ban is a response to the broken ZerO+CV-combo rather then the inherent strength of ZerO itself. Might also be a tad of decreasing the overall power-level of Anarch in that decision. And for that i support the decision.</p>
+<p>&nbsp;</p>
+<p>I hoped the very few of you who like going this deep enjoyed the side-discussion. Next time we&#8217;ll move onto something different entirely!</p>
+<p>/E</p>
+<p><a href="/the-skills-of-netrunner-index/"><strong>Back to Index of Articles  -&gt;</strong></a></p>

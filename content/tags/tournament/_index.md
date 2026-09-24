@@ -1,0 +1,5 @@
+---
+title: Tournament
+slug: tournament
+---
+

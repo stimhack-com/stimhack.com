@@ -1,0 +1,5 @@
+---
+title: jinteki
+slug: jinteki
+---
+

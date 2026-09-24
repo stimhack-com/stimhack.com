@@ -1,0 +1,262 @@
+---
+title: 'Single Sided Swiss: How it Works by Ysengrin'
+slug: single-sided-swiss-how-it-works-by-ysengrin
+date: '2021-02-17T17:08:04-07:00'
+lastmod: '2021-03-03T04:02:47-07:00'
+authors:
+- guest-author
+categories:
+- articles
+tags: []
+summary: 'This article is a guest contribution by Ysengrin. It is a repost (with permission) from his personal blog. The original article can be found here: https://netrunnerscribbler.wordpress.com/2021/02/17/single-sided-swiss-how-it-works/ Intro I have created a free application for tournament…'
+wp_id: 16662
+---
+<p>This article is a guest contribution by Ysengrin. It is a repost (with permission) from his personal blog. The original article can be found here: <a href="https://netrunnerscribbler.wordpress.com/2021/02/17/single-sided-swiss-how-it-works/">https://netrunnerscribbler.wordpress.com/2021/02/17/single-sided-swiss-how-it-works/</a></p>
+
+
+
+<h1 class="wp-block-heading">Intro</h1>
+
+
+
+<p>I have created a free application for tournament organizers to run single sided swiss events called the <a href="https://github.com/Chemscribbler/Netrunner/tree/main/SingleSided_App">Side Aware Swiss System (SASS) </a>and this article will describe how it pairs. I’m going to cover it first in a hopefully universally understandable way, and then go into a bit more depth of the actual math used for those interested.</p>
+
+
+
+<h1 class="wp-block-heading">Why Single Sided Swiss?</h1>
+
+
+
+<p>The very short summary of why I’m looking at single sided swiss for Netrunner tournaments is because the current format, double sided swiss (i.e. a match is two games, one on each side), has some problems.</p>
+
+
+
+<ul><li>The structure makes 241s, (“two for one”) where instead of playing both games, the two players agree the winner of the first game gets both wins, very commonly the optimal choice for both players. This occurs when both players would need to get 2 wins to make the cut. But even beyond that, it’s often a higher expected value for a player to 241 every round.</li><li>Intentional draws (IDs) are also extremely common. Because both players get a full win recorded, the top score bracket in most tournaments can usually safely ID into the cut playing very few games of Netrunner (this is further exacerbated with byes).</li><li>Those two factors combine to mean early performances in Netrunner tournaments, against the weakest opponents (theoretically) end up having a significant impact on who makes it into the cut and who misses it.</li><li>For new players, to Netrunner or just to a local scene, the etiquette of when you ID/241 can also be intimidating, and adds an extra burden to Netrunner tournaments.</li><li>Finally, because 241’s side selections are not tracked, someone could theoretically 241 every round and just get one of their two decks the whole day.</li></ul>
+
+
+
+<p>Single sided swiss (SSS) reduces or eliminates (in theory) all of those problems. In single sided swiss, you are assigned your opponent as well as the deck you will play, and you only play that single game.</p>
+
+
+
+<ul><li>241s are eliminated entirely</li><li>Intentional draws are much less common, and generally only good for the very best performers at the end of the tournament. This is because a tie is worth ⅓ of a match win instead of ½ of a match win in DSS</li><li>This forces good players to play a much larger portion of their games, and removes the ability to game the tournament structure</li></ul>
+
+
+
+<p>&nbsp;However SSS does introduce three new potential problems.</p>
+
+
+
+<ul><li>Playing the same number of games takes longer</li><li>You cannot guarantee everyone plays their decks the same number of times</li><li>There are more mismatched record pairings (this is somewhat dependant on how you count, as you could argue that every double sided swiss has a mismatched pairing)</li></ul>
+
+
+
+<p>The first issue is a challenging one, and I think a really important one to address, with potential solutions being cutting games (<a href="https://netrunnerscribbler.wordpress.com/2020/09/25/double-vs-single-swiss-round-2-lies-damn-lies-and-statistics/">see this article</a> for why I don’t think that hurts overall rankings) or reducing the amount of time a round is allotted. This is a tricky issue, as cutting games from a tournament to make the top cut more fair is primarily catering to strong players (though SSS gets people paired with closer ranked players faster). If that change comes at the expense of games for everyone, we as a community have to weigh that cost carefully.&nbsp;</p>
+
+
+
+<p>This article is going to focus on the second potential issue, and how, with some math, we can actually handle it pretty well without making the third issue worse.</p>
+
+
+
+<h1 class="wp-block-heading">Algorithm in English</h1>
+
+
+
+<p>For my algorithm I wanted to make pairings based on two factors: the player’s wins (sometimes referred to as score or prestige) and the amount of times they’ve played each deck. I call this bias. So if a person has played their Corp twice, and Runner once I would say they have a Corp bias of 1 (the reverse would be a runner bias of 1). If they had played Corp 3 times and Runner 1 time, they would have a Corp bias of 2.</p>
+
+
+
+<p>Traditionally, swiss systems that don’t care about side balance do some variation of solving a “graph” problem. Here graph stands for a collection of nodes (representing players) and the lines (called edges) that connect them (sorta like a spiderweb). For every player we draw a line connecting them to every other player. Each node represents a player, and each edge gets assigned a number representing the desirability of that pairing. Then the tournament organizer uses some algorithm to divide those players to create a “best” pairing.</p>
+
+
+
+<figure class="wp-block-image"><img decoding="async" src="https://lh4.googleusercontent.com/zJVHVSGq7Hd-WLQKptJ9xYypYwApeKO66WFB4QI1lHXz4u08965a0dqhnJ4Wb6XnLrCX9WC2OomdZh8_bB5N28WHGBQeVXsl7ldq2d5SLt0BUiUjycxchacElykSfp1zEjqLCbef" alt=""/></figure>
+
+
+
+<p>We use these edges to calculate how “desirable” a given pairing would be by assigning costs to potential pairings. Two players who “should” be paired against each other would have a small cost, and two players who you don’t want paired have a high cost. For the rest of the discussion I’m going to refer to the nodes as players, and the edges as the “cost to pair” a set of two players.</p>
+
+
+
+<p>So for my algorithm, I followed the same strategy. In most swiss systems the cost to pair considers two things: what is the difference in tournament score, and have they played already. So the “equation” to figure out the cost to pair is simply:</p>
+
+
+
+<p><strong>Cost = Score Difference + Have They Played(if yes make this very big)</strong></p>
+
+
+
+<p>So when I went to make my algorithm I wanted to change as little as possible. My equation just adds one more cost which accounts for their side bias, which I call the <strong>Relative Side Bias</strong>. If both players have a Corp bias of 1, that increases the cost, if they both have a Corp bias of 2 that increases it even more. But if one player has a corp bias of 1, and the other player has a runner bias of 1 (or an even amount with both) the <strong>Relative Side Bias </strong>cost is 0. So the equation becomes:</p>
+
+
+
+<p><strong>Cost = Score Difference + Relative Side Bias + Have They Played(if yes make this very big)</strong></p>
+
+
+
+<p>There are lots of ways you fiddle with the exact calculations of score difference and relative side bias, but the most important thing is their relative size. If <strong>Score Difference</strong> has a larger effect on <strong>Cost </strong>than <strong>Relative Side Bias</strong>, then you’re more likely to end up with some players playing uneven sides. In the reverse you’re more likely to get pair up/downs, but fewer people play their decks an uneven number of times. In SASS, I have a term called the <strong>Score Factor</strong> which tweaks the relative sizes of the two terms so the TO can adjust how far the algorithm will look to find someone to balance the sides.</p>
+
+
+
+<h1 class="wp-block-heading">Example Round from Throwback Tournament</h1>
+
+
+
+<p>Standings after round 3 is concluded are pictured below. The Side column is counting the difference in Corp games played minus Runner games played. So a Side value of 1 means they’ve played 2 corp games and 1 runner game. And a side value of -1 is the reverse. (Because of byes three players have played only 2 games, one on each side)</p>
+
+
+
+<figure class="wp-block-image"><img decoding="async" src="https://lh5.googleusercontent.com/VrnbMNYvWegIZJppeEcFuk-XEBVLFQ57vOFO6_FATCMp0McpD9t4nEn5-_o619sPx2faSTo4JJD1H-zv0WEe24xWy_kJf0ZBhjq0Sl2Mf9o25CIXVke9-dCTHdbpF7BAmF6G_MsA" alt=""/></figure>
+
+
+
+<p>Going into round 4 we need to come up with a pairing for these 9 players. So let&#8217;s go through a basic idea of what the algorithm did, looking at how it calculated costs for analyzechris. To put numbers on the page I’m going to have the score difference term just be the differences between the two player’s scores (it’s slightly more complex in the actual implementation), so analyzechris vs Aruzan would have a score difference term of 3 (6 points &#8211; 3 points). And then, to match the math behind my algorithm, the side bias cost for pairing two players with the same side bias (i.e. both players have played more Corp than Runner) would be 10. So the whole table for analyzechris looks like:</p>
+
+
+
+<p>Analyzechris:</p>
+
+
+
+<figure class="wp-block-table"><table><tbody><tr><td>Opponent</td><td>Score Difference Cost</td><td>Side Bias Cost</td><td>Total</td></tr><tr><td>wiserunner</td><td>1</td><td>10</td><td>11</td></tr><tr><td>Longi</td><td>1</td><td>0</td><td>1</td></tr><tr><td>Sokka234</td><td>0</td><td>0</td><td>0</td></tr><tr><td>Whiteblade111</td><td>0</td><td>10</td><td>1010 (they’ve already played twice)</td></tr><tr><td>Aruzan</td><td>3</td><td>0</td><td>3</td></tr><tr><td>Solomir</td><td>3</td><td>0</td><td>3</td></tr><tr><td>Frizzler</td><td>3</td><td>0</td><td>3</td></tr><tr><td>Deus Mortis</td><td>3</td><td>0</td><td>3</td></tr></tbody></table></figure>
+
+
+
+<p>So the best pairings for analyzechris would be Sokka234, Longi, and then any of the people with 1 win. In the actual tournament, analyzechris was paired with Deus Mortis. Why?</p>
+
+
+
+<p>Basically because the algorithm looks to minimize cost across all players. In this case, there were an even number of people with the top score, and an odd number of people below, instead of having the top two pair down, they played each other, Whiteblade111 and Sokka234 got paired (at random), so analyzechris got the pair-down. Chris could have been paired against any of them, and so randomly got Deus Mortis chosen from the pool of players with 1 less win, and an opposite side bias.</p>
+
+
+
+<h1 class="wp-block-heading">Technical Details</h1>
+
+
+
+<p>Here I’m going to discuss some of the actual math and implementation things. This is not essential for most people, but for those that want to check my math, I figured it makes sense to write some things out more clearly.</p>
+
+
+
+<p>I’m going to break out each of the three terms in a bit more detail as there are complexities to how each is calculated. My actual cost calculation looks like this:</p>
+
+
+
+<p>Cost =1000- Score Cost * Score Factor &#8211; Side Bias Cost</p>
+
+
+
+<p>I’m doing subtraction because the python library I’m using has a maximum weight function (not a minimum weight one), but all the math ends up being the same, so I’ll continue to use positive costs through the rest of the discussion. For those interested I&#8217;m using the python library networkx and its max_weight_matching function with maxcardinality=True to optimize the graph I build with the above cost function.</p>
+
+
+
+<h2 class="wp-block-heading">Side Selection</h2>
+
+
+
+<p>My implementation is a bit idiosyncratic, so sides are currently assigned near the end of the algorithm. There are a bunch of other ways you could implement this algorithm that handle side assignment and pairing differently (like making the graph directed instead of non-directed). But due to me trying to use the tools I had on hand, I take a somewhat unusual approach. First I make my graph (details below), then go through every pair and assign sides using a simple logic tree.</p>
+
+
+
+<ul><li>If your opponent is the Bye, you get no side assigned</li><li>If you’ve played this opponent before, you are assigned the opposite side</li><li>If you and your opponent have the same bias, flip a coin</li><li>If your bias is greater than the opponent (i.e. you’ve played more corp games) you run, otherwise you Corp.</li></ul>
+
+
+
+<p>Then when I check to see if every player if any of the following are true</p>
+
+
+
+<ul><li>If they’ve already played the opponent twice</li><li>If they’re against the bye and already received the bye</li><li>If they’re having a rematch and the side they’re assigned would make their overall side bias worse ( abs(current side bias + assigned side) &gt; abs(current side bias) and current side bias != 0)</li></ul>
+
+
+
+<p>If any of those three things are true, the edge weight is set to 1000, and I re-run the algorithm to optimize the graph with that edge essentially removed. This set of calculations is totally something that could be done upfront, and incorporated into the graph initially instead of post-hoc. When I was trying to solve a different problem related to my simulations running slow I tried to make my implementation vectorizable to reduce function calls, and I wasn’t sure how to make the above checks vectorizable. This ended up not saving me any computational resources, so was a bit moot, but I’d built up enough infrastructure that I decided to keep pushing ahead with it.</p>
+
+
+
+<p>With an understanding of how I’m assigning sides, I think it makes sense to look at how the algorithm determines the weights for all the allowed cases.</p>
+
+
+
+<h2 class="wp-block-heading">Score Differences</h2>
+
+
+
+<p>The formula I showed above was just Player A score minus Player B score. And that’s what all of my testing did, and what I believe Cobr.ai does. However when running a simulated tournament, I got a weird pairing that made me want to modify that equation a little. What happened was there was one player with a score of 9, then there were an even number of people at 6, and an odd number at 3. So because pairing one person down 2 levels had the same overall cost as 2 people down 1 level, one of the minimal mappings (and the one the algorithm chose) paired the 1st player with the 6th player instead of anyone else in the top 5. So I needed some non-linear cost to make it so that two pairs being paired up/down 1 was preferred over 1 pair being paired up down twice. I ended up selecting triangular numbers, so the cost equation becomes (with the score difference being the difference of their scores divided by the points/win):</p>
+
+
+
+<p><strong>Cost = </strong><strong>SD*(SD+1)</strong><strong>2</strong></p>
+
+
+
+<p>So if two players has a score difference of 1 (i.e. one player has won one more game than the other) the cost of pairing them is 1*2/2 = 1. If the score difference is 2 the cost is 2*3/2 = 3, and SD of 3 has a cost of 6 (3*4/2). So each further level down has a higher and higher cost. I chose triangular numbers because they’re simple to calculate, and while they do grow faster than linear, they grow slower than my side bias calculation, which is below.</p>
+
+
+
+<h2 class="wp-block-heading">Side Bias Calculation</h2>
+
+
+
+<p>I adapted this side bias calculation from a paper by <a href="https://www.researchgate.net/publication/31953571_Weighted_Matching_in_Chess_Tournaments">Olafson</a>. For this one I’m going to start with the equation, and work backwards (for players A and B)</p>
+
+
+
+<p>Cost =(Abias*Bbias &gt;0)*8min(|Abias|,| Bbias|)</p>
+
+
+
+<p>This is a lot messier. So let&#8217;s start with the left hand side. A<sub>bias </sub>and B<sub>bias </sub>&nbsp;are signed quantities. So if A<sub>bias</sub> * B<sub>bias</sub> &gt; 0 that means either both are positive, or both are negative. So the left term is only true (which in Python is equivalent to 1) if both players have the same bias. If they have opposite biases, or one player has no bias, the value is zero and we’re done with the side bias calculation.</p>
+
+
+
+<p>Onto the second term 8 raised to the power of minimum of the absolute values of A<sub>bias</sub> and B<sub>bias</sub>. A lot of whys here. Let&#8217;s start in and work out. We chose the minimum of the biases because in the case where someone has a bias, we want to find the opponent with the least bias in the same direction. As an example of why that is true, if player A has a large bias (say 3), B had a bias of 2, and C had a bias of 1, the maximum of AB and AC is the same, but the minimum is different. And pairing A vs C before A vs B makes it more likely that everything balances out overall. We use the absolute value of the bias because the bias term is signed, so 2 more runner games is the larger bias, but is stored in the system as -2.</p>
+
+
+
+<p>So then why 8? There isn’t a good reason why to be quite honest, I picked the number based on Olafson’s paper (scaled down, he had everything with large multipliers in the hundreds). Any exponential base is fine, and 8 gives you some room for going below 8 in different increments, and below 64 (8<sup>2</sup>), and almost guarantees you’ll always find a suitable pairing before 8<sup>3</sup> occurs. But this could be changed to 10, 100, whatever. Part of my motivation for using the triangular number sequence (instead of any other non-linear integer sequence) was I could multiply the early numbers by small integers and still be smaller than 8.</p>
+
+
+
+<h2 class="wp-block-heading">Score Factor</h2>
+
+
+
+<p>So now we get to the score factor. The side bias term is always going to be discrete, 0, 8, 64, 512. The number we get out from the score cost may include fractions (due to ties), but generally will be 0, 1, 3, 6, 10, 15, 21, etc. So now if we think of players A, B, C where A and B have 1 win, and +1 side bias, and C has 3 wins and -1 side bias we could end up with different optimal pairings. By default, using the two factors I outlined above, the cost for A to pair with B would be 8, and the cost would be 3 for A to pair with C. So generally the algorithm will probably pair A against C because that’s the lower cost. But we could add a multiplier to the score factor term to change the relative weighting of the two terms.</p>
+
+
+
+<p>So a score factor of 3 would mean now the cost of A vs B would remain 8, but A vs C would be 9 (3*3), so it becomes a less desirable pairing. So for a range of different score factors we get the table below. Each score cost * score factor is colored in the center of the table. The number of rows down (win difference) is what the final score cost will be. The green cells are ones where the score cost of going up/down the standings to find someone with a different bias is going to be less than playing someone with the same score and bias (So A vs C is a better pairing than A vs B). When you get to the yellow, those are showing how far the algorithm will cost A vs C less than A vs. B if A and B both had a side bias for +/- 2.</p>
+
+
+
+<figure class="wp-block-image"><img decoding="async" src="https://lh5.googleusercontent.com/kddxQ_-4xw-29jBh2W1ESQDhXY5RD0W-_1JYKWWgoYVBaS_-g77RryT7RyJcdEmxllVNEcxQy6vFszNv2QdUPXvRo4_w1ZI_9k2hvaT5_l9wWljYkXh92yyIQML87dkmHXZicJWO" alt=""/></figure>
+
+
+
+<p>In my tests, a score factor of 2 vs 3 had a difference of 0.05 in overall pair up/downs per tournament (for a 28 person tournament), but one tenth the number of tournaments where some number of players went home with uneven sides. So for those mid-size tournaments, I’m recommending a score factor of 2. I’ll do more testing on smaller player counts 6-20, but I suspect being a bit more flexible with scores, and more rigid about sides will often end up coming out pretty fair.</p>
+
+
+
+<h2 class="wp-block-heading">A note about Re-pairing</h2>
+
+
+
+<p>Currently I allow re-pairing provided both players are playing the opposite side provided it does not hurt their side bias. If A has played B but not C, and both B and C have equal score factors and side biases, the algorithm is equally likely to choose either of them. This could be a behavior that people want tweaked, to avoid early (round 2 especially) rematches that can occur frequently in small tournaments (or tournaments where one side won a large predominance of games). This could be simply adding 1 to the cost if two people have played already, which would be smaller than any other contribution, so should only change the pairings in the case described above.</p>
+
+
+
+<h1 class="wp-block-heading">Conclusion</h1>
+
+
+
+<p>Hopefully this is a helpful summary of the nuts and bolts of the algorithm. I don’t think this should be needed to understand to run a tournament. But I figured, now that I’ve got a working app, with a somewhat opaque strategy, it would be worth sharing how it works, and some of how I got there.</p>
+
+
+
+<p>I think single sided swiss solves some significant issues with the current Netrunner tournament format. Through this pairing algorithm one of the major drawbacks of single sided swiss can be mitigated to be almost a non-issue. If you’re interested in some of the theoretical data to support this solution I’ve got a whole series of articles on <a href="https://netrunnerscribbler.wordpress.com/">my blog</a>. I built this app, and wrote this article because as a community we should be testing out single sided swiss for all event sizes. Without data I don’t think we will know how well this works or doesn’t work without testing, and I wanted to give people more tools to test this. One day hopefully this algorithm can be integrated with <a href="http://cobr.ai/">Cobr.ai</a>, but until then this desktop app should hopefully be enough to get this going.</p>
+
+
+
+<p>I want to thank Timmy Wong, SimonMoon, Sanjay, miek, and JayPumpkin who all looked at version of this article and gave very helpful feedback and edits.&nbsp; If you have got any questions, comments, I’m fairly active on Stimslack as Ysengrin.</p>

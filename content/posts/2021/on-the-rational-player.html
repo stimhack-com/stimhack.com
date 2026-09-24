@@ -1,0 +1,161 @@
+---
+title: On the Rational Player – by lostgeek
+slug: on-the-rational-player
+date: '2021-11-04T05:39:00-07:00'
+lastmod: '2021-11-04T06:41:37-07:00'
+authors:
+- guest-author
+categories:
+- articles
+tags:
+- lostgeek
+- meta-meta-discussion
+- sbt
+summary: Hey everyone, lostgeek from the NISEI SBT here! In the last few weeks, I’ve been trying to sort my thoughts into a coherent theory, hoping to end up with some useful tool for our balancing work. I’ve missed that goal and this specific perspective might be very much born out of the way I personally think and conceptualize things and might not work for you, but I still think it has been a fun and interesting journey and might click for some of you as well, so… uh… here’s way too many words on meta theory for you!
+featured_image: /wp-content/uploads/2021/11/meta.png
+thumbnail: /wp-content/uploads/2021/11/meta.png
+wp_id: 17279
+---
+<h1 class="wp-block-heading"><strong>A theoretical look on the competitive meta</strong></h1>
+
+
+
+<p>Hey everyone, lostgeek from the NISEI Standard Balance Team here! In the last few weeks, I’ve been trying to sort my thoughts into a coherent theory, hoping to end up with some useful tool for our balancing work. I’ve missed that goal and this specific perspective might be very much born out of the way I personally think and conceptualize things and might not work for you, but I still think it has been a fun and interesting journey and might click for some of you as well, so… uh… here’s <em>way too many</em> words on meta theory for you!</p>
+
+
+
+<p>Towards the end of our <a href="https://nisei.net/blog/ban2110/">SBL 21.10</a> discussions, a question came up: Who exactly are we making our decisions for? We stated that we want to balance the game both for “top and mid tables”, but what is the difference between those two?</p>
+
+
+
+<p>When talking about SBL updates, we were often throwing around definitions for a competitive player along the lines of “a player searching for the best deck against the meta in a faction and archetype-agnostic way”. I do believe that there is quite some truth to this, but it doesn’t fully represent the motivations behind real player decisions. In this article, I’ll be using the term <strong><em>real player</em></strong> referring to actual human beings we might meet at a tournament. While these are the people we want to build our SBL for, it is also next to impossible to take into account all their different motivations, inner workings, and all their little quirks like biases, faction loyalties, the fact that they’re working on incomplete information, and so on.</p>
+
+
+
+<p>For this reason, I will try to define some other constructs; theoretical beings that may or may not describe any actual <em>real players</em>, but are accessible to us in that they have strict rules we can reason about and variables we can control. In some sense, the <em>real player</em> is inaccessible to us and these abstract constructs will help us form theories, think them through and – as long as our constructs are somewhat decent approximations of the real world – translate into actual insights for our <em>real players</em>.</p>
+
+
+
+<h1 class="wp-block-heading"><strong>Defining constructs</strong></h1>
+
+
+
+<p>Let’s start with the most abstract and simple one: the <strong><em>ideal player</em></strong>. An ideal player picks and plays whatever deck will help turn their infinite skill into winning games in a faction- and archetype-agnostic way. They optimize for the question: “What is the deck <em>that is capable </em>of the highest win percentage against the field?”. They are capable of accurately determining what decks the field of actual <em>real players</em> will be bringing and will know their exact win percentage against them. Think of it as an analog to chess engines which are capable of playing at superhuman levels.</p>
+
+
+
+<p style="font-size:12px">(On the topic of Yomi, expect this <em>ideal player</em> to be capable of playing a game theory optimal strategy against other ideal players or exploit whatever weakness a non-ideal player might have. We’re going Caprice Nisei levels of psychic here…)<br /></p>
+
+
+
+<p>I feel when people talk about the meta, they typically envision it being played by these ideal players. Trying to apply this model to <em>real players</em> will no doubt fail for various reasons. One of them is that a real player has certain skills and weaknesses. I’ll be using the deck of <a href="https://netrunnerdb.com/en/decklist/64846/hivemind-maxx-1st-4th-6th-7th-10th-14th-at-early-bird-">Hivemind MaxX</a> (HMM in short) as an example here, idealized into a deck with a high barrier of entry to play at a reasonable level and a high skill ceiling (in the sense that players are given many opportunities to turn their personal skill into better results or lack thereof into worse results). This deck would be the obvious choice for the <em>ideal player</em>, giving them the greatest ability to turn their infinite skill into winning games.</p>
+
+
+
+<p>Now why do we not see HMM dominating the top tables and cuts of tournaments (besides the fact that the idealization of HMM might not be holding true)? Any deck will ask certain skills of their pilot. More linear decks like Titan or Sportsmetal have play patterns that in the most extreme case might look like: If you hold an FA tool, score. Otherwise, draw. We could assume that a lot of players are able to reach the skill ceiling of these decks, since the skill it asks of you as a player is limited. But in the case of high skill ceiling decks, a <em>real player</em> is confronted with a question: Are <em>my personal skills </em>good enough to pilot this deck better than some other more linear alternative?<br /><br /><br /><br /><br /></p>
+
+
+
+<div class="wp-block-image is-style-default"><figure class="aligncenter is-resized"><img loading="lazy" decoding="async" src="https://lh3.googleusercontent.com/JpTm4LTm_-wLNGOvRECPQ82HAABzIwqUnGpGKKnZD566kUobxTv5RG4hIhZ3FPFXCyMWytQQhjCZnh7pUvBEya53LjzvK9UoA187efMDiETTiL47AgldKXcbHnbBnyx2EFo6jdxQ" alt="" width="708" height="401"/></figure></div>
+
+
+
+<div class="wp-block-columns is-layout-flex wp-container-core-columns-layout-1 wp-block-columns-is-layout-flex">
+<div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow" style="flex-basis:100%">
+<p class="has-text-align-center"><em>Figure 1: Representation of the different player constructs. While ideal and rational players can be reasoned about, the real player is inaccessible to reasoning and can only be approximated.</em></p>
+</div>
+</div>
+
+
+
+<p>It might also be that they’re comfortable piloting HMM against rush decks, because the decision space collapses to a smaller area, emphasizing using the tools for remote accesses, which they’re proficient in. But when facing slower Corps, play patterns become more nuanced and opportunities to make mistakes arise more often, leading to less favorable matchups for them personally. This player might now be facing a meta decision whether or not to bring this deck to a tournament and deviate from what the <em>ideal player</em> would do, even without the need for any faction or archetype biases.</p>
+
+
+
+<p>To formalize this into a more refined theoretical construct, I want to introduce the <strong><em>rational player</em></strong>, as an extension of the <em>ideal player</em> model. This player also is faction and archetype agnostic, but is limited in their skill set. They do know exactly what their own strengths and weaknesses are and can take this into consideration when deciding on a deck. They are optimizing for a slightly modified question: “What is the deck <em>that I am capable of piloting</em> to give me the highest win percentage against the field?” For example, they might know that they’re bad at evaluating board states against asset spam Corps, so they might pick a strategy that is relatively invariant to this weakness like an Apoc deck.</p>
+
+
+
+<p style="font-size:12px"> (It might be helpful to stress that all of these theoretical players are incapable of making mistakes in their analysis. They do operate with infallible precision.)</p>
+
+
+
+<p>I will limit myself to these two definitions, but there are many more possibilities. DeeR from the Itinerant Pro-Testers Discord suggested the <strong><em>misguided player</em></strong> basing their decisions on wrong beliefs about the meta or the <strong><em>non-proficient player</em></strong> having the right beliefs about the meta, but incapable of converting them into the correct meta calls and play patterns. These may be helpful constructs for certain questions, but for the ones I will address in the rest of this article, the <em>ideal</em> and <em>rational</em> <em>player</em> are sufficient.</p>
+
+
+
+<h1 class="wp-block-heading"><strong>Applying the constructs to reality</strong></h1>
+
+
+
+<p>Now that we have defined some constructs, let’s look at how well they approximate decisions and actions of <em>real players</em>. There is one central aspect of the human experience that our constructs are not representing: an actual <strong><em>real player</em></strong> also takes their own subjective fun into account. They might be loyal to a certain faction and will not deviate from that. They might ignore a certain archetype (grinder, asset spam, etc.) no matter what the impact on their win percentage might be. They are also optimizing for the same question as the <em>rational player</em>, but work under additional constraints necessary to make the game fun for them. Since winning is fun<a href="https://xkcd.com/285/"><sup>[citation needed]</sup></a>, the deviation from the decisions of a <em>rational player</em> can be relatively small or even effectively zero. But every single player has a different answer on what is fun for them and chooses their additional constraints accordingly.</p>
+
+
+
+<p style="font-size:12px">(An interesting result of this perspective is the realization that looking back, the game has been most satisfying for myself, when the necessary additional constraints were minimal and what <em>I wanted to play</em> coincided with what <em>I should be playing</em> as a rational player, solely optimizing for win percentage).</p>
+
+
+
+<p>We could try to define further theoretical constructs that take into account these additional constraints, but doing so would paralyse us in our ability to reason about player decisions and actions. The <em>ideal</em> player is the easiest to reason about. Their decisions and actions can be predicted solely using our knowledge and experience about the game and we should be capable of predicting the ideal player solution to a given meta with sufficient granularity. The <em>rational</em> player construct requires additionally considering the skill distribution of players. This is already a much more difficult task and requires some guesswork and meta experience. Discussing the actions of a rational player at the start of a new meta is probably vain and only in more mature metas can we start taking the effects of the rational player into account. So in order to keep the theoretical complexity of our model manageable, I will refrain from going any further than the <em>rational player</em>, i.e., adding more variables other than skill to the theoretical model.</p>
+
+
+
+<h1 class="wp-block-heading"><strong>Defining “tables”</strong></h1>
+
+
+
+<p>Armed with these constructs, we can now tackle the question of how to define a top, mid, or lower table. When talking about players “at the top tables”, we typically have a player in mind that is consistently performing well at high-level tournaments with on-meta deck choices. But what about off-meta decks that regularly get into Worlds top cuts like ToThBeBe on <a href="https://netrunnerdb.com/en/decklist/57286">Adam</a> at Worlds 2019 or formerteen on <a href="https://netrunnerdb.com/en/decklist/52531/i-scored-7-points-in-1-turn-w-mushin-made-top-8-at-worlds">Jinteki Biotech</a> at MOpus 2018?</p>
+
+
+
+<p>We should broaden our perspective here and separate the player from their table. The concept of a <strong><em>consistent player</em></strong> is still very valuable. This comprises <em>rational players</em> who have a broad range of skills and experience in the on-meta decks at their disposal and are able to adapt well to meta shifts by changing their preferred lists in a relatively archetype-agnostic manner. But on top tables one can also often find a few <strong><em>niche players</em></strong> bringing an off-meta deck (see Adam and Biotech above). These also are <em>rational players</em>, but have built up experience in non-standard decks and have found themselves either by chance or conscious observation in a meta that favors their niche pick and allows them to turn their unique knowledge into wins.</p>
+
+
+
+<p>These two player types do not necessarily exclude each other, but we often see <em>consistent players </em>incapable of fully adapting to these meta shifts. As an example, look at the <a href="https://netrunnerdb.com/en/decklist/60995">Sunny lists</a> that were performing extremely well in the GameNET meta, which aimed to grind games to a halt and then out-value runner engines. While some of your typical <em>consistent players</em> adapted and brought these Sunny decks to tournaments, many others stuck to their previous choice as they may have deemed their knowledge in this particular niche to be too small to produce good results.<br /><br /><br /></p>
+
+
+
+<div class="wp-block-group"><div class="wp-block-group__inner-container is-layout-flow wp-block-group-is-layout-flow">
+<div class="wp-block-image is-style-default"><figure class="aligncenter is-resized"><img loading="lazy" decoding="async" src="https://lh3.googleusercontent.com/-sWM7Q0I5YjcRVzyrC9STB3cHj3qq48ks3yrjeSHOjerBHipbj-2yaNt2kRBKzGFMCLRmu9A2mBY8_hcedITXEaDlobPMg9L52XQvSIQHC6cSU9ZUYsIKeC6lr2TcWdnV-ACkWaF" alt="" width="800" height="663"/></figure></div>
+
+
+
+<p class="has-text-align-center"><em>Figure 2: A general approach to defining tables, projecting our players onto the two dimensions of meta adherence and average skill level. Credits to Ginevra for the idea behind this illustration.</em></p>
+</div></div>
+
+
+
+<p>To get a better insight into the classification of player classes in tables, we can project our players into two dimensions: meta adherence and average skill level (see Fig. 2). The two player types described earlier fit in the top right and left corners of this diagram. And players in general fall on some spot on this plane, which typically also translates roughly to their performance and therefore “table placement”, making the mid and lower table labels sensible.</p>
+
+
+
+<h1 class="wp-block-heading"><strong>Optimizing SBL decisions for different tables</strong></h1>
+
+
+
+<p>When we say we want to optimize our SBL decisions for both the “top and mid tables”, what we mean is that we are excluding players below a certain skill threshold, since their results vary wildly with their particular level of proficiency and progress in the game. We still want the game to be fun for those players, but it is hard to adjust for that by means of bans and unbans. This is more a topic for development and design, who are designing cards that are targeted at multiple skill levels to create fun and interesting game play.</p>
+
+
+
+<p>Furthermore, the evaluations for mid and top tables can vary especially for high skill ceiling decks and high skill floor decks &#8211; using the term “high skill floor” here to mean decks that provide similarly good results for both high skilled and lesser skilled players. The former decks like Hivemind MaxX mentioned earlier and <a href="https://netrunnerdb.com/en/decklist/62253/regass-geist-8th-9th-13th-in-swiss-6th-15th-in-cut-">NWE Geist</a> are appealing to <em>consistent players</em>, who can use these decks to translate their general skills into win percentage. During those times in the game, we discussed whether these decks need a ban. Our gut feelings based on a mental calculation of what an <em>ideal player</em> would be able to achieve with these lists told us that they were over the power curve and needed a ban. But actual tournament results were inconclusive with individual players performing incredibly well, but those people also being <em>consistent players</em> in general, who typically perform well in these tournaments no matter what deck they bring. And when looking at mid table results of these decks, the win rates were much more tolerable.</p>
+
+
+
+<p>High skill floor decks like the Audacity Sportsmetal lists of the previous SBL 21.06 and Titan lists of earlier SBLs pose a different problem. They typically coincide with having a relatively low skill ceiling, meaning that players of different skill levels can achieve similar performances with them. If these decks are powerful, they can wreak havoc on the mid tables, where they demand disproportionately high levels of skill from their opponents, while being comparatively easy to pilot. On the top tables they have more acceptable win rates, as their opponents are able to play very efficiently and focus on the weaknesses of these lists. Looking at them solely using the model of the <em>ideal player</em>, a nerf might not seem appropriate and might only do so when taking the <em>rational players</em> with different skill levels into account.</p>
+
+
+
+<h1 class="wp-block-heading"><strong>Conclusion</strong></h1>
+
+
+
+<p>Thank you for following along with my theoretical babbling. I am pretty happy with how this model turned out. It reflects how I think about the game at this moment and I feel it’s self-consistent. Still, a lot of details have changed in discussions with a whole lot of people over the last few weeks and I’m looking forward to even more comments and discussions in the future. Feel free to message me in any of the Netrunner-related online spaces like the GLC discord or Stimslack!</p>
+
+
+
+<hr class="wp-block-separator"/>
+
+
+
+<p class="has-small-font-size"></p>

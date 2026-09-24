@@ -1,0 +1,5 @@
+---
+title: japanese
+slug: japanese
+---
+

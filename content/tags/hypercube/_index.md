@@ -1,0 +1,5 @@
+---
+title: hypercube
+slug: hypercube
+---
+
