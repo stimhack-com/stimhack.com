@@ -20,6 +20,7 @@ from urllib.parse import unquote, urlsplit
 import requests
 
 import archived_images
+import archived_links
 
 ROOT = Path(__file__).resolve().parent.parent
 EXPORT = ROOT / ".export"
@@ -86,7 +87,17 @@ def main():
         for kind in ("posts", "pages")
         for item in json.loads((EXPORT / f"{kind}.json").read_text())
     )
-    archived_images.fetch(archived_images.urls_in(html), STATIC, EXPORT)
+    # Dead external images, found by check_external_images.py.
+    checked = EXPORT / "external-image-check.json"
+    dead = {u for u, s in json.loads(checked.read_text()).items() if s != "ok"} if checked.exists() else set()
+    archived_images.fetch(
+        archived_images.cardgamedb_urls_in(html) | dead, STATIC, EXPORT, ROOT / "migration" / "archived-images.json"
+    )
+    archived_links.find(
+        archived_links.cardgamedb_links_in(html),
+        ROOT / "migration" / "archived-links.json",
+        EXPORT / "missing-archived-links.txt",
+    )
 
 
 if __name__ == "__main__":

@@ -17,6 +17,7 @@ import yaml
 from bs4 import BeautifulSoup
 
 import archived_images
+import archived_links
 import nrdb_images
 import wayback
 
@@ -30,6 +31,11 @@ SKIP_PAGES = {"landing", "under-maintenance", "submission-successful", "decklist
 SITE_URL = re.compile(r"^(?:https?:)?//(?:www\.)?stimhack\.com(?=/|$)")
 URL_ATTR = re.compile(r"""\b(href|src|srcset|poster|data-src)=(["'])(.*?)\2""", re.S)
 IFRAME_HTTP = re.compile(r"""(<iframe\b[^>]*\bsrc=["'])http://""", re.I)
+
+# Original URL -> local copy, for images other sites no longer serve (see archived_images.py).
+ARCHIVED = archived_images.load_map(ROOT / "migration" / "archived-images.json")
+# Original URL -> Internet Archive copy, for cardgamedb pages (see archived_links.py).
+ARCHIVED_LINKS = archived_links.load_map(ROOT / "migration" / "archived-links.json")
 
 # Posts that WordPress moved to a new URL. Links are updated and the old URL redirects.
 MOVED = {
@@ -61,7 +67,8 @@ def site_relative(value):
 
 
 def rewrite_url(value):
-    value = nrdb_images.rewrite(archived_images.rewrite(site_relative(value), ROOT / "static"))
+    value = nrdb_images.rewrite(archived_images.rewrite(site_relative(value), ARCHIVED))
+    value = archived_links.rewrite(value, ARCHIVED_LINKS)
     return MOVED.get(value, value)
 
 
