@@ -35,19 +35,24 @@ The site ran on WordPress until 2026. The migration scripts read the public
 WordPress REST API:
 
 ```sh
-python3 migration/export.py            # writes .export/*.json
-python3 migration/download_uploads.py  # downloads uploads to static/
-python3 migration/convert.py           # writes content/, data/ and tests/legacy-urls.txt
+python3 migration/export.py                 # writes .export/*.json
+python3 migration/check_external_images.py  # finds images other sites no longer serve
+python3 migration/download_uploads.py       # downloads uploads and archived copies to static/
+python3 migration/convert.py                # writes content/, data/ and tests/legacy-urls.txt
 ```
 
 `export.py` also downloads Internet Archive copies of two posts that were
 deleted from WordPress but are still linked from other posts
 (`migration/wayback.py`), and `convert.py` restores them.
 
-Old posts loaded card images from cardgamedb.com, which no longer serves
-them. `download_uploads.py` downloads Internet Archive copies into
-`static/images/archive/` (`migration/archived_images.py`), and
-`convert.py` points the posts at them. It also moves old NetrunnerDB card
+Old posts loaded images from sites that no longer serve them, such as
+cardgamedb.com and BoardGameGeek's old image server. `download_uploads.py`
+downloads Internet Archive copies into `static/images/archive/<host>/` and
+records them in `migration/archived-images.json`
+(`migration/archived_images.py`). Dead cardgamedb page links get the same
+treatment in `migration/archived-links.json`. `convert.py` points the
+posts at the copies. All requests to the archive are sequential with a
+pause between them, and a re-run only asks for what is still missing. It also moves old NetrunnerDB card
 image links to card-images.netrunnerdb.com (`migration/nrdb_images.py`).
 
 `convert.py` overwrites the files it generated. Do not run it after the

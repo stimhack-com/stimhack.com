@@ -22,6 +22,8 @@ IN_HTML = re.compile(r"""\b(?:src|href)=["']([^"']+)""", re.I)
 LOCAL_ROOT = "/images/archive"
 EXTENSIONS = {b"\x89PNG": ".png", b"\xff\xd8\xff": ".jpg", b"GIF8": ".gif", b"RIFF": ".webp"}
 
+ARCHIVE_ERA = "2015"
+
 # Be gentle with the Internet Archive: one request at a time, a pause before each.
 DELAY = 5
 MAX_RETRIES = 4
@@ -86,11 +88,21 @@ def _cardgamedb_captures(cache):
     return {_key(o): t for o, t in reversed(json.loads(cache.read_text())[1:])}
 
 
-def _capture(url):
-    """Timestamp of an archived copy of one image, or None."""
+def available(url):
+    """Timestamp of an archived copy of url that was served with status 200, or None.
+
+    Uses the availability API, which stays up when the CDX index API is overloaded.
+    It returns the capture closest to the given time. Without one it returns the
+    newest capture, which for a dead page is usually the error, so ask for 2015,
+    when the site was most active and most of what it linked to still worked.
+    """
     time.sleep(DELAY)
-    rows = _cdx({"url": re.sub(r"^https?://", "", html.unescape(url)), "limit": 5})
-    return rows[0][1] if rows else None
+    r = get_with_backoff(
+        "https://archive.org/wayback/available", params={"url": html.unescape(url), "timestamp": ARCHIVE_ERA}
+    )
+    r.raise_for_status()
+    closest = r.json().get("archived_snapshots", {}).get("closest") or {}
+    return closest.get("timestamp") if closest.get("available") and closest.get("status") == "200" else None
 
 
 def map_existing(urls, static_root, map_path):
@@ -118,7 +130,7 @@ def fetch(urls, static_root, export_dir, map_path):
     missing = []
     try:
         for i, url in enumerate(todo, 1):
-            timestamp = cardgamedb.get(_key(url)) if CARDGAMEDB.match(url) else _capture(url)
+            timestamp = cardgamedb.get(_key(url)) if CARDGAMEDB.match(url) else available(url)
             extension = None
             if timestamp:
                 time.sleep(DELAY)
