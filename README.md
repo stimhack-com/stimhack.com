@@ -44,6 +44,12 @@ python3 migration/convert.py           # writes content/, data/ and tests/legacy
 deleted from WordPress but are still linked from other posts
 (`migration/wayback.py`), and `convert.py` restores them.
 
+Old posts loaded card images from cardgamedb.com, which no longer serves
+them. `download_uploads.py` downloads Internet Archive copies into
+`static/images/archive/` (`migration/archived_images.py`), and
+`convert.py` points the posts at them. It also moves old NetrunnerDB card
+image links to card-images.netrunnerdb.com (`migration/nrdb_images.py`).
+
 `convert.py` overwrites the files it generated. Do not run it after the
 WordPress site is shut down, or after people have edited migrated posts in
 this repository.

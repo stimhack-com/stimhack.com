@@ -16,6 +16,8 @@ from urllib.parse import urlsplit, unquote
 import yaml
 from bs4 import BeautifulSoup
 
+import archived_images
+import nrdb_images
 import wayback
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -59,7 +61,7 @@ def site_relative(value):
 
 
 def rewrite_url(value):
-    value = site_relative(value)
+    value = nrdb_images.rewrite(archived_images.rewrite(site_relative(value), ROOT / "static"))
     return MOVED.get(value, value)
 
 
@@ -97,7 +99,7 @@ def convert_shortcodes(body):
 
 
 def clean_body(body):
-    return rewrite_urls(convert_shortcodes(body))
+    return rewrite_urls(nrdb_images.remove_type_icons(convert_shortcodes(body)))
 
 
 def iso_date(local, gmt):

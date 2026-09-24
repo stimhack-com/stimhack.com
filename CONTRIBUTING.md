@@ -18,8 +18,10 @@ anything.
 4. Put the post's images in the same folder and refer to them by file name:
    `![Hedge Fund](hedge-fund.png)`. Set `featured_image` to the image that
    the home page and archives show.
-5. Remove `draft: true`, or set it to `false`. Drafts are not published.
-6. Open a pull request. The build check runs on it and reports problems such
+5. For a card image, use NetrunnerDB's image server with the five-digit card
+   code: `https://card-images.netrunnerdb.com/v2/large/01001.jpg`.
+6. Remove `draft: true`, or set it to `false`. Drafts are not published.
+7. Open a pull request. The build check runs on it and reports problems such
    as a broken internal link.
 
 The folder name must not match an existing post or page. The build fails when
@@ -94,8 +96,9 @@ Every pull request runs these checks:
 - `hugo --printPathWarnings --panicOnWarning` fails when two pages have the
   same URL.
 - `python3 scripts/check_site.py` fails when a URL from the old WordPress site
-  is missing, or when a page links to a path on this site that does not
-  exist. Old links that were already broken on WordPress are listed in
-  `tests/known-broken-links.txt`.
+  is missing, when a page links to a path on this site that does not
+  exist, or when a page loads an image from an old cardgamedb.com or
+  netrunnerdb.com address that no longer works. Old links that were already
+  broken on WordPress are listed in `tests/known-broken-links.txt`.
 
 Do not build with `--minify`. The HTML minifier breaks the XML feed at `/feed/`.

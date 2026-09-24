@@ -19,6 +19,8 @@ from urllib.parse import unquote, urlsplit
 
 import requests
 
+import archived_images
+
 ROOT = Path(__file__).resolve().parent.parent
 EXPORT = ROOT / ".export"
 STATIC = ROOT / "static"
@@ -79,6 +81,12 @@ def main():
     (EXPORT / "missing-uploads.txt").write_text("\n".join(missing) + "\n")
     print(f"missing: {len(missing)}", file=sys.stderr)
     move_unused(paths)
+    html = "".join(
+        (item.get("content") or {}).get("rendered", "")
+        for kind in ("posts", "pages")
+        for item in json.loads((EXPORT / f"{kind}.json").read_text())
+    )
+    archived_images.fetch(archived_images.urls_in(html), STATIC, EXPORT)
 
 
 if __name__ == "__main__":
