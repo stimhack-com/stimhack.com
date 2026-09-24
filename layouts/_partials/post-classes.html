@@ -1,0 +1,4 @@
+{{- /* WordPress post classes; some theme CSS keys off them. */ -}}
+post type-post format-{{ .Params.format | default "standard" }}{{ with .Params.featured_image }} has-post-thumbnail{{ end }} hentry
+{{- range .GetTerms "categories" }} category-{{ .Slug }}{{ end }}
+{{- range .GetTerms "tags" }} tag-{{ .Slug }}{{ end }}

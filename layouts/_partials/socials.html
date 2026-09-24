@@ -1,0 +1,5 @@
+<div class="socials" id="{{ .id }}">
+{{- range site.Params.socials }}
+  <a target="_blank" rel="nofollow" href="{{ .url }}" class="socialicons social-{{ .name }}" title="{{ .name }}"><img alt="{{ .name }}" src="/images/socials/{{ .name }}.png"></a>
+{{- end }}
+</div>

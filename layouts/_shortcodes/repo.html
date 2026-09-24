@@ -1,0 +1,3 @@
+{{- /* Link into the site's GitHub repository: {{< repo "path" >}}text{{< /repo >}} */ -}}
+<a href="{{ site.Params.repo }}/{{ .Get 0 }}">{{ .Inner }}</a>
+{{- /**/ -}}

@@ -1,0 +1,8 @@
+{{- /* Author and date line. Pass (dict "page" . "categories" bool). */ -}}
+{{- $p := .page -}}
+<span class="author vcard"><i class="icon-author icon-metas" title="Author "></i> {{ partial "author-link.html" $p }} <span class="bl_sep">&#8226;</span></span>
+<span class="onDate date updated"><i class="icon-time icon-metas" title="Date"></i> <a href="{{ $p.RelPermalink }}" rel="bookmark">{{ $p.Date | time.Format "January 2, 2006" }}</a></span>
+{{- if .categories }}{{ with $p.GetTerms "categories" }}
+<span class="bl_categ"><i class="icon-folder-open icon-metas" title="Categories"></i>
+{{- range $i, $c := . }}{{ if $i }}, {{ end }}<a href="{{ $c.RelPermalink }}" rel="tag">{{ $c.Title }}</a>{{ end }}</span>
+{{- end }}{{ end }}

@@ -1,0 +1,21 @@
+<article id="post-{{ .Params.wp_id | default .File.ContentBaseName }}" class="{{ partial "post-classes.html" . }}">
+  <header class="entry-header">
+    <h2 class="entry-title"><a href="{{ .RelPermalink }}" title="Permalink to {{ .Title }}" rel="bookmark">{{ .Title }}</a></h2>
+    <div class="entry-meta"></div>
+  </header>
+  {{- if in (slice "video" "audio") .Params.format }}
+  <div class="entry-content">{{ .Content }}</div>
+  {{- else }}
+  <div class="entry-summary">
+    {{- with or (partial "image-url.html" (dict "page" . "param" "thumbnail")) (partial "image-url.html" (dict "page" . "param" "featured_image")) }}
+    <a href="{{ $.RelPermalink }}" title="{{ $.Title }}"><img class="alignleft post_thumbnail wp-post-image" src="{{ . }}" alt="" height="200" loading="lazy" decoding="async"></a>
+    {{- end }}
+    <p>{{ .Summary | plainify | htmlUnescape }}</p>
+    <p><a class="continue-reading-link" href="{{ .RelPermalink }}">Read More<i class="icon-right-dir"></i></a></p>
+  </div>
+  {{- end }}
+  <footer class="entry-meta">
+    {{- if .Params.format }}<h3 class="entry-format"><i class="icon-{{ .Params.format }}" title="{{ .Params.format | title }}"></i></h3>{{ end }}
+    {{ partial "entry-meta.html" (dict "page" . "categories" true) }}
+  </footer>
+</article>

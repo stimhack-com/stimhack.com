@@ -1,0 +1,7 @@
+{{- /* URL for a post image param. Migrated posts give a site path; new posts
+       can name a file in their page bundle. Pass (dict "page" . "param" "featured_image"). */ -}}
+{{- $url := "" -}}
+{{- with index .page.Params .param -}}
+  {{- with $.page.Resources.Get . }}{{ $url = .RelPermalink }}{{ else }}{{ $url = . }}{{ end -}}
+{{- end -}}
+{{- return $url -}}

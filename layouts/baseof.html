@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="{{ site.Language.Locale }}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+<title>{{ if .IsHome }}{{ site.Title }} | {{ site.Params.description }}{{ else }}{{ .Title }} - {{ site.Title }}{{ end }}</title>
+<meta name="description" content="{{ with .Params.summary }}{{ . | plainify | truncate 160 }}{{ else }}{{ site.Params.description }}{{ end }}">
+<link rel="canonical" href="{{ .Permalink }}">
+<link rel="shortcut icon" href="{{ site.Params.favicon }}">
+<link rel="alternate" type="application/rss+xml" title="{{ site.Title }} &raquo; Feed" href="{{ "index.xml" | absURL }}">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato&display=swap">
+{{- $css := resources.Match "css/vendor/*.css" | append (resources.Get "css/stimhack.css") | resources.Concat "css/site.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
+{{- with partial "image-url.html" (dict "page" . "param" "featured_image") }}
+<meta property="og:image" content="{{ . | absURL }}">
+{{- end }}
+<meta property="og:title" content="{{ .Title }}">
+<meta property="og:site_name" content="{{ site.Title }}">
+</head>
+<body class="{{ block "bodyclass" . }}{{ end }} custom-background wc-shortcodes-font-awesome-enabled tempera-image-none caption-dark magazine-layout">
+<div id="wrapper" class="hfeed">
+<div id="topbar"><div id="topbar-inner">
+  {{ partial "socials.html" (dict "id" "sheader") }}
+</div></div>
+
+<div id="header-full">
+<header id="header">
+<div id="masthead">
+  <div id="branding" role="banner">
+    <a href="/" title="{{ site.Title }}"><img id="bg_image" alt="{{ site.Title }}" src="{{ site.Params.headerImage }}"></a>
+    <div id="header-container"></div>
+    <div style="clear:both;"></div>
+  </div>
+  {{ partial "nav.html" . }}
+</div>
+</header>
+</div>
+<div style="clear:both;height:0;"></div>
+
+<div id="main">
+  <div id="toTop"><i class="icon-back2top"></i></div>
+  <div id="forbottom">
+    <div style="clear:both;"></div>
+    <section id="container" class="one-column">
+      <div id="content" role="main">
+        {{ block "main" . }}{{ end }}
+      </div>
+    </section>
+    <div style="clear:both;"></div>
+  </div>
+
+  <footer id="footer" role="contentinfo">
+    <div id="colophon"></div>
+    <div id="footer2">
+      <div id="site-copyright">{{ site.Params.contact }}</div>
+      {{ partial "socials.html" (dict "id" "sfooter") }}
+    </div>
+  </footer>
+</div>
+</div>
+{{- $js := resources.Get "js/site.js" | minify | fingerprint }}
+<script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" defer></script>
+</body>
+</html>

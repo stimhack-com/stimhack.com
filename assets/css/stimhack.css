@@ -1,0 +1,125 @@
+/* Stimhack additions on top of the vendored Tempera theme CSS. */
+
+/* Submenus: the theme opened them with jQuery; CSS does it here. */
+#access li:hover > ul,
+#access li:focus-within > ul {
+  display: block;
+  visibility: visible;
+}
+
+/* Back to top button (see site.js). */
+#toTop.visible {
+  margin-left: 1130px;
+  opacity: 1;
+}
+
+/* Socials hover colour; the theme animated an overlay. */
+.socials a:hover {
+  background-color: #D6341D;
+}
+
+#branding a {
+  display: block;
+}
+
+/* [one_fourth] columns from old draft write-ups. */
+.sh-cols {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+}
+.sh-col {
+  flex: 1 1 10em;
+}
+
+/* [accordion][pane] sections from old draft write-ups. */
+.entry-content details {
+  margin: 0 0 1em;
+  padding: 0.5em 1em;
+  background: #1e1e1e;
+  border-left: 3px solid #1693A5;
+}
+.entry-content summary {
+  cursor: pointer;
+  color: #ffffff;
+  font-family: "Lato", sans-serif;
+}
+
+/* Tournament decklists table. It scrolls sideways on phones. */
+#decks {
+  overflow-x: auto;
+}
+#decks .deck-search {
+  margin: 1em 0;
+  padding: 5px;
+  width: 15em;
+}
+#decklists {
+  width: 100%;
+}
+#decklists tbody tr:nth-child(even) td {
+  background-color: #333333;
+}
+#decklists th[data-sort] {
+  cursor: pointer;
+}
+#decklists th[data-sort]::after {
+  content: " \f0dc";
+  font-family: "FontAwesome";
+  float: right;
+}
+#decklists th.asc::after {
+  content: " \f0de";
+}
+#decklists th.desc::after {
+  content: " \f0dd";
+}
+
+/* Imported comments (read only). The theme's comment template was broken
+   on the live site, so these rules are new. */
+#comments .commentlist,
+#comments .children {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+#comments .children {
+  margin-left: 2em;
+}
+#comments .comment > div {
+  margin: 0 0 1em;
+  padding: 1em;
+  background: #1a1a1a;
+  border-left: 3px solid #1693A5;
+}
+#comments .comment-author img {
+  float: left;
+  margin-right: 10px;
+}
+#comments .comment-author cite {
+  font-style: normal;
+  font-weight: bold;
+  color: #ffffff;
+}
+#comments .comment-meta {
+  font-size: 12px;
+  margin-bottom: 0.5em;
+}
+#comments .comment-body {
+  clear: both;
+}
+
+/* Wide embeds and images must not overflow on phones. */
+.entry-content iframe,
+.entry-content img {
+  max-width: 100%;
+}
+.entry-content img {
+  height: auto;
+}
+
+/* Archive thumbnails: WordPress printed each at 200px high. */
+#content .entry-summary img.post_thumbnail {
+  height: 200px;
+  width: auto;
+}

@@ -1,0 +1,22 @@
+{{ define "bodyclass" }}{{ if eq .Section "posts" }}single single-post single-format-{{ .Params.format | default "standard" }}{{ else }}page{{ end }}{{ end }}
+{{ define "main" }}
+{{- if eq .Section "posts" }}
+<div id="post-{{ .Params.wp_id | default .File.ContentBaseName }}" class="{{ partial "post-classes.html" . }}">
+  <h1 class="entry-title">{{ .Title }}</h1>
+  <div class="entry-meta">{{ partial "entry-meta.html" (dict "page" . "categories" false) }}</div>
+  <div class="entry-content">{{ .Content }}</div>
+  <footer class="entry-meta">
+    {{- with .GetTerms "tags" }}
+    <span class="footer-tags"><i class="icon-tag icon-metas" title="Tagged"></i>
+    {{- range $i, $t := . }}{{ if $i }}, {{ end }}<a href="{{ $t.RelPermalink }}" rel="tag">{{ $t.Title }}</a>{{ end }}.</span>
+    {{- end }}
+  </footer>
+</div>
+{{ partial "comments.html" . }}
+{{- else }}
+<div class="page type-page hentry">
+  <h1 class="entry-title">{{ .Title }}</h1>
+  <div class="entry-content">{{ .Content }}</div>
+</div>
+{{- end }}
+{{ end }}

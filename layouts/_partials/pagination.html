@@ -1,0 +1,15 @@
+{{- /* WordPress-style pager: first, previous, two pages each side, next, last. */ -}}
+{{- $p := . -}}
+{{- if gt $p.TotalPages 1 }}
+<div class="pagination_container"><nav class="pagination">
+  {{- if gt $p.PageNumber 2 }}<a href="{{ $p.First.URL }}">&laquo;</a>{{ end }}
+  {{- with $p.Prev }}<a href="{{ .URL }}">&lsaquo;</a>{{ end }}
+  {{- range $p.Pagers }}
+    {{- if eq .PageNumber $p.PageNumber }}<span class="current">{{ .PageNumber }}</span>
+    {{- else if and (ge .PageNumber (sub $p.PageNumber 2)) (le .PageNumber (add $p.PageNumber 2)) }}<a href="{{ .URL }}" class="inactive">{{ .PageNumber }}</a>
+    {{- end }}
+  {{- end }}
+  {{- with $p.Next }}<a href="{{ .URL }}">&rsaquo;</a>{{ end }}
+  {{- if lt $p.PageNumber (sub $p.TotalPages 1) }}<a href="{{ $p.Last.URL }}">&raquo;</a>{{ end }}
+</nav></div>
+{{- end }}

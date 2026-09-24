@@ -1,0 +1,33 @@
+{{ define "bodyclass" }}home page{{ end }}
+{{ define "main" }}
+{{- $posts := where site.RegularPages "Section" "posts" }}
+{{- with site.Taxonomies.categories.Get site.Params.homeCategory }}{{ $posts = .Pages }}{{ end }}
+<div class="page type-page hentry">
+<div class="entry-content">
+<div class="wc-shortcodes-posts-wrapper">
+<div class="wc-shortcodes-posts wc-shortcodes-clearfix wc-shortcodes-posts-col-2 wc-shortcodes-posts-layout-masonry wc-shortcodes-posts-template-box wc-shortcodes-posts-gutter-space-20" data-columns="2" data-gutter-space="20">
+{{- range first site.Params.homePosts $posts.ByDate.Reverse }}
+  <div class="wc-shortcodes-post-box {{ partial "post-classes.html" . }}">
+    <div class="wc-shortcodes-post-border">
+      {{- with partial "image-url.html" (dict "page" . "param" "featured_image") }}
+      <div class="wc-shortcodes-entry-thumbnail"><a href="{{ $.RelPermalink }}" title="{{ $.Title }}"><img src="{{ . }}" alt="" class="wp-post-image" decoding="async"></a></div>
+      {{- end }}
+      <div class="wc-shortcodes-post-content">
+        <div class="wc-shortcodes-entry-header">
+          <h2 class="wc-shortcodes-entry-title"><a href="{{ .RelPermalink }}" rel="bookmark">{{ .Title }}</a></h2>
+        </div>
+        <div class="wc-shortcodes-footer-entry-meta wc-shortcodes-clearfix">
+          <div class="wc-shortcodes-entry-meta-inner wc-shortcodes-clearfix">
+            <span class="wc-shortcodes-author"><span class="wc-shortcodes-by">By</span> {{ with index (.GetTerms "authors") 0 }}<a class="wc-shortcodes-url" href="{{ .RelPermalink }}" title="{{ .Title }}" rel="author">{{ .Title }}</a>{{ end }}</span><span class="wc-shortcodes-sep">|</span><span class="wc-shortcodes-date"><a href="{{ .RelPermalink }}" title="Permalink to {{ .Title }}" rel="bookmark"><time class="wc-shortcodes-entry-date" datetime="{{ .Date.Format "2006-01-02T15:04:05-07:00" }}">{{ .Date | time.Format "Jan 2, 2006" }}</time></a></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{{- end }}
+</div>
+</div>
+<div style="clear:both;"></div>
+</div>
+</div>
+{{ end }}

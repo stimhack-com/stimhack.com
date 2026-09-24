@@ -1,0 +1,20 @@
+{{ define "bodyclass" }}archive {{ .Data.Singular }} {{ .Data.Singular }}-{{ .Data.Term }}{{ end }}
+{{ define "main" }}
+<header class="page-header">
+{{- if eq .Data.Plural "authors" }}
+  <h1 class="page-title author">Author Archives: <span class="vcard"><a class="url fn n" href="{{ .RelPermalink }}" rel="me" title="{{ .Title }}">{{ .Title }}</a></span></h1>
+{{- else }}
+  <h1 class="page-title">{{ if eq .Data.Plural "categories" }}Category{{ else }}Tag{{ end }} Archives: <span>{{ .Title }}</span></h1>
+  {{- with .Description }}<div class="category-archive-meta"><p>{{ . }}</p></div>{{ end }}
+{{- end }}
+</header>
+{{- if and (eq .Data.Plural "authors") .Description }}
+<div id="author-info">
+  {{ with .Params.avatar }}<div id="author-avatar"><img alt="" src="{{ . }}" class="avatar avatar-60 photo" height="60" width="60"></div>{{ end }}
+  <div id="author-description"><h2>{{ .Title }}</h2>{{ .Description }}</div>
+</div>
+{{- end }}
+{{- $pager := .Paginate .Pages.ByDate.Reverse }}
+{{- range $pager.Pages }}{{ partial "article-summary.html" . }}{{ end }}
+{{ partial "pagination.html" $pager }}
+{{ end }}

@@ -1,0 +1,145 @@
+baseURL = "https://stimhack.com/"
+title = "StimHack"
+locale = "en-US"
+timeZone = "America/Los_Angeles"
+enableRobotsTXT = true
+# WordPress URLs have no /index.html and keep their trailing slash.
+uglyURLs = false
+
+[params]
+  description = "A Community for Netrunner Players"
+  contact = "Contact us at stimhack(at)gmail(dot)com."
+  headerImage = "/wp-content/uploads/2014/03/graffiti_banner_logo_center2.png"
+  favicon = "/wp-content/uploads/2013/11/favicon.ico"
+  # Category whose newest posts fill the home page grid.
+  homeCategory = "articles"
+  homePosts = 12
+  repo = "https://github.com/stimhack/stimhack.com"
+
+  [[params.socials]]
+    name = "Twitch"
+    url = "http://www.twitch.tv/stimhacked"
+  [[params.socials]]
+    name = "Twitter"
+    url = "https://twitter.com/stimhacked"
+  [[params.socials]]
+    name = "YouTube"
+    url = "https://www.youtube.com/user/stimhack"
+  [[params.socials]]
+    name = "RSS"
+    url = "/feed/"
+
+[taxonomies]
+  category = "categories"
+  tag = "tags"
+  author = "authors"
+
+# Keep every WordPress permalink.
+[permalinks.page]
+  posts = "/:slugorcontentbasename/"
+[permalinks.term]
+  categories = "/category/:slug/"
+  tags = "/tag/:slug/"
+  authors = "/author/:slug/"
+[permalinks.taxonomy]
+  categories = "/category/"
+  tags = "/tag/"
+  authors = "/author/"
+
+[pagination]
+  pagerSize = 10
+  path = "page"
+
+[markup.goldmark.renderer]
+  # Markdown posts can embed HTML (iframes, decklist tables).
+  unsafe = true
+
+# WordPress served the feed at /feed/. GitHub Pages only serves index.html
+# for a directory, so the feed is written to feed/index.html as well.
+# Do not build with --minify: the HTML minifier would mangle this XML.
+[outputFormats.wpfeed]
+  mediaType = "text/html"
+  baseName = "index"
+  path = "feed"
+  isPlainText = true
+  notAlternative = true
+
+[outputs]
+  home = ["html", "rss", "wpfeed"]
+  section = ["html"]
+  taxonomy = ["html"]
+  term = ["html"]
+
+[services.rss]
+  limit = 20
+
+[[menus.main]]
+  name = "Home"
+  pageRef = "/"
+  weight = 10
+  pre = "fa-home"
+[[menus.main]]
+  name = "Tournament Winning Decklists"
+  pageRef = "/pages/tournament-decklists"
+  weight = 20
+  pre = "fa-trophy"
+[[menus.main]]
+  name = "Forums"
+  url = "http://forum.stimhack.com/"
+  weight = 30
+  pre = "fa-comments-o"
+[[menus.main]]
+  identifier = "articles"
+  name = "Articles and Guides"
+  pageRef = "/categories/articles"
+  weight = 40
+  pre = "fa-list-alt"
+[[menus.main]]
+  parent = "articles"
+  name = "Classic Articles"
+  pageRef = "/pages/classic-articles"
+  weight = 1
+  pre = "fa-book"
+[[menus.main]]
+  parent = "articles"
+  name = "Set Reviews"
+  pageRef = "/pages/set-reviews"
+  weight = 2
+  pre = "fa-bar-chart"
+[[menus.main]]
+  parent = "articles"
+  name = "Cube Drafting"
+  pageRef = "/pages/cube-drafting"
+  weight = 3
+  pre = "fa-briefcase"
+[[menus.main]]
+  parent = "articles"
+  name = "New Players"
+  pageRef = "/pages/new-players"
+  weight = 4
+  pre = "fa-user"
+[[menus.main]]
+  parent = "articles"
+  name = "All Articles"
+  pageRef = "/categories/articles"
+  weight = 5
+  pre = "fa-folder-open-o"
+[[menus.main]]
+  name = "Videos and Podcasts"
+  pageRef = "/categories/videos-and-podcasts"
+  weight = 50
+  pre = "fa-film"
+[[menus.main]]
+  name = "Playgroup Finder"
+  pageRef = "/pages/playgroup-finder"
+  weight = 60
+  pre = "fa-globe"
+[[menus.main]]
+  name = "About"
+  pageRef = "/pages/about"
+  weight = 70
+  pre = "fa-question-circle-o"
+
+# Migrated WordPress posts are stored as .html content files.
+[security]
+  allowContent = ['^text/html$', '^text/markdown$']

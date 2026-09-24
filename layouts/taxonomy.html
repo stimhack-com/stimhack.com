@@ -1,0 +1,7 @@
+{{ define "bodyclass" }}archive{{ end }}
+{{ define "main" }}
+<header class="page-header"><h1 class="page-title">{{ .Title }}</h1></header>
+<div class="entry-content"><ul>
+{{- range .Pages.ByTitle }}<li><a href="{{ .RelPermalink }}">{{ .Title }}</a> ({{ len .Pages }})</li>{{ end }}
+</ul></div>
+{{ end }}

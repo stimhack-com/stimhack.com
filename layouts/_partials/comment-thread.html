@@ -1,0 +1,17 @@
+{{- $all := .all -}}
+{{- range where .all "parent" .parent }}
+<li class="comment" id="li-comment-{{ .id }}">
+  <div id="comment-{{ .id }}">
+    <div class="comment-author vcard">
+      {{ with .avatar }}<img alt="" src="{{ . }}" class="avatar avatar-48 photo" height="48" width="48" loading="lazy">{{ end }}
+      <cite class="fn">{{ .author }}</cite>
+    </div>
+    <div class="comment-meta commentmetadata"><a href="#comment-{{ .id }}">{{ time.AsTime .date | time.Format "January 2, 2006 at 3:04 pm" }}</a></div>
+    <div class="comment-body">{{ .content | safeHTML }}</div>
+  </div>
+  {{- $children := where $all "parent" .id }}
+  {{- if $children }}
+  <ul class="children">{{ partial "comment-thread.html" (dict "all" $all "parent" .id) }}</ul>
+  {{- end }}
+</li>
+{{- end }}

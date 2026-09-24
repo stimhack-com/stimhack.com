@@ -1,0 +1,10 @@
+{{- /* Read-only archive of comments imported from WordPress. */ -}}
+{{- with .Params.comments }}
+<div id="comments">
+  <h3 id="comments-title"><i class="icon-replies"></i>{{ len . }} {{ cond (eq (len .) 1) "Comment" "Comments" }}:</h3>
+  <ol class="commentlist">
+    {{ partial "comment-thread.html" (dict "all" . "parent" 0) }}
+  </ol>
+  <p class="nocomments">Comments are closed.</p>
+</div>
+{{- end }}

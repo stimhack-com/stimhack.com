@@ -1,0 +1,28 @@
+{{- /* Sortable, searchable table of tournament winners from data/decklists.yaml. */ -}}
+<div id="decks">
+  <input class="deck-search" type="search" placeholder="Search table" aria-label="Search decklists">
+  <table id="decklists" class="tablepress">
+    <thead><tr>
+      <th class="sorting" data-sort="pack">DataPack</th>
+      <th>Location</th>
+      <th class="sorting" data-sort="type">Type</th>
+      <th class="sorting" data-sort="players" data-numeric>Players</th>
+      <th class="sorting" data-sort="winner">Winner</th>
+      <th class="sorting" data-sort="runner">Runner</th>
+      <th class="sorting" data-sort="corp">Corp</th>
+    </tr></thead>
+    <tbody>
+    {{- range hugo.Data.decklists }}
+      <tr>
+        <td class="pack">{{ .pack }}</td>
+        <td class="location">{{ if .url }}<a href="{{ .url }}">{{ .location }}</a>{{ else }}{{ .location }}{{ end }}</td>
+        <td class="type">{{ .type }}</td>
+        <td class="players">{{ .players }}</td>
+        <td class="winner">{{ .winner }}</td>
+        <td class="runner">{{ .runner }}</td>
+        <td class="corp">{{ .corp }}</td>
+      </tr>
+    {{- end }}
+    </tbody>
+  </table>
+</div>
