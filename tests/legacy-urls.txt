@@ -300,6 +300,7 @@
 /cube-2-hypercube-by-joseki/
 /cube-drafting-101/
 /cube-drafting-201-cube-design/
+/cube-drafting-revisited/
 /cube-drafting/
 /daedalus-complex-community-reviews-and-meta-predictions/
 /damage-unlimited-store-championship-2014/
@@ -331,6 +332,7 @@
 /double-time-set-review-playtesting-guide/
 /down-the-white-nile-community-review-and-meta-predictions-corp/
 /down-the-white-nile-community-review-and-meta-predictions-runner/
+/drafting-with-netrunner/
 /drafting/
 /dragons-keep-store-championship/
 /dragons-lair-store-championship-2014/
@@ -2197,6 +2199,7 @@
 /the-state-of-netrunner/
 /the-state-of-the-metagame-2019/
 /the-truth-about-true-colors-card-ratings/
+/the-two-year-turn-how-i-learned-netrunner-by-noah-mckee/
 /the-two-year-turn/
 /the-uncommons-championship-2014/
 /the-uncommons-nyc-1-whizzard-dad-bod-teamworkcast/

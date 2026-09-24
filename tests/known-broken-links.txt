@@ -1,5 +1,1 @@
 # Links in migrated posts that were already broken on the WordPress site.
-/drafting-with-netrunner/
-/the-two-year-turn-how-i-learned-netrunner-by-noah-mckee/
-/cube-drafting-revisited/
-/wp-content/uploads/2013/04/ffg_noise-core.png

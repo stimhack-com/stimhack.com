@@ -40,6 +40,10 @@ python3 migration/download_uploads.py  # downloads uploads to static/
 python3 migration/convert.py           # writes content/, data/ and tests/legacy-urls.txt
 ```
 
+`export.py` also downloads Internet Archive copies of two posts that were
+deleted from WordPress but are still linked from other posts
+(`migration/wayback.py`), and `convert.py` restores them.
+
 `convert.py` overwrites the files it generated. Do not run it after the
 WordPress site is shut down, or after people have edited migrated posts in
 this repository.

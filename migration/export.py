@@ -11,6 +11,8 @@ from pathlib import Path
 
 import requests
 
+import wayback
+
 API = "https://stimhack.com/wp-json/wp/v2"
 OUT = Path(__file__).resolve().parent.parent / ".export"
 ENDPOINTS = ["posts", "pages", "media", "categories", "tags", "users", "comments"]
@@ -73,6 +75,7 @@ def main():
         items = fetch_all(endpoint)
         (OUT / f"{endpoint}.json").write_text(json.dumps(items, indent=1, ensure_ascii=False))
         print(f"{endpoint}: {len(items)}", file=sys.stderr)
+    wayback.fetch(OUT / "wayback")
 
 
 if __name__ == "__main__":

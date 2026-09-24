@@ -37,6 +37,12 @@ class RewriteUrls(unittest.TestCase):
         body = "<p>Visit https://stimhack.com/about/ today</p>"
         self.assertEqual(convert.rewrite_urls(body), body)
 
+    def test_links_to_moved_posts_point_to_the_new_url(self):
+        self.assertEqual(
+            convert.rewrite_urls('<a href="http://stimhack.com/the-two-year-turn-how-i-learned-netrunner-by-noah-mckee/">x</a>'),
+            '<a href="/the-two-year-turn/">x</a>',
+        )
+
     def test_http_iframes_are_upgraded(self):
         self.assertEqual(
             convert.rewrite_urls('<iframe width="9" src="http://www.youtube.com/embed/x"></iframe>'),

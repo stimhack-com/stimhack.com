@@ -16,6 +16,8 @@ from urllib.parse import urlsplit, unquote
 import yaml
 from bs4 import BeautifulSoup
 
+import wayback
+
 ROOT = Path(__file__).resolve().parent.parent
 EXPORT = ROOT / ".export"
 CONTENT = ROOT / "content"
@@ -26,6 +28,12 @@ SKIP_PAGES = {"landing", "under-maintenance", "submission-successful", "decklist
 SITE_URL = re.compile(r"^(?:https?:)?//(?:www\.)?stimhack\.com(?=/|$)")
 URL_ATTR = re.compile(r"""\b(href|src|srcset|poster|data-src)=(["'])(.*?)\2""", re.S)
 IFRAME_HTTP = re.compile(r"""(<iframe\b[^>]*\bsrc=["'])http://""", re.I)
+
+# Posts that WordPress moved to a new URL. Links are updated and the old URL redirects.
+MOVED = {
+    # Republished in 2019 in memory of the author.
+    "/the-two-year-turn-how-i-learned-netrunner-by-noah-mckee/": "/the-two-year-turn/",
+}
 
 
 def load(name):
@@ -50,8 +58,13 @@ def site_relative(value):
     return ",".join(parts)
 
 
+def rewrite_url(value):
+    value = site_relative(value)
+    return MOVED.get(value, value)
+
+
 def rewrite_urls(body):
-    body = URL_ATTR.sub(lambda m: f"{m[1]}={m[2]}{site_relative(m[3])}{m[2]}", body)
+    body = URL_ATTR.sub(lambda m: f"{m[1]}={m[2]}{rewrite_url(m[3])}{m[2]}", body)
     return IFRAME_HTTP.sub(r"\1https://", body)
 
 
@@ -158,6 +171,8 @@ def convert_posts(posts, users, cats, tags, media, attached, comments, page_path
             front["thumbnail"] = media[attached[p["id"]]][1]
         if p["id"] in comments:
             front["comments"] = comments[p["id"]]
+        if old := [old for old, new in MOVED.items() if new == path_of(p["link"])]:
+            front["aliases"] = old
         if path_of(p["link"]) in page_paths:
             # WordPress served the page at this URL and the post only by ID.
             front["url"] = f"/{p['slug']}-2/"
@@ -215,9 +230,37 @@ def convert_pages(pages):
         write(CONTENT / "pages" / f"{p['slug']}.html", front, clean_body(body))
 
 
-def convert_terms(kind, terms, extra=None):
+def convert_wayback_posts(users, cats, tags):
+    """Write the deleted posts in wayback.POSTS. Returns the category and tag slugs they use."""
+    by_name = lambda terms: {html.unescape(t["name"]).lower(): t["slug"] for t in terms}
+    users, cats, tags = by_name(users), by_name(cats), by_name(tags)
+    used = set()
+    for slug, timestamp in wayback.POSTS.items():
+        post = wayback.parse(EXPORT / "wayback" / f"{slug}.html", ROOT / "static")
+        front = {
+            "title": post["title"],
+            "slug": slug,
+            "date": post["date"],
+            "authors": [users[post["author"].lower()]],
+            "categories": [cats[c.lower()] for c in post["categories"]],
+            "tags": [tags[t.lower()] for t in post["tags"]],
+            "comments": [dict(c, content=rewrite_urls(c["content"])) for c in post["comments"]],
+            "wp_id": post["wp_id"],
+            "archived_from": wayback.capture_url(slug),
+        }
+        used |= set(front["categories"]) | set(front["tags"])
+        note = (
+            f'<p><em>This article was deleted from the WordPress site. It is restored from the '
+            f'<a href="{front["archived_from"]}">Internet Archive copy</a> of '
+            f'{datetime.strptime(timestamp[:8], "%Y%m%d"):%B %-d, %Y}.</em></p>\n'
+        )
+        write(CONTENT / "posts" / post["date"][:4] / f"{slug}.html", front, note + clean_body(post["content"]))
+    return used
+
+
+def convert_terms(kind, terms, extra=None, used=frozenset()):
     for t in terms:
-        if t.get("count", 1) == 0:
+        if t.get("count", 1) == 0 and t["slug"] not in used:
             continue
         front = {"title": html.unescape(t["name"]), "slug": t["slug"]}
         if t.get("description"):
@@ -228,7 +271,7 @@ def convert_terms(kind, terms, extra=None):
 
 def legacy_urls(posts, pages, cats, tags, users):
     """Every public WordPress URL. A test checks each one still exists in the build."""
-    urls = {path_of(p["link"]) for p in posts}
+    urls = {path_of(p["link"]) for p in posts} | set(MOVED) | {f"/{slug}/" for slug in wayback.POSTS}
     urls |= {path_of(p["link"]) for p in pages if p["slug"] not in SKIP_PAGES - {"decklist-submssion"}}
     for terms in (cats, tags, users):
         urls |= {path_of(t["link"]) for t in terms if t.get("count", 1)}
@@ -251,8 +294,9 @@ def main():
         {path_of(p["link"]) for p in pages if p["slug"] not in SKIP_PAGES},
     )
     convert_pages(pages)
-    convert_terms("categories", cats)
-    convert_terms("tags", tags)
+    used = convert_wayback_posts(users, cats, tags)
+    convert_terms("categories", cats, used=used)
+    convert_terms("tags", tags, used=used)
     convert_terms("authors", users, {u["id"]: {"avatar": u["avatar_urls"].get("96", "")} for u in users})
     legacy_urls(posts, pages, cats, tags, users)
 
