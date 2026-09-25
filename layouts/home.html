@@ -1,7 +1,13 @@
 {{ define "bodyclass" }}home page{{ end }}
 {{ define "main" }}
 {{- $posts := where site.RegularPages "Section" "posts" }}
-{{- with site.GetPage (printf "/categories/%s" site.Params.homeCategory) }}{{ $posts = .Pages }}{{ end }}
+{{- /* An empty homeCategory shows the newest posts. */}}
+{{- with site.Params.homeCategory }}
+  {{- $category := site.GetPage (printf "/categories/%s" .) }}
+  {{- if and $category (eq $category.Kind "term") }}{{ $posts = $category.Pages }}
+  {{- else }}{{ errorf "hugo.toml params.homeCategory %q is not a category. Use the slug of a category archive, as in /category/<slug>/. A category with no posts needs content/categories/<slug>/_index.md." . }}
+  {{- end }}
+{{- end }}
 <div class="page type-page hentry">
 <div class="entry-content">
 <div class="wc-shortcodes-posts-wrapper">

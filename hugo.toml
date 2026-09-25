@@ -11,7 +11,10 @@ uglyURLs = false
   contact = "Contact us at stimhack(at)gmail(dot)com."
   headerImage = "/wp-content/uploads/2014/03/graffiti_banner_logo_center2.png"
   favicon = "/wp-content/uploads/2013/11/favicon.ico"
-  # Category whose newest posts fill the home page grid.
+  # Category whose newest posts fill the home page grid. When it is empty,
+  # the newest posts fill the grid. A name that is not a category stops the
+  # build, as does one in feedExcludeCategories. A category with no posts
+  # needs content/categories/<slug>/_index.md.
   homeCategory = "articles"
   homePosts = 12
   # Categories whose posts every feed leaves out: the site feed and each

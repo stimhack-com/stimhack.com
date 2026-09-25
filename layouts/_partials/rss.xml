@@ -5,7 +5,10 @@ as the WordPress site feed and category feeds did: its decklists category
 feed had no items. The pages of the category are the posts its archive
 lists, also those whose front matter spells the category another way. */}}
 {{- range site.Params.feedExcludeCategories }}
-{{- with site.GetPage (printf "/categories/%s" .) }}{{ $pages = $pages | complement .Pages }}{{ end }}
+{{- $category := site.GetPage (printf "/categories/%s" .) }}
+{{- if and $category (eq $category.Kind "term") }}{{ $pages = $pages | complement $category.Pages }}
+{{- else }}{{ errorf "hugo.toml params.feedExcludeCategories has %q, which is not a category. Use the slug of a category archive, as in /category/<slug>/. A category with no posts needs content/categories/<slug>/_index.md." . }}
+{{- end }}
 {{- end }}
 {{- $pages = first site.Config.Services.RSS.Limit $pages.ByDate.Reverse -}}
 {{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}

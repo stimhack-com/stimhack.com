@@ -1473,8 +1473,8 @@ class CategoryFeeds(unittest.TestCase):
                 self.assertIn('<atom:link href="https://stimhack.com/feed/" rel="self"', served(out, url))
 
 
-def build_with_params(params, out):
-    """Build CATEGORY_SPELLINGS into out with hugo.toml and the site params in params.
+def build_with_params(params, out, content=CATEGORY_SPELLINGS):
+    """Build content into out with hugo.toml and the site params in params.
 
     Return the finished Hugo process. The params go in a second config file:
     Hugo reads an environment variable such as HUGO_PARAMS_FEEDEXCLUDECATEGORIES
@@ -1484,7 +1484,7 @@ def build_with_params(params, out):
     extra.write_text("[params]\n" + "".join(f"  {key} = {json.dumps(value)}\n" for key, value in params.items()))
     return subprocess.run(
         [*hugo(), "--source", str(ROOT), "--destination", str(Path(out) / "public"),
-         "--contentDir", str(CATEGORY_SPELLINGS), "--config", f"{ROOT / 'hugo.toml'},{extra}"],
+         "--contentDir", str(content), "--config", f"{ROOT / 'hugo.toml'},{extra}"],
         capture_output=True,
         text=True,
     )
@@ -1526,6 +1526,21 @@ class CategoryParams(unittest.TestCase):
                 feed = site_feed(out)
                 self.assertNotEqual(result.returncode, 0, f"The build succeeded. Site feed: {feed}")
                 self.assertIn(f'feedExcludeCategories has "{name}"', result.stdout + result.stderr)
+
+    def test_category_with_a_page_and_no_posts_is_valid(self):
+        # content/categories/<slug>/_index.md gives a category a page. The
+        # real site has one for each category, so a category that has lost
+        # its last post is still a category. A fixture without a post in a
+        # category of hugo.toml needs one too.
+        with tempfile.TemporaryDirectory() as out:
+            content = Path(out) / "content"
+            shutil.copytree(CATEGORY_SPELLINGS, content)
+            (content / "categories" / "unused").mkdir(parents=True)
+            (content / "categories" / "unused" / "_index.md").write_text("---\ntitle: Unused\n---\n")
+            result = build_with_params({"homeCategory": "unused", "feedExcludeCategories": ["unused"]}, out, content)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(home_grid(out), [])
+            self.assertEqual(site_feed(out), ["/decklist/", "/report/", "/article/"])
 
     def test_empty_home_category_shows_the_newest_posts_of_every_category(self):
         with tempfile.TemporaryDirectory() as out:
