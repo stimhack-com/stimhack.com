@@ -1,7 +1,8 @@
 {{- /* The site feed lists all posts, a category feed the posts in that category. */}}
 {{- $pages := where (cond .IsHome site.RegularPages .Pages) "Section" "posts" -}}
 {{- /* Every feed leaves out posts in any category of feedExcludeCategories,
-as every WordPress feed did: its decklists category feed had no items. */}}
+as the WordPress site feed and category feeds did: its decklists category
+feed had no items. */}}
 {{- $pages = $pages | complement (where $pages "Params.categories" "intersect" site.Params.feedExcludeCategories) -}}
 {{- $pages = first site.Config.Services.RSS.Limit $pages.ByDate.Reverse -}}
 {{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}

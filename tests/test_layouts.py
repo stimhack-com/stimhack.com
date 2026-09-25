@@ -673,7 +673,7 @@ class PostIdLinks(unittest.TestCase):
         self.assert_opens("?page_id=1879", "/articles-and-guides/")
 
     def test_either_parameter_takes_any_id(self):
-        # WordPress looked up ?p= and ?page_id= in the same ID space.
+        # Posts and pages share one WordPress ID space, so either parameter finds either.
         self.assert_opens("?p=1879", "/articles-and-guides/")
         self.assert_opens("?page_id=5525", "/2014-world-championship-report-1st-place/")
 
@@ -695,8 +695,6 @@ class PostIdLinks(unittest.TestCase):
         self.assertEqual([(r["replaced"], r["fetched"], r["errors"]) for r in results], [(None, [], [])] * len(searches))
 
     def test_not_found_page_redirects_old_id_links_too(self):
-        # WordPress redirected any address with ?p=<ID>, /index.php?p=<ID> too,
-        # and GitHub Pages serves 404.html for /index.php.
         self.assert_opens("?p=5525", "/2014-world-championship-report-1st-place/", page="404.html")
 
     def test_every_post_and_page_id_goes_to_its_url(self):
