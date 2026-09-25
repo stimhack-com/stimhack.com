@@ -2,8 +2,11 @@
 
 Run: python3 -m unittest discover tests
 """
+import html
 import re
 import unittest
+
+import yaml
 
 from site_build import ROOT, build
 
@@ -70,3 +73,103 @@ class RootContext(unittest.TestCase):
             if path.is_file() and parts[0] not in ("_partials", "_shortcodes"):
                 found += [(str(path.relative_to(ROOT)), a) for a in root_context_uses_in_blocks(path.read_text())]
         self.assertEqual(found, [])
+
+
+def archive_summaries(out):
+    """Return (post URL, summary text) for each post entry on the category archive pages in out."""
+    found = []
+    for page in sorted(out.glob("category/**/index.html")):
+        for article in page.read_text().split("<article ")[1:]:
+            summary = re.search(r'<div class="entry-summary">.*?<p>([^<]*)</p>', article, re.S)
+            if summary:
+                url = re.search(r'<h2 class="entry-title"><a href="([^"]*)"', article)[1]
+                found.append((url, html.unescape(summary[1])))
+    return found
+
+
+def feed_descriptions(out):
+    """Return (post URL, description text) for each item in the RSS feed in out."""
+    items = re.findall(r"<item>.*?<link>https://stimhack\.com(/[^<]*)</link>.*?<description>([^<]*)</description>", (out / "index.xml").read_text(), re.S)
+    return [(url, html.unescape(text)) for url, text in items]
+
+
+def meta_description(out, url):
+    """Return the text of the meta description on the page at url."""
+    page = (out / url.strip("/") / "index.html").read_text()
+    return html.unescape(re.search(r'<meta name="description" content="([^"]*)">', page)[1])
+
+
+def front_matter_summaries(content):
+    """Return {post URL: front matter summary} for each post in content that has one."""
+    summaries = {}
+    for path in sorted((content / "posts").rglob("*.*")):
+        front = yaml.safe_load(path.read_text().split("---\n")[1])
+        if front.get("summary"):
+            summaries[front.get("url") or f"/{front['slug']}/"] = front["summary"]
+    return summaries
+
+
+def is_start_of(text, summary):
+    """Tell if text is summary, or the start of summary with " …" added as Hugo's truncate does."""
+    return text == summary or (text.endswith(" …") and summary.startswith(text.removesuffix(" …")))
+
+
+FIXTURE = ROOT / "tests" / "fixtures" / "summaries"
+LOOKALIKES = 'Lock of the Year <tm> picks, *sounds of a ruckus*, "quoted" & R&amp;D'
+
+
+class FrontMatterSummaries(unittest.TestCase):
+    """Migrated posts keep the WordPress excerpt as plain text in front matter summary."""
+
+    maxDiff = None
+
+    def test_archive_entry_shows_summary_as_written(self):
+        entries = dict(archive_summaries(build(FIXTURE)))
+        self.assertEqual(entries["/markup-lookalikes/"], LOOKALIKES)
+
+    def test_feed_description_shows_summary_as_written(self):
+        items = dict(feed_descriptions(build(FIXTURE)))
+        self.assertEqual(items["/markup-lookalikes/"], LOOKALIKES)
+
+    def test_meta_description_shows_summary_as_written(self):
+        self.assertEqual(meta_description(build(FIXTURE), "/markup-lookalikes/"), LOOKALIKES)
+
+    def test_summary_divider_in_content_does_not_replace_summary(self):
+        out = build(FIXTURE)
+        self.assertEqual(dict(archive_summaries(out))["/summary-divider/"], "The excerpt from front matter.")
+        self.assertEqual(dict(feed_descriptions(out))["/summary-divider/"], "The excerpt from front matter.")
+
+    def test_post_without_summary_uses_summary_from_content(self):
+        # Hugo makes the summary from the rendered content, so the typographer
+        # has made the quotes curly.
+        out = build(FIXTURE)
+        expected = "First paragraph of a \u201cnew\u201d post & more. Second paragraph."
+        self.assertEqual(" ".join(dict(archive_summaries(out))["/new-post/"].split()), expected)
+        self.assertEqual(" ".join(dict(feed_descriptions(out))["/new-post/"].split()), expected)
+
+    def test_every_archive_entry_shows_summary_as_written(self):
+        summaries = front_matter_summaries(ROOT / "content")
+        wrong = [
+            (url, text, summaries[url])
+            for url, text in archive_summaries(build())
+            if url in summaries and text != summaries[url]
+        ]
+        self.assertEqual(wrong, [])
+
+    def test_every_feed_description_shows_summary_as_written(self):
+        summaries = front_matter_summaries(ROOT / "content")
+        wrong = [
+            (url, text, summaries[url])
+            for url, text in feed_descriptions(build())
+            if url in summaries and text != summaries[url]
+        ]
+        self.assertEqual(wrong, [])
+
+    def test_every_meta_description_shows_summary_as_written(self):
+        out = build()
+        wrong = []
+        for url, summary in front_matter_summaries(ROOT / "content").items():
+            text = meta_description(out, url)
+            if not is_start_of(text, summary):
+                wrong.append((url, text, summary))
+        self.assertEqual(wrong, [])
