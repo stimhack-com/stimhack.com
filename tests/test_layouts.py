@@ -1069,6 +1069,29 @@ class FeedCategories(unittest.TestCase):
                 urls = [url for url, _ in feed_guids(out, feed)]
                 self.assertEqual([url for url in decklists if url in urls], [])
 
+    def test_feeds_leave_out_decklists_written_other_ways(self):
+        # Hugo puts a post in the category whose slug matches a category of
+        # its front matter, so "Decklists" and a single value not in a list
+        # both put a post in decklists.
+        out = build(FEED_CATEGORIES)
+        archive = (out / "category" / "decklists" / "index.html").read_text()
+        listed = re.findall(r'<h2 class="entry-title"><a href="([^"]*)"', archive)
+        self.assertEqual(listed, ["/single-category/", "/capitalised/", "/slug-list/"])
+        expected = {
+            "index.xml": ["/articles-only/"],
+            "feed/index.html": ["/articles-only/"],
+            "category/articles/index.xml": ["/articles-only/"],
+            "category/articles/feed/index.html": ["/articles-only/"],
+            "category/decklists/index.xml": [],
+            "category/decklists/feed/index.html": [],
+        }
+        for feed, urls in expected.items():
+            with self.subTest(feed=feed):
+                self.assertEqual([url for url, _ in feed_guids(out, feed)], urls)
+
+
+FEED_CATEGORIES = ROOT / "tests" / "fixtures" / "feed-categories"
+
 
 def served(out, url):
     """Return the text GitHub Pages serves for the URL path url, or None when it serves a 404."""
