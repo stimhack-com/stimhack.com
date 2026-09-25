@@ -16,9 +16,10 @@ keeps the content of every file that exists:
   that exists is kept, and listed if the export has a different version.
   Delete a listed file and run again to take the export version.
 - If the slug or date of a post or page changed in WordPress, the export
-  can give a wp_id that a content file has to a new path. The file is kept, the new path is not written, and both are listed,
-  because the site would serve the post twice. Move the file to the new
-  path, change it to the new slug or date, and add its old URL to aliases.
+  can give a wp_id that a content file has to a new path. The file is
+  kept, the new path is not written, and both are listed, because the
+  site would serve the post twice. Move the file to the new path, change
+  it to the new slug or date, and add its old URL to aliases.
 - data/decklists.yaml is kept if it exists. The WordPress rows that it
   does not contain are printed, to add by hand.
 - tests/legacy-urls.txt gets the URLs of the export added. No URL is removed,
