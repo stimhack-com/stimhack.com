@@ -1549,6 +1549,21 @@ class CategoryParams(unittest.TestCase):
             self.assertEqual(home_grid(out), [])
             self.assertEqual(site_feed(out), ["/decklist/", "/report/", "/article/"])
 
+    def test_home_category_shows_the_posts_that_write_it_as_a_title(self):
+        # The fixture posts write their categories with capital letters, and
+        # report.md writes tournament-report as "Tournament Report". No post
+        # writes a category as its slug.
+        expected = {
+            "tournament-report": ["/report/"],
+            "articles": ["/decklist/", "/article/"],
+            "decklists": ["/decklist/"],
+        }
+        for slug, posts in expected.items():
+            with self.subTest(slug=slug), tempfile.TemporaryDirectory() as out:
+                result = build_with_params({"homeCategory": slug}, out)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(home_grid(out), posts)
+
     def test_empty_home_category_shows_the_newest_posts_of_every_category(self):
         with tempfile.TemporaryDirectory() as out:
             result = build_with_params({"homeCategory": ""}, out)
