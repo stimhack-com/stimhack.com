@@ -679,10 +679,14 @@ class TouchMenu(unittest.TestCase):
                 self.assertEqual(touch_menu(browser, ["About"]), [{"navigated": "/about/", "open": []}])
 
     def test_click_after_a_tap_that_fired_no_click_follows_the_link(self):
-        # A tap that fires no click leaves no state that makes a later click
-        # that is not from that tap open the submenu: in "hover-no-click" the
-        # first tap fires no click, and a touch that becomes a scroll fires
-        # no click in any browser model.
+        # In "hover-no-click" the first tap fires no click, and a touch that
+        # becomes a scroll fires no click in any browser model. In each case a
+        # pointerdown on another element, a key press or a pointercancel comes
+        # between the tap and the later click. initTouchMenu in site.js clears
+        # the stored tap on these events, so the later click follows the link.
+        # A tap followed directly by a click with no such event between them,
+        # as with "activate" just after a first tap in "hover-no-click", still
+        # opens the submenu.
         cases = [
             ("hover-no-click", [self.ARTICLES, "outside", (self.ARTICLES, "keyboard")]),
             ("hover-no-click", [self.ARTICLES, (self.ARTICLES, "keyboard")]),
