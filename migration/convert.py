@@ -4,10 +4,13 @@
 Migrated posts and pages keep their WordPress HTML as .html content files,
 so they render as they did. The script writes content/posts/<year>/<slug>.html,
 content/pages/<slug>.html, taxonomy _index.md files, data/decklists.yaml and
-tests/legacy-urls.txt.
+tests/legacy-urls.txt. It points images and cardgamedb links at the copies
+recorded in migration/archived-images.json and migration/archived-links.json,
+which download_uploads.py writes, and old NetrunnerDB card images at
+card-images.netrunnerdb.com.
 
 Contributors edit these files after the migration, so by default a run
-changes no file that exists:
+keeps the content of every file that exists:
 
 - A post, page or _index.md file that does not exist yet is written. One
   that exists is kept, and listed if the export has a different version.

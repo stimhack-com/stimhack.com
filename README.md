@@ -80,14 +80,15 @@ python3 migration/download_uploads.py       # downloads uploads and archived cop
 python3 migration/convert.py                # writes content/, data/ and tests/legacy-urls.txt
 ```
 
-`convert.py` does not change files that exist, because contributors edit
-posts, author pages and `data/decklists.yaml` after the migration. A run
-writes the posts, pages, categories, tags and authors that do not have a
-file yet, and adds their URLs to `tests/legacy-urls.txt`. It lists each
-kept file that the export has a different version of; to take the export
-version of one, delete the file and run `convert.py` again. It prints the
-WordPress tournament results that `data/decklists.yaml` does not contain;
-add them to the file by hand.
+By default `convert.py` keeps the content files and `data/decklists.yaml`
+that exist, because contributors edit posts, author pages and
+`data/decklists.yaml` after the migration. A run writes the posts, pages,
+categories, tags and authors that do not have a file yet, and adds the URLs
+of the export to `tests/legacy-urls.txt`. It lists each kept file that
+the export has a different version of; to take the export version of one,
+delete the file and run `convert.py` again. It prints the WordPress
+tournament results that `data/decklists.yaml` does not contain; add them to
+the file by hand.
 `python3 migration/convert.py --overwrite` writes every file from the
 export again and discards all edits. Use it only before anyone edits the
 repository.
@@ -100,12 +101,17 @@ Old posts loaded images from sites that no longer serve them, such as
 cardgamedb.com and BoardGameGeek's old image server. `download_uploads.py`
 downloads Internet Archive copies into `static/images/archive/<host>/` and
 records them in `migration/archived-images.json`
-(`migration/archived_images.py`). Dead cardgamedb page links get the same
-treatment in `migration/archived-links.json`. `convert.py` points the
-posts at the copies. All requests to the archive are sequential with a
-pause between them, and a re-run only asks for what is still missing. It also moves old NetrunnerDB card
-image links to card-images.netrunnerdb.com (`migration/nrdb_images.py`).
+(`migration/archived_images.py`). For links to cardgamedb pages that no
+longer exist, it finds an Internet Archive copy of each page and records
+its web.archive.org URL in `migration/archived-links.json`
+(`migration/archived_links.py`). It does not download these pages.
+`convert.py` points the posts at the image copies and at the archived
+pages. All requests to the archive are sequential with a pause between
+them, and a re-run only asks for what is still missing. `convert.py` also
+changes old NetrunnerDB card image links to card-images.netrunnerdb.com
+(`migration/nrdb_images.py`).
 
-`convert.py` overwrites the files it generated. Do not run it after the
-WordPress site is shut down, or after people have edited migrated posts in
-this repository.
+`export.py` and `download_uploads.py` read the live WordPress site, so run
+them before it is shut down. `convert.py` reads only `.export/` and the
+files in the repository. Without `--overwrite`, it does not change posts
+that people edited in this repository.
