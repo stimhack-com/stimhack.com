@@ -127,20 +127,22 @@ class ContributorPost(unittest.TestCase):
         # in lower case.
         root = contributor_root(("probe-post", NEW_DATE, [], False), ("Probe-Case", NEW_DATE, [], False))
         self.assertEqual(walker_errors(root), [])
-        posts = test_layouts.all_posts(root / "content")
+        new = set(test_layouts.all_posts(root / "content")) - set(test_layouts.all_posts(ROOT / "content"))
+        self.assertEqual(sorted(new), ["/probe-case/", "/probe-post/"])
         out = build(root / "content")
-        for url in ["/probe-post/", "/probe-case/"]:
+        for url in new:
             with self.subTest(url=url):
-                self.assertIn(url, posts)
                 self.assertTrue((out / url.strip("/") / "index.html").is_file())
 
     def test_category_feed_check_reads_dates_that_are_not_quoted(self):
         # A slug, so that the post URL does not stop the check before it reads the date.
-        # Hugo reads a date without an offset in the timeZone of hugo.toml.
+        # Hugo reads a date without an offset in the timeZone of hugo.toml. The
+        # check compares the dates of the posts that are not in a feed with the
+        # dates in it, so the posts with these dates are older than the feeds.
         root = contributor_root(
             ("probe-post", NEW_DATE, ["slug: probe-post"], False),
-            ("probe-local", "date: 2026-09-19T12:00:00", ["slug: probe-local"], False),
-            ("probe-day", "date: 2026-09-18", ["slug: probe-day"], False),
+            ("probe-local", "date: 2013-06-01T12:00:00", ["slug: probe-local"], False),
+            ("probe-day", "date: 2013-06-02", ["slug: probe-day"], False),
         )
         content = root / "content"
         self.assertEqual(test_layouts.category_feed_errors(build(content), content), [])
