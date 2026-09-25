@@ -2,9 +2,10 @@
 """Download every upload the site uses into static/wp-content/uploads/.
 
 Collects the original file of every media item (other sites link to them),
-the "medium" variant of featured images (list thumbnails), and every uploads
-URL referenced in post and page HTML. Other WordPress size variants are not
-used and would push the site over the 1 GB GitHub Pages limit.
+the featured image and thumbnail that convert.py writes into each post's
+front matter, and every uploads URL referenced in post and page HTML. Other
+WordPress size variants are not used and would push the site over the 1 GB
+GitHub Pages limit.
 
 Files already on disk are skipped. Files on disk that are not in the set are
 moved to .export/unused-uploads/. Writes .export/missing-uploads.txt for URLs
@@ -21,6 +22,7 @@ import requests
 
 import archived_images
 import archived_links
+import convert
 
 ROOT = Path(__file__).resolve().parent.parent
 EXPORT = ROOT / ".export"
@@ -33,7 +35,6 @@ session.headers["User-Agent"] = "stimhack-migration/1.0"
 
 def upload_paths():
     media = json.loads((EXPORT / "media.json").read_text())
-    by_id = {m["id"]: m for m in media}
     paths = set()
     for m in media:
         paths.add(urlsplit(m["source_url"]).path)
@@ -41,11 +42,12 @@ def upload_paths():
         for item in json.loads((EXPORT / f"{kind}.json").read_text()):
             html = (item.get("content") or {}).get("rendered", "")
             paths.update(UPLOAD_RE.findall(html))
-            m = by_id.get(item.get("featured_media"))
-            medium = m and (m.get("media_details") or {}).get("sizes", {}).get("medium")
-            if medium:
-                paths.add(urlsplit(medium["source_url"]).path)
-    return sorted(unquote(p) for p in paths)
+    paths = {unquote(p) for p in paths}
+    # The featured_image and thumbnail paths that convert.py writes, already unquoted.
+    images, attached = convert.media_paths(media), convert.first_attachments(media)
+    for post in json.loads((EXPORT / "posts.json").read_text()):
+        paths.update(convert.post_images(post, images, attached).values())
+    return sorted(paths)
 
 
 def move_unused(paths):

@@ -192,6 +192,17 @@ def first_attachments(media):
     return out
 
 
+def post_images(post, media, attached):
+    """The featured_image and thumbnail front matter of a post. download_uploads.py downloads these."""
+    if post["featured_media"] in media:
+        full, thumbnail = media[post["featured_media"]]
+        return {"featured_image": full, "thumbnail": thumbnail}
+    if post["id"] in attached:
+        # Without a featured image, Tempera used the first image uploaded to the post.
+        return {"thumbnail": media[attached[post["id"]]][1]}
+    return {}
+
+
 def convert_posts(posts, users, cats, tags, media, attached, comments, page_paths):
     for p in posts:
         front = {
@@ -206,11 +217,7 @@ def convert_posts(posts, users, cats, tags, media, attached, comments, page_path
         }
         if p["format"] != "standard":
             front["format"] = p["format"]
-        if p["featured_media"] in media:
-            front["featured_image"], front["thumbnail"] = media[p["featured_media"]]
-        elif p["id"] in attached:
-            # Without a featured image, Tempera used the first image uploaded to the post.
-            front["thumbnail"] = media[attached[p["id"]]][1]
+        front.update(post_images(p, media, attached))
         if p["id"] in comments:
             front["comments"] = comments[p["id"]]
         if old := [old for old, new in MOVED.items() if new == path_of(p["link"])]:
