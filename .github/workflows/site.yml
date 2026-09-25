@@ -9,9 +9,13 @@ on:
 permissions:
   contents: read
 
+# One run at a time per ref. A new run for a pull request cancels the
+# older one. A new run for main waits instead, so that a push does not
+# cancel a Pages deployment that is in progress. GitHub keeps only the
+# newest waiting run in a group and cancels older waiting runs.
 concurrency:
   group: pages-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
   HUGO_VERSION: 0.166.0
