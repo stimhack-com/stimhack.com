@@ -368,7 +368,13 @@ def convert_terms(kind, terms, overwrite, extra=None, used=frozenset()):
 
 
 def legacy_urls(posts, pages, cats, tags, users, overwrite):
-    """Every public WordPress URL. A test checks each one still exists in the build.
+    """Write tests/legacy-urls.txt, which scripts/check_site.py checks against the build.
+
+    The list has the URL of each post, of each page not in SKIP_PAGES (and
+    of decklist-submssion, which the site still serves), of each category,
+    tag and author archive that has posts, the old URL of each post in
+    MOVED, and the URL of each post in wayback.POSTS. It does not have the home page, feeds, archive pages
+    after the first, date archives or attachment pages.
 
     Without overwrite the URLs in the file are kept: the files of posts
     removed from WordPress since the last run are kept, so the site still serves them.

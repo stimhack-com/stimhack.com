@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
 """Check a built site for broken URLs.
 
-1. Every URL the WordPress site served (tests/legacy-urls.txt) must still
-   exist, so links from the forum, Reddit and search engines keep working.
+1. Every URL in tests/legacy-urls.txt must still exist, so links from the
+   forum, Reddit and search engines keep working. The list has the URL of
+   each post in the WordPress export, of each page that the site kept, of
+   each category, tag and author archive, the old URL of each post that
+   WordPress moved, and the URL of each deleted post restored from the
+   Internet Archive. It does not have the home page,
+   feeds, archive pages after the first (/page/2/), date archives or
+   attachment pages.
 2. Every path on this site in an href, src, poster, data-src or srcset
    attribute of the built HTML must point to a file. Relative paths, such as
    an image referenced by file name from a post's folder, are resolved

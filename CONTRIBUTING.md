@@ -102,8 +102,8 @@ Every pull request runs these checks:
   build the site with Hugo.
 - `hugo --printPathWarnings --panicOnWarning` fails when two pages have the
   same URL.
-- `python3 scripts/check_site.py` fails when a URL from the old WordPress site
-  is missing, when a page links to a path on this site that does not
+- `python3 scripts/check_site.py` fails when the URL of an old WordPress
+  post, page or archive is missing, when a page links to a path on this site that does not
   exist, or when a page loads an image from an old cardgamedb.com or
   netrunnerdb.com address that no longer works. The link check reads the
   `href`, `src`, `poster`, `data-src` and `srcset` attributes. It checks
