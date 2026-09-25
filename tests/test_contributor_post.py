@@ -205,7 +205,7 @@ class ContributorPost(unittest.TestCase):
     def test_site_checks_pass_with_a_new_post(self):
         # Run every test of test_layouts with this content/ in place of the real one.
         # A new loader: the default one keeps the -k patterns of the command line.
-        # Five new posts in articles give its archive one page more than WordPress had.
+        # The new posts in articles give its archive at least one page more than WordPress had.
         # CONTRIBUTING.md says that Hugo does not publish a draft or a post with
         # a date in the future, so a pull request can add one.
         root = contributor_root(
@@ -222,7 +222,7 @@ class ContributorPost(unittest.TestCase):
             ("contributor-test-key", "date: 2026-09-23T12:00:00-07:00", ["Slug: contributor-test-upper-key"], False),
             ("contributor-test-html/index.html", "date: 2026-09-24T12:00:00-07:00", ["summary: HTML."], True),
             # Hugo reads the keys of front matter in any case.
-            ("contributor-test-categories", "date: 2026-09-25T12:00:00-07:00", ["Categories: [strategy]"], False),
+            ("contributor-test-categories", "date: 2026-09-15T12:00:00-07:00", ["Categories: [strategy]", "Summary: Keys."], False),
         )
         default = lambda content=None, environment=None: site_build.build(content or root / "content", environment)
         tests = unittest.TestSuite(
