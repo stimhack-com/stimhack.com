@@ -811,6 +811,32 @@ class FrontMatterSummaries(unittest.TestCase):
             with self.subTest(url=url):
                 self.assertEqual(meta_description(out, url), site_description)
 
+    def test_post_with_only_an_embed_has_site_description(self):
+        # The summary Hugo makes from a post that is only an iframe or an
+        # image is only white space, which is not a description.
+        out = build(FIXTURE)
+        site_description = tomllib.loads((ROOT / "hugo.toml").read_text())["params"]["description"]
+        for url in ["/iframe-only/", "/image-only/"]:
+            with self.subTest(url=url):
+                self.assertEqual(meta_description(out, url), site_description)
+
+    def test_post_with_only_an_embed_has_empty_summary_in_archive_and_feed(self):
+        out = build(FIXTURE)
+        archive = dict(archive_summaries(out))
+        feed = dict(feed_descriptions(out))
+        for url in ["/iframe-only/", "/image-only/"]:
+            with self.subTest(url=url):
+                self.assertEqual((archive[url], feed[url]), ("", ""))
+
+    def test_no_meta_description_is_only_white_space(self):
+        out = build()
+        blank = []
+        for path in sorted(out.rglob("*.html")):
+            found = re.search(r'<meta name="description" content="([^"]*)">', path.read_text())
+            if found and not html.unescape(found[1]).strip():
+                blank.append((str(path.relative_to(out)), found[1]))
+        self.assertEqual(blank, [])
+
     def test_long_meta_description_is_cut_between_characters_not_inside_an_entity(self):
         # The text has "R&D a < b AT&T" at character 160, so a cut made after
         # escaping would leave part of an entity such as "&am".
