@@ -1227,6 +1227,40 @@ def all_posts(content):
 CONFIG = tomllib.loads((ROOT / "hugo.toml").read_text())
 EXCLUDED = set(CONFIG["params"]["feedExcludeCategories"])
 FEED_LIMIT = CONFIG["services"]["rss"]["limit"]
+CATEGORY_SPELLINGS = ROOT / "tests" / "fixtures" / "category-spellings"
+
+
+def category_feed_errors(out, content):
+    """Return what is wrong with each category feed in out, built from content.
+
+    A category feed must list the newest posts in the category, newest first,
+    and no post in a category of feedExcludeCategories.
+    """
+    posts = all_posts(content)
+    wrong = []
+    for slug in sorted(p.parent.name for p in out.glob("category/*/index.html")):
+        for url in [f"/category/{slug}/feed/", f"/category/{slug}/index.xml"]:
+            text = served(out, url)
+            if text is None:
+                wrong.append((url, "not served"))
+                continue
+            items = feed_items(text)
+            eligible = {
+                link: datetime.fromisoformat(front["date"])
+                for link, front in posts.items()
+                if slug in (front.get("categories") or []) and not EXCLUDED & set(front.get("categories") or [])
+            }
+            links = [link for link, _ in items]
+            dates = [date for _, date in items]
+            if len(links) != min(FEED_LIMIT, len(eligible)):
+                wrong.append((url, "count", len(links), len(eligible)))
+            elif not set(links) <= set(eligible):
+                wrong.append((url, "not eligible", sorted(set(links) - set(eligible))))
+            elif dates != sorted(dates, reverse=True):
+                wrong.append((url, "not newest first"))
+            elif links and any(eligible[link] > dates[-1] for link in set(eligible) - set(links)):
+                wrong.append((url, "misses a newer post"))
+    return wrong
 
 
 class CategoryFeeds(unittest.TestCase):
@@ -1259,33 +1293,28 @@ class CategoryFeeds(unittest.TestCase):
 
     def test_every_category_feed_lists_its_newest_posts_without_excluded_ones(self):
         out = build()
-        posts = all_posts(ROOT / "content")
-        categories = sorted(p.parent.name for p in out.glob("category/*/index.html"))
-        self.assertGreater(len(categories), 10)
-        wrong = []
-        for slug in categories:
-            for url in [f"/category/{slug}/feed/", f"/category/{slug}/index.xml"]:
-                text = served(out, url)
-                if text is None:
-                    wrong.append((url, "not served"))
-                    continue
-                items = feed_items(text)
-                eligible = {
-                    link: datetime.fromisoformat(front["date"])
-                    for link, front in posts.items()
-                    if slug in (front.get("categories") or []) and not EXCLUDED & set(front.get("categories") or [])
-                }
-                links = [link for link, _ in items]
-                dates = [date for _, date in items]
-                if len(links) != min(FEED_LIMIT, len(eligible)):
-                    wrong.append((url, "count", len(links), len(eligible)))
-                elif not set(links) <= set(eligible):
-                    wrong.append((url, "not eligible", sorted(set(links) - set(eligible))))
-                elif dates != sorted(dates, reverse=True):
-                    wrong.append((url, "not newest first"))
-                elif links and any(eligible[link] > dates[-1] for link in set(eligible) - set(links)):
-                    wrong.append((url, "misses a newer post"))
-        self.assertEqual(wrong, [])
+        self.assertGreater(len(list(out.glob("category/*/index.html"))), 10)
+        self.assertEqual(category_feed_errors(out, ROOT / "content"), [])
+
+    def test_feed_check_finds_posts_whose_categories_are_not_written_as_slugs(self):
+        # The posts of these fixtures write categories as titles, with capital
+        # letters or as one value and not a list. Their feeds are correct, so
+        # the check of every category feed must find no error.
+        out = build(CATEGORY_SPELLINGS)
+        archive = (out / "category" / "tournament-report" / "index.html").read_text()
+        self.assertEqual(re.findall(r'<h2 class="entry-title"><a href="([^"]*)"', archive), ["/report/"])
+        expected = {
+            "/feed/": ["/report/", "/article/"],
+            "/category/articles/feed/": ["/article/"],
+            "/category/decklists/feed/": [],
+            "/category/tournament-report/feed/": ["/report/"],
+        }
+        for url, links in expected.items():
+            with self.subTest(url=url):
+                self.assertEqual([link for link, _ in feed_items(served(out, url))], links)
+        for content in [CATEGORY_SPELLINGS, FEED_CATEGORIES]:
+            with self.subTest(content=content.name):
+                self.assertEqual(category_feed_errors(build(content), content), [])
 
     def test_category_feed_items_keep_wordpress_guid(self):
         out = build()
