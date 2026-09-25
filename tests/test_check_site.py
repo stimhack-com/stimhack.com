@@ -9,6 +9,7 @@ import tempfile
 import unittest
 from pathlib import Path
 from unittest import mock
+from urllib.parse import quote
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "migration"))
@@ -375,6 +376,27 @@ class LegacyUrls(unittest.TestCase):
                 "legacy URL missing: /uploads/gone.png",
             },
         )
+
+
+class KnownBrokenLinks(unittest.TestCase):
+    """The check skips each path in tests/known-broken-links.txt and reports other broken links, also ones like it."""
+
+    def test_skips_only_the_listed_paths(self):
+        self.assertNotEqual(check_site.KNOWN_BROKEN, set())
+        public = Path(tempfile.mkdtemp(prefix="check-site-")) / "public"
+        self.addCleanup(shutil.rmtree, public.parent)
+        (public / "links").mkdir(parents=True)
+        (public / "index.html").write_text('<link rel="canonical" href="https://static.example.com/">')
+        unlisted = set()
+        for path in check_site.KNOWN_BROKEN:
+            # A longer path, the path with a trailing slash, the same file
+            # name in another folder and another file in the same folder.
+            unlisted |= {path + "x", path + "/", "/unlisted" + path, path.rpartition("/")[0] + "/unlisted.png"}
+        (public / "links" / "index.html").write_text(
+            "".join(f'<a href="{quote(path)}">link</a>' for path in sorted(check_site.KNOWN_BROKEN | unlisted))
+        )
+        reported = {line for line in problems(public) if line.startswith("broken link in ")}
+        self.assertEqual(reported, {f"broken link in /links/index.html: {path}" for path in unlisted - check_site.KNOWN_BROKEN})
 
 
 class SrcsetSpaces(unittest.TestCase):

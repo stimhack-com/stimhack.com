@@ -1862,15 +1862,40 @@ class BundleFiles(unittest.TestCase):
                 self.assertEqual(files - paths, set(), sorted(p for p in paths if p.endswith((".png", ".pdf"))))
 
     def test_no_page_has_a_broken_link(self):
-        out = build(BUNDLES)
-        hosts = check_site.SITE_HOSTS | {check_site.built_host(out)}
-        broken = []
-        for page in sorted(out.rglob("*.html")):
-            url = "/" + page.relative_to(out).as_posix()
-            broken += [
-                (url, path) for path in check_site.site_paths(url, page.read_text(), hosts) if not check_site.exists(out, path)
-            ]
-        self.assertEqual(broken, [])
+        self.assertEqual(missing_targets(build(BUNDLES)), [])
+
+
+def missing_targets(out):
+    """Return (page URL, path) for each path on the site that a page in the built site out links to and that is not a file."""
+    hosts = check_site.SITE_HOSTS | {check_site.built_host(out)}
+    broken = []
+    for page in sorted(out.rglob("*.html")):
+        url = "/" + page.relative_to(out).as_posix()
+        broken += [
+            (url, path) for path in check_site.site_paths(url, page.read_text(), hosts) if not check_site.exists(out, path)
+        ]
+    return broken
+
+
+class KnownBrokenLinks(unittest.TestCase):
+    """The check skips the links in tests/known-broken-links.txt, which were already broken on WordPress.
+
+    Each line must be a path as check_site.site_paths gives it for a link in
+    the built site. A line in another form, such as a percent-encoded path or
+    a path without its trailing slash, skips nothing, and the check then
+    reports the link.
+    """
+
+    def test_each_listed_path_is_a_broken_link_in_the_built_site(self):
+        broken = {path for _, path in missing_targets(build())}
+        self.assertNotEqual(check_site.KNOWN_BROKEN, set())
+        self.assertEqual(sorted(check_site.KNOWN_BROKEN - broken), [])
+
+    def test_the_check_reports_no_broken_link_in_the_built_site(self):
+        stdout = io.StringIO()
+        with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(io.StringIO()):
+            check_site.main([str(build())])
+        self.assertEqual([line for line in stdout.getvalue().splitlines() if line.startswith("broken link in ")], [])
 
 
 class StagingRobots(unittest.TestCase):
