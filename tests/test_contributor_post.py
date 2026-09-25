@@ -35,8 +35,10 @@ def contributor_root(*posts):
     Each post is (folder name, date line, extra front matter lines, image). It
     is made with `hugo new` from the archetype and then changed as
     CONTRIBUTING.md says: draft false, an author, and the image as its
-    featured_image. The other entries of ROOT are copies, or symbolic links
-    for the entries in LINKED.
+    featured_image. The folder names start with contributor-test-, so that
+    they do not match a post that a contributor has added to content/: `hugo
+    new` does not replace a file. The other entries of ROOT are copies, or
+    symbolic links for the entries in LINKED.
     """
     root = Path(tempfile.mkdtemp(prefix="stimhack-contributor-"))
     atexit.register(shutil.rmtree, root, ignore_errors=True)
@@ -53,7 +55,7 @@ def contributor_root(*posts):
         subprocess.run(
             [*hugo(), "new", "content", f"posts/2026/{name}/index.md",
              "--source", str(ROOT), "--contentDir", str(content), "--quiet"],
-            check=True, capture_output=True,
+            check=True,
         )
         index = content / "posts" / "2026" / name / "index.md"
         lines = []
@@ -118,17 +120,20 @@ class ContributorPost(unittest.TestCase):
     maxDiff = None
 
     def test_content_walkers_skip_the_images_in_a_post_folder(self):
-        root = contributor_root(("probe-post", NEW_DATE, [], True))
+        root = contributor_root(("contributor-test-post", NEW_DATE, [], True))
         self.assertEqual(walker_errors(root), [])
-        self.assertIn("/probe-post/", test_layouts.all_posts(root / "content"))
+        self.assertIn("/contributor-test-post/", test_layouts.all_posts(root / "content"))
 
     def test_content_walkers_give_a_post_the_url_of_its_folder(self):
         # A post folder has no slug. Hugo serves the post at the folder name,
         # in lower case.
-        root = contributor_root(("probe-post", NEW_DATE, [], False), ("Probe-Case", NEW_DATE, [], False))
+        root = contributor_root(
+            ("contributor-test-post", NEW_DATE, [], False),
+            ("Contributor-Test-Case", NEW_DATE, [], False),
+        )
         self.assertEqual(walker_errors(root), [])
         new = set(test_layouts.all_posts(root / "content")) - set(test_layouts.all_posts(ROOT / "content"))
-        self.assertEqual(sorted(new), ["/probe-case/", "/probe-post/"])
+        self.assertEqual(sorted(new), ["/contributor-test-case/", "/contributor-test-post/"])
         out = build(root / "content")
         for url in new:
             with self.subTest(url=url):
@@ -140,9 +145,9 @@ class ContributorPost(unittest.TestCase):
         # check compares the dates of the posts that are not in a feed with the
         # dates in it, so the posts with these dates are older than the feeds.
         root = contributor_root(
-            ("probe-post", NEW_DATE, ["slug: probe-post"], False),
-            ("probe-local", "date: 2013-06-01T12:00:00", ["slug: probe-local"], False),
-            ("probe-day", "date: 2013-06-02", ["slug: probe-day"], False),
+            ("contributor-test-post", NEW_DATE, ["slug: contributor-test-post"], False),
+            ("contributor-test-local", "date: 2013-06-01T12:00:00", ["slug: contributor-test-local"], False),
+            ("contributor-test-day", "date: 2013-06-02", ["slug: contributor-test-day"], False),
         )
         content = root / "content"
         self.assertEqual(test_layouts.category_feed_errors(build(content), content), [])
@@ -152,8 +157,8 @@ class ContributorPost(unittest.TestCase):
         # A new loader: the default one keeps the -k patterns of the command line.
         # Five new posts in articles give its archive one page more than WordPress had.
         root = contributor_root(
-            ("probe-post", NEW_DATE, [], True),
-            *((f"probe-post-{n}", f"date: 2026-09-1{n}T12:00:00-07:00", [], False) for n in range(1, 5)),
+            ("contributor-test-post", NEW_DATE, [], True),
+            *((f"contributor-test-post-{n}", f"date: 2026-09-1{n}T12:00:00-07:00", [], False) for n in range(1, 5)),
         )
         default = lambda content=None, environment=None: site_build.build(content or root / "content", environment)
         tests = unittest.TestSuite(
