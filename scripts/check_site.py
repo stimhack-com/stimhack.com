@@ -20,7 +20,9 @@
    baseURL of the build. Other URLs with a scheme (mailto:, data: and so
    on), URLs on other hosts, and values that are only a #fragment or a
    ?query are not checked.
-3. No page loads an image from an address that no longer serves images.
+3. No page loads an image from an address that no longer serves images. The
+   check reads the src, poster, data-src and srcset attributes and the
+   content of og:image meta tags.
 
 Usage: hugo && python3 scripts/check_site.py [DIR]
 
@@ -37,6 +39,9 @@ ROOT = Path(__file__).resolve().parent.parent
 PUBLIC = ROOT / "public"
 # Attributes that hold one URL. srcset holds a list of URLs.
 LINK_ATTRS = {"href", "src", "poster", "data-src"}
+# Attributes in LINK_ATTRS that can hold the URL of an image. srcset holds a
+# list of image URLs.
+IMAGE_ATTRS = {"src", "poster", "data-src"}
 # Meta tags whose content attribute is a URL.
 META_URL_PROPERTIES = {"og:image", "og:url"}
 # The URL in the content of a meta refresh tag, such as "0; url=/a/". The
@@ -46,7 +51,6 @@ REFRESH_URL = re.compile(r"""\s*[\d.]*(?:\s*[;,]\s*|\s+)(?:url\s*=\s*)?(?:(["'])
 # Hosts of the production site. The host of the built site is added from its
 # canonical link, since a staging build has another baseURL.
 SITE_HOSTS = {"stimhack.com", "www.stimhack.com"}
-IMG_SRC = re.compile(r"""<img\b[^>]*?\bsrc=["']?([^"'\s>]+)""", re.I)
 # Image addresses that are gone. Use card-images.netrunnerdb.com for card scans.
 DEAD_IMAGES = re.compile(
     r"^https?://(?:www\.)?(?:cardgamedb\.com/forums/uploads/"
@@ -88,11 +92,12 @@ def srcset_urls(srcset):
 
 
 class Links(HTMLParser):
-    """Collect the URLs that the tags on a page link to, and the page's canonical URL."""
+    """Collect the URLs that the tags on a page link to, the image URLs among them, and the page's canonical URL."""
 
     def __init__(self):
         super().__init__()
         self.urls = []
+        self.images = []
         self.canonical = None
 
     def handle_starttag(self, tag, attrs):
@@ -101,8 +106,11 @@ class Links(HTMLParser):
                 continue
             if name in LINK_ATTRS:
                 self.urls.append(value.strip())
+                if name in IMAGE_ATTRS:
+                    self.images.append(value.strip())
             elif name == "srcset":
                 self.urls.extend(srcset_urls(value))
+                self.images.extend(srcset_urls(value))
         attrs = {name: value or "" for name, value in attrs}
         if tag == "link" and "canonical" in attrs.get("rel", "").lower().split():
             self.canonical = attrs.get("href", "").strip()
@@ -114,6 +122,8 @@ class Links(HTMLParser):
                 self.urls.append((match[2] if match[1] else match[3]).strip())
         elif attrs.get("property", "").strip().lower() in META_URL_PROPERTIES:
             self.urls.append(attrs["content"].strip())
+            if attrs["property"].strip().lower() == "og:image":
+                self.images.append(attrs["content"].strip())
 
 
 def parse(html):
@@ -168,7 +178,7 @@ def main(args=()):
     for page in public.rglob("*.html"):
         html = page.read_text(errors="replace")
         name = page.relative_to(public).as_posix()
-        for src in IMG_SRC.findall(html):
+        for src in parse(html).images:
             if DEAD_IMAGES.match(src):
                 errors.append(f"image from a dead address in /{name}: {src}")
         # public/<dir>/index.html is served at /<dir>/. A relative path
