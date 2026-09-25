@@ -216,7 +216,7 @@ def split_decklists(body):
     return body[:start], rows, body[end:]
 
 
-def convert_pages(pages):
+def convert_pages(pages, comments):
     for p in pages:
         if p["slug"] in SKIP_PAGES:
             continue
@@ -236,6 +236,8 @@ def convert_pages(pages):
             "lastmod": iso_date(p["modified"], p["modified_gmt"]),
             "wp_id": p["id"],
         }
+        if p["id"] in comments:
+            front["comments"] = comments[p["id"]]
         write(CONTENT / "pages" / f"{p['slug']}.html", front, clean_body(body))
 
 
@@ -292,6 +294,7 @@ def main():
     cats, tags, users = load("categories"), load("tags"), load("users")
     authors_with_posts = {p["author"] for p in posts}
     users = [u for u in users if u["id"] in authors_with_posts]
+    comments = comments_by_post(load("comments"))
     convert_posts(
         posts,
         {u["id"]: u["slug"] for u in users},
@@ -299,10 +302,10 @@ def main():
         {t["id"]: t["slug"] for t in tags},
         media_paths(media),
         first_attachments(media),
-        comments_by_post(load("comments")),
+        comments,
         {path_of(p["link"]) for p in pages if p["slug"] not in SKIP_PAGES},
     )
-    convert_pages(pages)
+    convert_pages(pages, comments)
     used = convert_wayback_posts(users, cats, tags)
     convert_terms("categories", cats, used=used)
     convert_terms("tags", tags, used=used)
