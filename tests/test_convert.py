@@ -149,7 +149,9 @@ class Dates(unittest.TestCase):
     def test_offset_from_local_and_utc(self):
         self.assertEqual(convert.iso_date("2023-10-06T19:15:11", "2023-10-07T02:15:11"), "2023-10-06T19:15:11-07:00")
 
-    def test_offset_in_winter(self):
+    def test_offset_other_than_seven_hours(self):
+        # The export has no -08:00 date, because WordPress used a fixed UTC-7
+        # offset all year. This checks that the offset comes from the two times.
         self.assertEqual(convert.iso_date("2014-01-02T10:00:00", "2014-01-02T18:00:00"), "2014-01-02T10:00:00-08:00")
 
 

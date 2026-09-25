@@ -17,7 +17,9 @@ POSTS = {
     "cube-drafting-revisited": "20131004012013",
 }
 
-# The site's UTC offset in April to June 2013 (Pacific daylight time).
+# The site's UTC offset. WordPress used a fixed UTC-7 offset all year, not
+# Pacific time with daylight saving: every local date in the export is 7
+# hours behind its _gmt date, winter dates included.
 OFFSET = "-07:00"
 SITE_URL = re.compile(r"^https?://(?:www\.)?stimhack\.com(?::80)?")
 
