@@ -2,6 +2,7 @@
 
 Run: python3 -m unittest discover tests
 """
+import io
 import json
 import re
 import sys
@@ -202,6 +203,125 @@ class PageComments(unittest.TestCase):
             "id": 318, "parent": 0, "author": "Reader", "avatar": "https://example.org/a.png",
             "date": "2014-02-01T10:00:00-08:00", "content": "<p>Nice.</p>",
         }])
+
+
+def decklists_page(rows):
+    """A tournament-decklists page whose plugin table holds rows of (pack, location, winner)."""
+    trs = "".join(
+        f'<tr><td class="column-1 data-pack">{pack}</td><td class="column-2 location">{location}</td>'
+        f'<td class="column-3 type">GNK</td><td class="column-4 players">8</td>'
+        f'<td class="column-5 winner">{winner}</td><td class="column-6 runner">Kate</td>'
+        f'<td class="column-7 corp">Weyland</td></tr>'
+        for pack, location, winner in rows
+    )
+    body = (
+        '<p>Intro.</p><div id="decks"><table id="decklists"><tbody class="list">'
+        f"{trs}</tbody></table></div><script>var userList = new List('decks', options);</script>"
+    )
+    return {
+        "id": 20, "slug": "tournament-decklists", "link": "https://stimhack.com/tournament-decklists/",
+        "title": {"rendered": "Tournament Decklists"}, "content": {"rendered": body},
+        "date": "2013-04-06T00:36:49", "date_gmt": "2013-04-06T07:36:49",
+        "modified": "2014-01-26T23:05:43", "modified_gmt": "2014-01-27T06:05:43",
+    }
+
+
+def post(post_id, slug):
+    return {
+        "id": post_id, "slug": slug, "link": f"https://stimhack.com/{slug}/",
+        "title": {"rendered": slug}, "content": {"rendered": f"<p>{slug} from WordPress.</p>"},
+        "excerpt": {"rendered": ""}, "format": "standard", "featured_media": 0,
+        "author": 7, "categories": [3], "tags": [],
+        "date": "2016-05-01T10:00:00", "date_gmt": "2016-05-01T17:00:00",
+        "modified": "2016-05-01T10:00:00", "modified_gmt": "2016-05-01T17:00:00",
+    }
+
+
+class Rerun(unittest.TestCase):
+    """Run main() again after contributors edited the output, as the final re-export will."""
+
+    def setUp(self):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        self.root = Path(tmp.name)
+        (self.root / ".export").mkdir()
+        (self.root / "tests").mkdir()
+        self.export = {
+            "posts": [post(100, "first-post")],
+            "pages": [decklists_page([("Core", "Store A", "Alice")])],
+            "media": [], "tags": [], "comments": [],
+            "categories": [{"id": 3, "slug": "articles", "name": "Articles", "link": "https://stimhack.com/category/articles/", "count": 1}],
+            "users": [{"id": 7, "slug": "ian", "name": "Ian", "link": "https://stimhack.com/author/ian/", "avatar_urls": {}}],
+        }
+        self.run_convert()
+
+    def run_convert(self, **kwargs):
+        for name, items in self.export.items():
+            (self.root / ".export" / f"{name}.json").write_text(json.dumps(items))
+        with mock.patch.multiple(convert, ROOT=self.root, EXPORT=self.root / ".export", CONTENT=self.root / "content"), \
+                mock.patch.object(convert.wayback, "POSTS", {}), \
+                mock.patch("sys.stdout", new_callable=io.StringIO) as out:
+            convert.main(**kwargs)
+        return out.getvalue()
+
+    def edit(self, relative):
+        path = self.root / relative
+        path.write_text(path.read_text() + "Edited by a contributor.\n")
+        return path.read_text()
+
+    def test_default_run_keeps_an_edited_post(self):
+        edited = self.edit("content/posts/2016/first-post.html")
+        self.run_convert()
+        self.assertEqual((self.root / "content/posts/2016/first-post.html").read_text(), edited)
+
+    def test_default_run_keeps_an_edited_page(self):
+        edited = self.edit("content/pages/tournament-decklists.html")
+        self.run_convert()
+        self.assertEqual((self.root / "content/pages/tournament-decklists.html").read_text(), edited)
+
+    def test_default_run_keeps_an_edited_author_page(self):
+        edited = self.edit("content/authors/ian/_index.md")
+        self.run_convert()
+        self.assertEqual((self.root / "content/authors/ian/_index.md").read_text(), edited)
+
+    def test_default_run_keeps_edited_decklists(self):
+        edited = self.edit("data/decklists.yaml")
+        self.export["pages"] = [decklists_page([("Core", "Store B", "Bob"), ("Core", "Store A", "Alice")])]
+        self.run_convert()
+        self.assertEqual((self.root / "data/decklists.yaml").read_text(), edited)
+
+    def test_default_run_prints_decklist_rows_that_the_file_does_not_have(self):
+        self.export["pages"] = [decklists_page([("Core", "Store B", "Bob"), ("Core", "Store A", "Alice")])]
+        out = self.run_convert()
+        self.assertIn("location: Store B", out)
+        self.assertNotIn("location: Store A", out)
+
+    def test_default_run_creates_a_new_post(self):
+        self.export["posts"].append(post(101, "second-post"))
+        self.run_convert()
+        self.assertIn("second-post from WordPress.", (self.root / "content/posts/2016/second-post.html").read_text())
+
+    def test_default_run_adds_new_urls_and_keeps_the_others(self):
+        urls = self.root / "tests/legacy-urls.txt"
+        urls.write_text(urls.read_text() + "/added-by-hand/\n")
+        self.export["posts"].append(post(101, "second-post"))
+        self.run_convert()
+        self.assertEqual(
+            urls.read_text().split(),
+            ["/added-by-hand/", "/author/ian/", "/category/articles/", "/first-post/", "/second-post/", "/tournament-decklists/"],
+        )
+
+    def test_overwrite_run_replaces_edited_files(self):
+        paths = ["content/posts/2016/first-post.html", "content/authors/ian/_index.md", "data/decklists.yaml"]
+        before = {p: (self.root / p).read_text() for p in paths}
+        for p in paths:
+            self.edit(p)
+        urls = self.root / "tests/legacy-urls.txt"
+        urls_before = urls.read_text()
+        urls.write_text(urls_before + "/added-by-hand/\n")
+        self.run_convert(overwrite=True)
+        self.assertEqual({p: (self.root / p).read_text() for p in paths}, before)
+        self.assertEqual(urls.read_text(), urls_before)
 
 
 class TermDescriptions(unittest.TestCase):
