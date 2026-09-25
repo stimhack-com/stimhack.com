@@ -439,7 +439,11 @@ class MobileNav(unittest.TestCase):
 #     "hover-no-click" keeps :hover like "hover-kept", but does not fire click
 #     when the :hover of the tap shows a submenu that was hidden.
 #   taps: a list of {text, input}. text is the text of a menu link, or
-#     "outside" for the page content. input is "touch", "mouse" or "keyboard".
+#     "outside" for the page content. input is "touch", "mouse", "keyboard"
+#     (the Enter key: a keydown, then a click), "scroll" (a touch that the
+#     browser cancels because it becomes a scroll: a pointerdown, then a
+#     pointercancel, and no click) or "activate" (a click with no key or
+#     pointer events before it, as from assistive technology or a script).
 # A tap on a link in a hidden submenu is not possible. After a navigation the
 # page is gone, so the remaining taps are not done. Print, for each tap, the
 # address it navigated to or null, and the text of each top level item whose
@@ -545,6 +549,12 @@ for (const {text, input} of taps) {
     dispatch(target, "touchend", {touches: []});
     hovered = target;
     if (browser === "hover-no-click" && openItems().some((item) => !hiddenBefore.has(item))) click = false;
+  } else if (input === "scroll") {
+    dispatch(target, "pointerdown", {pointerType: "touch"});
+    dispatch(target, "pointercancel", {pointerType: "touch"});
+    click = false;
+  } else if (input === "keyboard") {
+    dispatch(target, "keydown", {key: "Enter"});
   } else if (input === "mouse") {
     hovered = target;
     dispatch(target, "pointerdown", {pointerType: "mouse"});
@@ -554,7 +564,7 @@ for (const {text, input} of taps) {
   }
   let navigated = null;
   if (click) {
-    const event = dispatch(target, "click", {pointerType: input === "keyboard" ? "" : input});
+    const event = dispatch(target, "click", {pointerType: input === "keyboard" || input === "activate" ? "" : input});
     const a = target.closest("a");
     if (a && !event.defaultPrevented) navigated = a.getAttribute("href");
   }
@@ -650,6 +660,21 @@ class TouchMenu(unittest.TestCase):
         for browser in self.TAP_BROWSERS + ["hover-no-click"]:
             with self.subTest(browser=browser):
                 self.assertEqual(touch_menu(browser, ["About"]), [{"navigated": "/about/", "open": []}])
+
+    def test_click_after_a_tap_that_fired_no_click_follows_the_link(self):
+        # A tap that fires no click leaves no state that makes a later click
+        # that is not from that tap open the submenu: in "hover-no-click" the
+        # first tap fires no click, and a touch that becomes a scroll fires
+        # no click in any browser model.
+        cases = [
+            ("hover-no-click", [self.ARTICLES, "outside", (self.ARTICLES, "keyboard")]),
+            ("hover-no-click", [self.ARTICLES, (self.ARTICLES, "keyboard")]),
+            ("hover-no-click", [self.ARTICLES, "outside", (self.ARTICLES, "activate")]),
+        ] + [(browser, [(self.ARTICLES, "scroll"), (self.ARTICLES, tool)])
+             for browser in self.TAP_BROWSERS + ["hover-no-click"] for tool in ["keyboard", "activate"]]
+        for browser, taps in cases:
+            with self.subTest(browser=browser, taps=taps):
+                self.assertEqual(touch_menu(browser, taps)[-1]["navigated"], "/category/articles/")
 
     def test_mouse_and_keyboard_follow_the_link_on_the_first_click(self):
         for browser in self.TAP_BROWSERS:
