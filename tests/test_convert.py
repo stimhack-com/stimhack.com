@@ -315,6 +315,44 @@ class Rerun(unittest.TestCase):
         self.run_convert()
         self.assertLessEqual({"/added-by-hand/", "/first-post/", "/second-post/"}, set(urls.read_text().split()))
 
+    def test_default_run_does_not_write_a_second_file_for_a_renamed_post(self):
+        # WordPress keeps the ID of a post when an editor changes its slug.
+        edited = self.edit("content/posts/2016/first-post.html")
+        self.export["posts"] = [post(100, "renamed-post")]
+        self.run_convert()
+        self.assertEqual(shared_wp_ids(self.root), {})
+        self.assertEqual((self.root / "content/posts/2016/first-post.html").read_text(), edited)
+
+    def test_default_run_does_not_write_a_second_file_for_a_post_with_a_new_year(self):
+        self.export["posts"] = [dict(post(100, "first-post"), date="2017-01-02T10:00:00", date_gmt="2017-01-02T17:00:00")]
+        self.run_convert()
+        self.assertEqual(shared_wp_ids(self.root), {})
+
+    def test_default_run_does_not_write_a_second_file_for_a_renamed_page(self):
+        about = {
+            "id": 2, "slug": "about", "link": "https://stimhack.com/about/",
+            "title": {"rendered": "About"}, "content": {"rendered": "<p>About.</p>"},
+            "date": "2013-04-06T00:36:49", "date_gmt": "2013-04-06T07:36:49",
+            "modified": "2014-01-26T23:05:43", "modified_gmt": "2014-01-27T06:05:43",
+        }
+        self.export["pages"].append(about)
+        self.run_convert()
+        self.export["pages"][-1] = dict(about, slug="about-us", link="https://stimhack.com/about-us/")
+        self.run_convert()
+        self.assertEqual(shared_wp_ids(self.root), {})
+
+    def test_default_run_names_both_files_of_a_renamed_post(self):
+        self.export["posts"] = [post(100, "renamed-post")]
+        out = self.run_convert()
+        self.assertIn("content/posts/2016/first-post.html", out)
+        self.assertIn("content/posts/2016/renamed-post.html", out)
+
+    def test_overwrite_run_does_not_keep_a_second_file_for_a_renamed_post(self):
+        self.export["posts"] = [post(100, "renamed-post")]
+        self.run_convert(overwrite=True)
+        self.assertEqual(shared_wp_ids(self.root), {})
+        self.assertIn("renamed-post from WordPress.", (self.root / "content/posts/2016/renamed-post.html").read_text())
+
     def test_overwrite_run_replaces_edited_files(self):
         paths = ["content/posts/2016/first-post.html", "content/authors/ian/_index.md", "data/decklists.yaml"]
         before = {p: (self.root / p).read_text() for p in paths}
@@ -330,6 +368,39 @@ class Rerun(unittest.TestCase):
 
 def front_matter(path):
     return yaml.safe_load(path.read_text().split("---\n")[1])
+
+
+def shared_wp_ids(root):
+    """Map each wp_id that more than one file in root/content has to those files.
+
+    Hugo would serve each of them, and /wp-ids.json can map the ID to only one.
+    """
+    files = {}
+    for path in sorted((root / "content").rglob("*")):
+        if path.is_file() and path.read_text().startswith("---\n"):
+            if (wp_id := (front_matter(path) or {}).get("wp_id")) is not None:
+                files.setdefault(wp_id, []).append(str(path.relative_to(root)))
+    return {wp_id: paths for wp_id, paths in files.items() if len(paths) > 1}
+
+
+class SharedWpIds(unittest.TestCase):
+    def test_no_two_content_files_have_the_same_wp_id(self):
+        # A copy of a migrated post keeps its wp_id.
+        self.assertEqual(shared_wp_ids(Path(__file__).resolve().parent.parent), {})
+
+    def test_archived_post_with_a_new_slug_does_not_get_a_second_file(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / ".export" / "wayback").mkdir(parents=True)
+            fixture = (Path(__file__).parent / "fixtures" / "wayback-post.html").read_text()
+            terms = lambda *names: [{"name": n, "slug": n.lower().replace(" ", "")} for n in names]
+            for slug in ("drafting-with-netrunner", "netrunner-drafting"):
+                (root / ".export" / "wayback" / f"{slug}.html").write_text(fixture)
+                with mock.patch.multiple(convert, ROOT=root, EXPORT=root / ".export", CONTENT=root / "content"), \
+                        mock.patch.object(convert.wayback, "POSTS", {slug: "20131113101435"}), \
+                        mock.patch("sys.stdout", new_callable=io.StringIO):
+                    convert.convert_wayback_posts(terms("SneakySly"), terms("Cube Drafting"), terms("Draft", "Drafting"), False)
+            self.assertEqual(shared_wp_ids(root), {})
 
 
 class WordPressGuid(unittest.TestCase):
