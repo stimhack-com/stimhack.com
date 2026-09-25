@@ -1,7 +1,7 @@
 {{ define "bodyclass" }}home page{{ end }}
 {{ define "main" }}
 {{- $posts := where site.RegularPages "Section" "posts" }}
-{{- with site.Taxonomies.categories.Get site.Params.homeCategory }}{{ $posts = .Pages }}{{ end }}
+{{- with site.GetPage (printf "/categories/%s" site.Params.homeCategory) }}{{ $posts = .Pages }}{{ end }}
 <div class="page type-page hentry">
 <div class="entry-content">
 <div class="wc-shortcodes-posts-wrapper">

@@ -1089,6 +1089,19 @@ class FeedCategories(unittest.TestCase):
             with self.subTest(feed=feed):
                 self.assertEqual([url for url, _ in feed_guids(out, feed)], urls)
 
+    def test_templates_get_category_posts_from_the_category_page(self):
+        # Templates find the posts in a category from the category page, whose
+        # pages are the posts its archive lists (archive-pager.html). They do
+        # not use the names as written in front matter or site.Taxonomies.
+        pattern = re.compile(r"Params\.(categories|tags|authors)\b|Taxonomies\.\w+\.Get\b")
+        found = [
+            (str(path.relative_to(ROOT)), match[0])
+            for path in sorted((ROOT / "layouts").rglob("*"))
+            if path.is_file()
+            for match in pattern.finditer(path.read_text())
+        ]
+        self.assertEqual(found, [])
+
 
 FEED_CATEGORIES = ROOT / "tests" / "fixtures" / "feed-categories"
 
