@@ -123,7 +123,10 @@ Every pull request runs these checks:
   does not check other URLs with a scheme (`mailto:`, `data:`), URLs on
   other hosts, or values that are only a `#fragment` or a `?query`. Old
   links that were already broken on WordPress are listed in
-  `tests/known-broken-links.txt`. The site finds the post or page of an
+  `tests/known-broken-links.txt`. If you fix or remove one of these
+  links, or add a page at its path, remove its line from that file. The
+  test `KnownBrokenLinks` in `tests/test_layouts.py` fails when a line in
+  the file is not a broken link in the built site. The site finds the post or page of an
   old ID link by the `wp_id` in its front matter, so keep that line when
   you edit a migrated post or page.
   To check a site that you built to a different directory, give the
