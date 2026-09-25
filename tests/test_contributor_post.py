@@ -280,6 +280,53 @@ class PostAuthors(unittest.TestCase):
         self.assertIn("content/authors/contributor-test-nobody/_index.md", output)
 
 
+class PostDatesAndCategories(unittest.TestCase):
+    """A published post without a date or a category stops the CI build, and the error names its file.
+
+    CONTRIBUTING.md says that date and categories are required. A post
+    without a category is in no category archive or category feed, and not
+    on the home page, which lists the posts of params.homeCategory. Hugo
+    gives a post without a date the zero time, so it is the oldest post in
+    each archive and feed.
+    """
+
+    maxDiff = None
+
+    def test_post_without_a_date_or_a_category_fails_the_build_and_names_its_file(self):
+        root = contributor_root(
+            ("contributor-test-empty", NEW_DATE, ["categories: []"], False),
+            ("contributor-test-missing", NEW_DATE, [], False),
+            ("contributor-test-no-date", "# No date.", [], False),
+            # Hugo does not publish these, so they need no category or date yet.
+            ("contributor-test-draft", "# No date.", ["draft: true", "categories: []"], False),
+            ("contributor-test-later", "date: 2099-01-01T12:00:00-07:00", ["categories: []"], False),
+        )
+        content = root / "content"
+        missing = content / "posts" / "2026" / "contributor-test-missing" / "index.md"
+        missing.write_text("".join(line for line in missing.read_text().splitlines(True) if not line.startswith("categories:")))
+        with tempfile.TemporaryDirectory() as out:
+            # The flags of the build step in .github/workflows/site.yml.
+            result = subprocess.run(
+                [*hugo(), "--source", str(ROOT), "--destination", out, "--contentDir", str(content),
+                 "--printPathWarnings", "--panicOnWarning"],
+                capture_output=True,
+                text=True,
+            )
+            published = {}
+            for page in sorted(Path(out).glob("contributor-test-*/index.html")):
+                date = re.search(r'<span class="onDate date updated">(.*?)</span>', page.read_text(), re.S)
+                category = Path(out) / "category"
+                archives = sorted({a.relative_to(category).parts[0] for a in category.rglob("index.html") if f"/{page.parent.name}/" in a.read_text()})
+                published[page.parent.name] = (re.sub(r"<[^>]*>", "", date[1]).strip(), archives)
+        self.assertNotEqual(result.returncode, 0, f"The build succeeded. Date and category archives: {published}")
+        output = result.stdout + result.stderr
+        names = ["empty", "missing", "no-date", "draft", "later"]
+        named = [f"contributor-test-{n}" for n in names if str(content / "posts" / "2026" / f"contributor-test-{n}" / "index.md") in output]
+        self.assertEqual(named, ["contributor-test-empty", "contributor-test-missing", "contributor-test-no-date"])
+        self.assertIn("Add a category slug", output)
+        self.assertIn("Add a date", output)
+
+
 def content_walks():
     """Return file:line for each glob() or rglob() on a path under content/ outside front_matter.py.
 
