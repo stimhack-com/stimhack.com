@@ -131,7 +131,10 @@ function initMobileNav() {
 // the item the next tap on it opens the submenu again. The stored tap is
 // cleared on pointercancel, on a key press and on a pointerdown on another
 // element, so after a tap that fires no click a later click that is not from a
-// tap, such as from the Enter key, follows the link.
+// tap, such as from the Enter key, follows the link. If none of these events
+// comes between the tap and that click, the click still opens the submenu. An
+// example is an assistive technology that activates the link just after a
+// first tap in a browser that fires no click for the tap.
 function initTouchMenu() {
   const menu = document.getElementById("prime_nav");
   if (!menu) return;
