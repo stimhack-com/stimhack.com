@@ -235,3 +235,112 @@ class PaginatedArchives(unittest.TestCase):
             head(build(), "/drafting-with-netrunner/"),
             ("Drafting with Netrunner - StimHack", "https://stimhack.com/drafting-with-netrunner/"),
         )
+
+
+def pager_items(out, url):
+    """Return the pager of the archive page at url as (text, href, class) items, or None when it has no pager."""
+    page = (out / url.strip("/") / "index.html").read_text()
+    nav = re.search(r'<nav class="pagination">(.*?)</nav>', page, re.S)
+    if not nav:
+        return None
+    items = []
+    for tag, attrs, text in re.findall(r"<(a|span)\b([^>]*)>([^<]*)</\1>", nav[1]):
+        href = re.search(r"""href=["']([^"']*)["']""", attrs)
+        cls = re.search(r"""class=["']([^"']*)["']""", attrs)
+        items.append((html.unescape(text), href and href[1], cls and cls[1]))
+    return items
+
+
+def wordpress_pager(base, pages, current, span=2):
+    """Return the pager items the WordPress theme showed on page current of an archive with pages pages.
+
+    This is the pager function of the old theme: range 2, showitems 2 * range + 1.
+    """
+    if pages == 1:
+        return None
+
+    def url(number):
+        return base if number == 1 else f"{base}page/{number}/"
+
+    showitems = 2 * span + 1
+    items = []
+    if current > 2 and current > span + 1 and showitems < pages:
+        items.append(("«", url(1), None))
+    if current > 1 and showitems < pages:
+        items.append(("‹", url(current - 1), None))
+    for number in range(1, pages + 1):
+        if pages <= showitems or current - span <= number <= current + span:
+            if number == current:
+                items.append((str(number), None, "current"))
+            else:
+                items.append((str(number), url(number), "inactive"))
+    if current < pages and showitems < pages:
+        items.append(("›", url(current + 1), None))
+    if current < pages - 1 and current + span - 1 < pages and showitems < pages:
+        items.append(("»", url(pages), None))
+    return items
+
+
+def archive_page_counts(out):
+    """Return {archive URL: number of pages} for every term archive in out."""
+    counts = {}
+    for index in sorted(out.glob("*/*/index.html")):
+        archive = index.parent
+        if archive.parts[-2] not in ("category", "tag", "author"):
+            continue
+        numbers = [int(p.name) for p in (archive / "page").glob("*") if p.name.isdigit()]
+        counts["/" + str(archive.relative_to(out)) + "/"] = max(numbers, default=1)
+    return counts
+
+
+class ArchivePager(unittest.TestCase):
+    """The archive pager shows the same items as the pager of the WordPress theme."""
+
+    maxDiff = None
+
+    def test_archive_with_five_pages_shows_every_page_and_no_arrows(self):
+        # Live WordPress, /category/tournament-report/ page 1:
+        # <span class='current'>1</span> and links to pages 2 to 5, no arrows.
+        base = "/category/tournament-report/"
+        self.assertEqual(archive_page_counts(build())[base], 5)
+        self.assertEqual(
+            pager_items(build(), base),
+            [("1", None, "current")] + [(str(n), f"{base}page/{n}/", "inactive") for n in range(2, 6)],
+        )
+
+    def test_long_archive_pages_match_wordpress(self):
+        # Live WordPress, /category/articles/ (26 pages).
+        base = "/category/articles/"
+        p = lambda n: base if n == 1 else f"{base}page/{n}/"
+        self.assertEqual(archive_page_counts(build())[base], 26)
+        expected = {
+            1: [("1", None, "current"), ("2", p(2), "inactive"), ("3", p(3), "inactive"),
+                ("›", p(2), None), ("»", p(26), None)],
+            3: [("‹", p(2), None), ("1", p(1), "inactive"), ("2", p(2), "inactive"),
+                ("3", None, "current"), ("4", p(4), "inactive"), ("5", p(5), "inactive"),
+                ("›", p(4), None), ("»", p(26), None)],
+            4: [("«", p(1), None), ("‹", p(3), None), ("2", p(2), "inactive"),
+                ("3", p(3), "inactive"), ("4", None, "current"), ("5", p(5), "inactive"),
+                ("6", p(6), "inactive"), ("›", p(5), None), ("»", p(26), None)],
+            25: [("«", p(1), None), ("‹", p(24), None), ("23", p(23), "inactive"),
+                 ("24", p(24), "inactive"), ("25", None, "current"), ("26", p(26), "inactive"),
+                 ("›", p(26), None)],
+        }
+        for number, items in expected.items():
+            with self.subTest(page=number):
+                self.assertEqual(pager_items(build(), p(number)), items)
+
+    def test_every_archive_page_matches_wordpress(self):
+        out = build()
+        counts = archive_page_counts(out)
+        # The build must have archives on both sides of the five page limit.
+        self.assertTrue({1, 2, 5, 6, 26} <= set(counts.values()))
+        wrong = []
+        for base, pages in counts.items():
+            for number in range(1, pages + 1):
+                url = base if number == 1 else f"{base}page/{number}/"
+                expected = wordpress_pager(base, pages, number)
+                actual = pager_items(out, url)
+                if actual != expected:
+                    wrong.append((url, actual, expected))
+        self.assertEqual(wrong[:5], [])
