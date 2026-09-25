@@ -420,5 +420,66 @@ class SrcsetSpaces(unittest.TestCase):
         self.assertEqual(reported, {"broken link in /post/index.html: /post/\xa0a.png"})
 
 
+class UrlSpaces(unittest.TestCase):
+    """A browser removes C0 controls and spaces from the ends of a URL, and tabs and line breaks inside it.
+
+    Other white space, such as a no-break space (&nbsp;) or an em space
+    (&#x2003;), is part of the URL. In a meta refresh tag, only ASCII white
+    space separates the delay, "url=" and the URL. Chromium 153 requested the
+    same URLs from this markup.
+    """
+
+    # Markup on /post/, where a.png exists, and the broken paths that the
+    # check must report for it.
+    BROKEN = [
+        ('<a href="&nbsp;a.png">', {"/post/\xa0a.png"}),
+        ('<img src="&#x2003;a.png">', {"/post/ a.png"}),
+        ('<video poster="a.png&nbsp;"></video>', {"/post/a.png\xa0"}),
+        ('<img data-src="&nbsp;a.png">', {"/post/\xa0a.png"}),
+        ('<meta property="og:image" content="&nbsp;a.png">', {"/post/\xa0a.png"}),
+        ('<meta property="og:url" content="https://stimhack.com/post/a.png&nbsp;">', {"/post/a.png\xa0"}),
+        ('<meta http-equiv="refresh" content="0; url=&nbsp;a.png">', {"/post/\xa0a.png"}),
+        ('<meta http-equiv="refresh" content="0;&nbsp;url=a.png">', {"/post/\xa0url=a.png"}),
+        ('<meta http-equiv="refresh" content="0;\x0burl=a.png">', {"/post/url=a.png"}),
+        # A no-break space after the delay stops the refresh.
+        ('<meta http-equiv="refresh" content="0&nbsp;url=gone.png">', set()),
+        ('<a href=" \t\n\f\ra.png\x01\x1f">', set()),
+        ('<img src="a\t.p\nng">', set()),
+        ('<img srcset="a.png\x0b 1x">', set()),
+        ("<meta http-equiv=\"refresh\" content=\"0;url='a.png\x01'\">", set()),
+    ]
+    # Markup and the image URLs that the check must report as from a dead address.
+    DEAD = [
+        ('<img src="\x01https://netrunnerdb.com/card_image/x.png">', {"https://netrunnerdb.com/card_image/x.png"}),
+        ('<img srcset="\x0bhttps://netrunnerdb.com/card_image/y.png 1x">', {"https://netrunnerdb.com/card_image/y.png"}),
+        # A path on this site, since the no-break space is part of the URL.
+        ('<img src="&nbsp;https://netrunnerdb.com/card_image/z.png">', set()),
+    ]
+
+    def check(self, markup):
+        """Return the problems that the check reports for a site whose /post/ page has markup."""
+        public = Path(tempfile.mkdtemp(prefix="check-site-")) / "public"
+        self.addCleanup(shutil.rmtree, public.parent)
+        (public / "post").mkdir(parents=True)
+        (public / "index.html").write_text('<link rel="canonical" href="https://static.example.com/">')
+        (public / "post" / "a.png").write_bytes(b"")
+        (public / "post" / "index.html").write_text(markup)
+        return problems(public)
+
+    def test_reports_the_path_that_a_browser_requests(self):
+        for markup, paths in self.BROKEN:
+            with self.subTest(markup=markup):
+                prefix = "broken link in /post/index.html: "
+                broken = {line.removeprefix(prefix) for line in self.check(markup) if line.startswith("broken link in ")}
+                self.assertEqual(broken, paths, f"{markup!r} reported {sorted(broken)}")
+
+    def test_reports_an_image_that_a_browser_loads_from_a_dead_address(self):
+        for markup, urls in self.DEAD:
+            with self.subTest(markup=markup):
+                prefix = "image from a dead address in /post/index.html: "
+                dead = {line.removeprefix(prefix) for line in self.check(markup) if line.startswith(prefix)}
+                self.assertEqual(dead, urls, f"{markup!r} reported {sorted(dead)}")
+
+
 if __name__ == "__main__":
     unittest.main()
