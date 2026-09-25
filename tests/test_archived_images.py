@@ -3,7 +3,10 @@ import json
 import sys
 import tempfile
 import unittest
+from email.utils import format_datetime
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "migration"))
 import archived_images  # noqa: E402
@@ -65,6 +68,45 @@ class CardgamedbUrlsIn(unittest.TestCase):
             '<img src="http://i.imgur.com/a.png"><a href="http://www.cardgamedb.com/index.php/netrunner">x</a>'
         )
         self.assertEqual(archived_images.cardgamedb_urls_in(text), {URL, linked})
+
+
+class GetWithBackoff(unittest.TestCase):
+    """The archive's 429 and 5xx answers can carry Retry-After (RFC 9110 section 10.2.3)."""
+
+    def sleeps_after(self, retry_after):
+        """The waits get_with_backoff makes after one 429 with this Retry-After, then a 200."""
+        answers = [
+            mock.Mock(status_code=429, headers={"Retry-After": retry_after}),
+            mock.Mock(status_code=200, headers={}),
+        ]
+        with mock.patch.object(archived_images.session, "get", side_effect=answers), \
+                mock.patch.object(archived_images.time, "sleep") as sleep:
+            self.assertEqual(archived_images.get_with_backoff("https://archive.org/x").status_code, 200)
+        return [c.args[0] for c in sleep.call_args_list]
+
+    def test_seconds_are_honoured(self):
+        self.assertEqual(self.sleeps_after("7"), [7])
+
+    def test_a_future_date_waits_until_that_time(self):
+        when = format_datetime(datetime.now(timezone.utc) + timedelta(seconds=120), usegmt=True)
+        [wait] = self.sleeps_after(when)
+        self.assertTrue(100 <= wait <= 120, wait)
+
+    def test_a_past_date_uses_the_default_backoff(self):
+        self.assertEqual(self.sleeps_after("Wed, 21 Oct 2015 07:28:00 GMT"), [archived_images.DELAY * 10])
+
+    def test_a_negative_or_unparseable_value_uses_the_default_backoff(self):
+        for value in ("-5", "soon", "1.5", ""):
+            with self.subTest(value=value):
+                self.assertEqual(self.sleeps_after(value), [archived_images.DELAY * 10])
+
+    def test_a_wait_of_days_stops_the_run_instead_of_hanging(self):
+        refusal = mock.Mock(status_code=503, headers={"Retry-After": str(3 * 24 * 3600)})
+        with mock.patch.object(archived_images.session, "get", return_value=refusal), \
+                mock.patch.object(archived_images.time, "sleep") as sleep:
+            with self.assertRaises(SystemExit):
+                archived_images.get_with_backoff("https://archive.org/x")
+        self.assertEqual(sleep.call_args_list, [])
 
 
 if __name__ == "__main__":
