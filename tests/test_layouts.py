@@ -60,6 +60,128 @@ class HomeGrid(unittest.TestCase):
         self.assertEqual(thumbnails, titles)
 
 
+# Run the site script from argv[1] in node with a fake home page that has one
+# grid of boxes. argv[2] is a JSON scenario: the window and grid widths, the
+# box heights, the boxes whose image is still loading, and steps that change
+# the widths or heights and then fire "resize" on the window or "load" or
+# "error" on the loading images. Print the grid and box styles after the
+# script runs and after each step as a JSON list.
+LAYOUT_GRID = r"""
+const fs = require("fs"), vm = require("vm");
+const [file, json] = process.argv.slice(1);
+const scenario = JSON.parse(json);
+const on = (target) => {
+  target.listeners = {};
+  target.addEventListener = (type, fn) => { (target.listeners[type] ||= []).push(fn); };
+  return target;
+};
+const styled = (el) => {
+  el.style = {};
+  el.removeAttribute = (name) => { if (name === "style") el.style = {}; };
+  return el;
+};
+const images = [];
+const boxes = scenario.heights.map((height, i) => {
+  const own = (scenario.loading || []).includes(i) ? [on({complete: false})] : [];
+  images.push(...own);
+  return styled({offsetHeight: height, querySelectorAll: (sel) => (sel === "img" ? own : [])});
+});
+const grid = styled({dataset: {columns: "2", gutterSpace: "20"}, children: boxes,
+  querySelectorAll: (sel) => (sel === ".wc-shortcodes-post-box" ? boxes : sel === "img" ? images : [])});
+const documentElement = {};
+const context = on(vm.createContext({console, document: {documentElement,
+  querySelectorAll: (sel) => (sel.includes("wc-shortcodes-posts") ? [grid] : []),
+  getElementById: () => null}}));
+context.window = context;
+const resize = (step) => {
+  if (step.window !== undefined) context.innerWidth = documentElement.clientWidth = step.window;
+  if (step.width !== undefined) {
+    grid.clientWidth = grid.offsetWidth = step.width;
+    grid.getBoundingClientRect = () => ({width: step.width});
+  }
+  (step.heights || []).forEach((height, i) => { boxes[i].offsetHeight = height; });
+};
+const snapshot = () => ({grid: {...grid.style}, boxes: boxes.map((box) => ({...box.style}))});
+resize(scenario);
+vm.runInContext(fs.readFileSync(file, "utf8"), context);
+const results = [snapshot()];
+for (const step of scenario.steps || []) {
+  resize(step);
+  const targets = step.fire === "resize" ? [context] : images;
+  targets.forEach((target) => (target.listeners[step.fire] || []).forEach((fn) => fn({type: step.fire})));
+  results.push(snapshot());
+}
+console.log(JSON.stringify(results));
+"""
+
+
+def layout_grid(scenario):
+    """Return the home grid and box styles that the built site script sets in scenario, as LAYOUT_GRID describes."""
+    out = build()
+    script = re.search(r'<script src="(/js/site[^"]*\.js)"', (out / "index.html").read_text())[1]
+    run = subprocess.run(["node", "-e", LAYOUT_GRID, str(out / script.lstrip("/")), json.dumps(scenario)],
+                         capture_output=True, text=True, check=True)
+    return json.loads(run.stdout)
+
+
+def box(left, top, width):
+    return {"position": "absolute", "width": f"{width}px", "left": f"{left}px", "top": f"{top}px"}
+
+
+# The wc-shortcodes plugin that drew the grid on WordPress
+# (public/assets/js/posts.js 3.42, calculateGrid and runMasonry) used fewer
+# columns when a column would be narrower than 200px and one column when the
+# window was 568px wide or less. With one column it removed the style
+# attributes of the grid and the boxes, so the boxes are in normal flow, and
+# set the grid height to auto.
+ONE_COLUMN = {"grid": {"height": "auto"}, "boxes": [{}, {}, {}]}
+
+
+@unittest.skipUnless(shutil.which("node"), "needs node")
+class HomeGridLayout(unittest.TestCase):
+    maxDiff = None
+
+    def test_wide_window_shows_two_columns(self):
+        [result] = layout_grid({"window": 1200, "width": 880, "heights": [100, 50, 70]})
+        self.assertEqual(result, {"grid": {"height": "160px"},
+                                  "boxes": [box(0, 0, 430), box(450, 0, 430), box(450, 70, 430)]})
+
+    def test_phone_window_shows_one_column(self):
+        [result] = layout_grid({"window": 400, "width": 370, "heights": [100, 50, 70]})
+        self.assertEqual(result, ONE_COLUMN)
+
+    def test_window_of_568px_or_less_shows_one_column(self):
+        [result] = layout_grid({"window": 568, "width": 540, "heights": [100, 50, 70]})
+        self.assertEqual(result, ONE_COLUMN)
+        [result] = layout_grid({"window": 569, "width": 540, "heights": [100, 50, 70]})
+        self.assertEqual(result["boxes"], [box(0, 0, 260), box(280, 0, 260), box(280, 70, 260)])
+
+    def test_grid_too_narrow_for_two_200px_columns_shows_one_column(self):
+        [result] = layout_grid({"window": 1000, "width": 419, "heights": [100, 50, 70]})
+        self.assertEqual(result, ONE_COLUMN)
+        [result] = layout_grid({"window": 1000, "width": 420, "heights": [100, 50, 70]})
+        self.assertEqual(result["boxes"], [box(0, 0, 200), box(220, 0, 200), box(220, 70, 200)])
+
+    def test_resize_changes_between_one_and_two_columns(self):
+        results = layout_grid({"window": 400, "width": 370, "heights": [100, 50, 70], "steps": [
+            {"window": 1200, "width": 880, "fire": "resize"},
+            {"window": 400, "width": 370, "fire": "resize"},
+        ]})
+        self.assertEqual(results[0], ONE_COLUMN)
+        self.assertEqual(results[1]["boxes"], [box(0, 0, 430), box(450, 0, 430), box(450, 70, 430)])
+        self.assertEqual(results[2], ONE_COLUMN)
+
+    def test_image_that_fails_to_load_lays_out_the_grid_again(self):
+        # The first box is tall while its image loads and short when it fails,
+        # so the third box moves from the second column to the first.
+        for event in ["load", "error"]:
+            with self.subTest(event=event):
+                results = layout_grid({"window": 1200, "width": 880, "heights": [300, 50, 70], "loading": [0],
+                                       "steps": [{"heights": [40, 50, 70], "fire": event}]})
+                self.assertEqual(results[0]["boxes"][2], box(450, 70, 430))
+                self.assertEqual(results[1]["boxes"][2], box(0, 60, 430))
+
+
 def root_context_uses_in_blocks(text):
     """Yield each action that uses $. inside a range or with block."""
     stack = []
