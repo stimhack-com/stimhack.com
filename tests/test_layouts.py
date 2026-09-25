@@ -12,6 +12,7 @@ import tomllib
 import unittest
 from datetime import datetime
 from email.utils import parsedate_to_datetime
+from html.parser import HTMLParser
 from urllib.parse import urlsplit
 from xml.etree import ElementTree
 
@@ -247,6 +248,180 @@ class VideoEmbeds(unittest.TestCase):
         ]
         self.assertEqual(iframe_styles(others), {
             f"{o['src']} {o.get('width')}x{o.get('height')}": {} for o in others})
+
+
+class MenuParser(HTMLParser):
+    """Read the items of the main menu (ul#prime_nav) as a list of
+    {"text", "href", "classes", "children"} dicts."""
+
+    def __init__(self):
+        super().__init__()
+        self.menu = None
+        self.lists = []
+        self.items = []
+        self.in_link = False
+
+    def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        if tag == "ul" and attrs.get("id") == "prime_nav":
+            self.menu = []
+            self.lists = [self.menu]
+        elif not self.lists:
+            return
+        elif tag == "ul":
+            self.items[-1]["children"] = []
+            self.lists.append(self.items[-1]["children"])
+        elif tag == "li":
+            item = {"text": "", "href": None, "classes": (attrs.get("class") or "").split(), "children": None}
+            self.lists[-1].append(item)
+            self.items.append(item)
+        elif tag == "a":
+            self.items[-1]["href"] = attrs["href"]
+            self.in_link = True
+
+    def handle_endtag(self, tag):
+        if not self.lists:
+            return
+        if tag == "ul":
+            self.lists.pop()
+        elif tag == "li":
+            self.items.pop()
+        elif tag == "a":
+            self.in_link = False
+
+    def handle_data(self, data):
+        if self.in_link:
+            self.items[-1]["text"] += data
+
+
+# Run the site script from argv[1] in node with a fake page at the address in
+# argv[2] whose main menu is argv[3], a JSON list of MenuParser items. Then
+# choose each option whose text is in argv[4], a JSON list, as a reader does:
+# the select fires "change" only when the choice differs from the selected
+# option. Print the options of the menu select, the text of the option that
+# was selected before the choices, and each address the script navigated to.
+MOBILE_NAV = r"""
+const fs = require("fs"), vm = require("vm");
+const [file, url, menuJson, chooseJson] = process.argv.slice(1);
+const navigations = [];
+const page = new URL(url);
+const location = {protocol: page.protocol, host: page.host, pathname: page.pathname};
+Object.defineProperty(location, "href", {get: () => url, set: (value) => { navigations.push(value); }});
+const list = (items) => ({children: items.map((item) => {
+  // A browser resolves the href property of a link against the page address.
+  const a = {textContent: item.text, href: new URL(item.href, url).href,
+    getAttribute: (name) => (name === "href" ? item.href : null)};
+  const sub = item.children ? list(item.children) : null;
+  return {classList: {contains: (name) => item.classes.includes(name)},
+    querySelector: (sel) => (sel === ":scope > a" ? a : sel === ":scope > ul" ? sub : null)};
+})});
+const menu = list(JSON.parse(menuJson));
+// A select without the multiple attribute shows the last option that is
+// selected, or the first option when none is.
+class Option {
+  constructor(text = "", value) { this.text = text; this.selected = false; if (value !== undefined) this._value = value; }
+  get value() { return this._value !== undefined ? this._value : this.text.replace(/[ \t\n\f\r]+/g, " ").trim(); }
+}
+const select = {options: [], listeners: {},
+  add(option) { this.options.push(option); },
+  addEventListener(type, fn) { (this.listeners[type] ||= []).push(fn); },
+  get selectedIndex() {
+    const i = this.options.findLastIndex((option) => option.selected);
+    return i === -1 && this.options.length ? 0 : i;
+  },
+  set selectedIndex(index) { this.options.forEach((option, i) => { option.selected = i === index; }); },
+  get value() { const option = this.options[this.selectedIndex]; return option ? option.value : ""; },
+};
+let inserted = null;
+menu.after = (el) => { inserted = el; };
+const context = vm.createContext({console, Option, location, document: {documentElement: {},
+  querySelectorAll: () => [],
+  getElementById: (id) => (id === "prime_nav" ? menu : null),
+  createElement: (tag) => (tag === "select" ? select : null)}});
+context.window = context;
+context.addEventListener = () => {};
+vm.runInContext(fs.readFileSync(file, "utf8"), context);
+if (inserted !== select) throw new Error("the select is not after the menu");
+const selected = select.options[select.selectedIndex].text;
+for (const text of JSON.parse(chooseJson)) {
+  const index = select.options.findIndex((option) => option.text === text);
+  if (index === -1) throw new Error(`no option ${JSON.stringify(text)}`);
+  if (index === select.selectedIndex) continue;
+  select.selectedIndex = index;
+  (select.listeners.change || []).forEach((fn) => fn({type: "change"}));
+}
+console.log(JSON.stringify({options: select.options.map((option) => [option.text, option.value]), selected, navigations}));
+"""
+
+
+def mobile_nav(path, choose=()):
+    """Run the built site script on the built page at path, as MOBILE_NAV describes."""
+    out = build()
+    page = (out / path.lstrip("/") / "index.html").read_text()
+    script = re.search(r'<script src="(/js/site[^"]*\.js)"', page)[1]
+    parser = MenuParser()
+    parser.feed(page)
+    run = subprocess.run(["node", "-e", MOBILE_NAV, str(out / script.lstrip("/")), f"https://stimhack.com{path}",
+                          json.dumps(parser.menu), json.dumps(list(choose))],
+                         capture_output=True, text=True)
+    if run.returncode:
+        raise RuntimeError(run.stderr)
+    return json.loads(run.stdout)
+
+
+@unittest.skipUnless(shutil.which("node"), "needs node")
+class MobileNav(unittest.TestCase):
+    # On small screens the WordPress theme showed the menu as a select made by
+    # TinyNav (js/frontend.js in Tempera, TinyNav 1.03 mod 0.1.1), called with
+    # header: ' = Menu = '. The header is the first option. The option whose
+    # address is the page address is selected, and on other pages the header
+    # stays selected. Choosing the header does not navigate. Child items start
+    # with a non-breaking space and "- " with a non-breaking space.
+    maxDiff = None
+    HEADER = " = Menu = "
+
+    def test_menu_items_follow_the_header(self):
+        options = mobile_nav("/about/")["options"]
+        self.assertEqual(options[0][0], self.HEADER)
+        self.assertEqual(options[1:], [
+            ["Home", "/"],
+            ["Tournament Winning Decklists", "/tournament-decklists/"],
+            ["Forums", "http://forum.stimhack.com/"],
+            ["Articles and Guides", "/category/articles/"],
+            ["\u00a0-\u00a0Classic Articles", "/classic-articles/"],
+            ["\u00a0-\u00a0Set Reviews", "/set-reviews/"],
+            ["\u00a0-\u00a0Cube Drafting", "/cube-drafting/"],
+            ["\u00a0-\u00a0New Players", "/new-players/"],
+            ["\u00a0-\u00a0All Articles", "/category/articles/"],
+            ["Videos and Podcasts", "/category/videos-and-podcasts/"],
+            ["Playgroup Finder", "/playgroup-finder/"],
+            ["About", "/about/"],
+        ])
+
+    def test_menu_page_selects_its_option(self):
+        # TinyNav selected every option with the page address, and a select
+        # shows the last of them, so the articles category shows All Articles.
+        for path, text in [("/", "Home"), ("/about/", "About"), ("/set-reviews/", "\u00a0-\u00a0Set Reviews"),
+                           ("/category/articles/", "\u00a0-\u00a0All Articles")]:
+            with self.subTest(path=path):
+                self.assertEqual(mobile_nav(path)["selected"], text)
+
+    def test_page_outside_the_menu_selects_the_header(self):
+        # The post is in the articles category, so its menu marks Articles
+        # and Guides, but its address is not in the menu.
+        for path in ["/tag/art/", "/author/alexfrog/", "/category/articles/page/2/",
+                     "/7-things-you-can-do-to-get-better-at-netrunner/"]:
+            with self.subTest(path=path):
+                self.assertEqual(mobile_nav(path)["selected"], self.HEADER)
+
+    def test_choosing_home_from_a_page_outside_the_menu_goes_home(self):
+        self.assertEqual(mobile_nav("/tag/art/", choose=["Home"])["navigations"], ["/"])
+
+    def test_choosing_an_item_goes_to_its_address(self):
+        self.assertEqual(mobile_nav("/about/", choose=["Playgroup Finder"])["navigations"], ["/playgroup-finder/"])
+
+    def test_choosing_the_header_does_not_navigate(self):
+        self.assertEqual(mobile_nav("/about/", choose=[self.HEADER])["navigations"], [])
 
 
 def root_context_uses_in_blocks(text):
