@@ -7,9 +7,12 @@ migration/archived-images.json. convert.py points the posts at them.
 import hashlib
 import html
 import json
+import math
 import re
 import sys
 import time
+from datetime import datetime, timezone
+from email.utils import parsedate_to_datetime
 from pathlib import PurePosixPath
 from urllib.parse import unquote, urlsplit
 
@@ -27,6 +30,8 @@ ARCHIVE_ERA = "2015"
 # Be gentle with the Internet Archive: one request at a time, a pause before each.
 DELAY = 5
 MAX_RETRIES = 4
+# A longer Retry-After stops the run. The maps are saved, so a later run resumes.
+MAX_WAIT = 3600
 
 session = requests.Session()
 session.headers["User-Agent"] = "stimhack-migration/1.0 (https://stimhack.com; one-time archive restore)"
@@ -57,13 +62,35 @@ def local_path(url, extension):
     return f"{LOCAL_ROOT}/{host}/{folder + '/' if folder else ''}{stem}{extension}"
 
 
+def retry_after(value):
+    """Seconds to wait from a Retry-After header, or None if it is missing, unreadable or not in the future.
+
+    The value is a number of seconds or an HTTP date (RFC 9110 section 10.2.3).
+    """
+    value = (value or "").strip()
+    if re.fullmatch(r"[0-9]+", value):
+        return int(value) or None
+    try:
+        when = parsedate_to_datetime(value)
+    except ValueError:
+        return None
+    # HTTP dates are in GMT. parsedate_to_datetime returns a naive datetime for the
+    # asctime form, which has no zone (Lib/email/utils.py, parsedate_to_datetime).
+    if when.tzinfo is None:
+        when = when.replace(tzinfo=timezone.utc)
+    wait = math.ceil((when - datetime.now(timezone.utc)).total_seconds())
+    return wait if wait > 0 else None
+
+
 def get_with_backoff(url, **kwargs):
     """GET with backoff. The archive answers 429 or 5xx when it wants clients to slow down."""
     for attempt in range(MAX_RETRIES):
         r = session.get(url, timeout=120, **kwargs)
         if r.status_code != 429 and r.status_code < 500:
             return r
-        wait = int(r.headers.get("Retry-After", 0)) or DELAY * 10 * 2**attempt
+        wait = retry_after(r.headers.get("Retry-After")) or DELAY * 10 * 2**attempt
+        if wait > MAX_WAIT:
+            raise SystemExit(f"The Internet Archive asks clients to wait {wait}s. Try again later.")
         print(f"archive returned {r.status_code}, waiting {wait}s", file=sys.stderr)
         time.sleep(wait)
     raise SystemExit("The Internet Archive keeps refusing requests. Try again later.")
