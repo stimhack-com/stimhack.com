@@ -46,6 +46,37 @@ class RewriteUrls(unittest.TestCase):
         body = '<img srcset="https://stimhack.com/a-300.png 300w, https://stimhack.com/a.png 900w">'
         self.assertEqual(convert.rewrite_urls(body), '<img srcset="/a-300.png 300w, /a.png 900w">')
 
+    def test_a_comma_in_a_link_does_not_split_it(self):
+        body = '<a href="https://example.com/a,https://stimhack.com/x">x</a><img src="https://example.com/i?u=,https://stimhack.com/y.png">'
+        self.assertEqual(convert.rewrite_urls(body), body)
+
+    def test_a_comma_in_a_decklist_link_does_not_split_it(self):
+        self.assertEqual(convert.site_relative("https://example.com/a,https://stimhack.com/x"), "https://example.com/a,https://stimhack.com/x")
+
+    def test_a_comma_inside_a_srcset_url_does_not_split_it(self):
+        # A srcset URL ends at whitespace; only a comma after it ends the candidate.
+        body = '<img srcset="https://example.com/i?u=,https://stimhack.com/y.png 1x, https://stimhack.com/z.png 2x">'
+        self.assertEqual(
+            convert.rewrite_urls(body),
+            '<img srcset="https://example.com/i?u=,https://stimhack.com/y.png 1x, /z.png 2x">',
+        )
+
+    def test_every_srcset_candidate_uses_its_archived_copy(self):
+        old = "http://www.cardgamedb.com/forums/uploads/an/a.png"
+        with mock.patch.dict(convert.ARCHIVED, {old: "/images/archive/a.png"}):
+            self.assertEqual(
+                convert.rewrite_urls(f'<img srcset="{old} 1x, {old} 2x">'),
+                '<img srcset="/images/archive/a.png 1x, /images/archive/a.png 2x">',
+            )
+
+    def test_every_srcset_candidate_uses_the_new_netrunnerdb_image(self):
+        body = '<img srcset="https://netrunnerdb.com/card_image/01001.png 1x, https://netrunnerdb.com/card_image/01002.png 2x">'
+        self.assertEqual(
+            convert.rewrite_urls(body),
+            '<img srcset="https://card-images.netrunnerdb.com/v2/large/01001.jpg 1x, '
+            'https://card-images.netrunnerdb.com/v2/large/01002.jpg 2x">',
+        )
+
     def test_text_mentions_are_not_rewritten(self):
         body = "<p>Visit https://stimhack.com/about/ today</p>"
         self.assertEqual(convert.rewrite_urls(body), body)
