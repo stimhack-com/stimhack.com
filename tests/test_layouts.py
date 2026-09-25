@@ -3,8 +3,14 @@
 Run: python3 -m unittest discover tests
 """
 import html
+import json
 import re
+import shutil
+import subprocess
+import tomllib
 import unittest
+from datetime import datetime
+from email.utils import parsedate_to_datetime
 from urllib.parse import urlsplit
 from xml.etree import ElementTree
 
@@ -462,3 +468,244 @@ class FeedCategories(unittest.TestCase):
             with self.subTest(feed=feed):
                 urls = [url for url, _ in feed_guids(out, feed)]
                 self.assertEqual([url for url in decklists if url in urls], [])
+
+
+def served(out, url):
+    """Return the text GitHub Pages serves for the URL path url, or None when it serves a 404."""
+    target = out / url.lstrip("/")
+    for path in (target, target / "index.html"):
+        if path.is_file():
+            return path.read_text()
+    return None
+
+
+def feed_items(text):
+    """Return (post URL path, date) for each item in the RSS text."""
+    items = ElementTree.fromstring(text.encode()).iter("item")
+    return [
+        (urlsplit(item.findtext("link")).path, parsedate_to_datetime(item.findtext("pubDate")))
+        for item in items
+    ]
+
+
+def all_posts(content):
+    """Return {post URL: front matter} for each post in content."""
+    posts = {}
+    for path in sorted((content / "posts").rglob("*.*")):
+        if path.name != "_index.md":
+            front = yaml.safe_load(path.read_text().split("---\n")[1])
+            posts[front.get("url") or f"/{front['slug']}/"] = front
+    return posts
+
+
+CONFIG = tomllib.loads((ROOT / "hugo.toml").read_text())
+EXCLUDED = set(CONFIG["params"]["feedExcludeCategories"])
+FEED_LIMIT = CONFIG["services"]["rss"]["limit"]
+
+
+class CategoryFeeds(unittest.TestCase):
+    """WordPress served a feed for each category at /category/<slug>/feed/."""
+
+    maxDiff = None
+
+    def test_articles_feed_lists_the_posts_wordpress_listed(self):
+        # Live WordPress, https://stimhack.com/category/articles/feed/ before cutover.
+        # It leaves out why-i-hate-shaper-and-you-should-too, which is in decklists too.
+        wordpress = [
+            "/queen-bee-2023/",
+            "/a-look-back-at-the-borealis-cycle/",
+            "/queen-bee-2022/",
+            "/deconstructing-shellgame-by-tehepicwin/",
+            "/on-the-rational-player/",
+        ]
+        for url in ["/category/articles/feed/", "/category/articles/index.xml"]:
+            with self.subTest(url=url):
+                text = served(build(), url)
+                self.assertIsNotNone(text, f"{url} is not served")
+                urls = [link for link, _ in feed_items(text)]
+                self.assertEqual(urls[:len(wordpress)], wordpress)
+
+    def test_decklists_feed_is_empty(self):
+        # Live WordPress, https://stimhack.com/category/decklists/feed/: no items.
+        text = served(build(), "/category/decklists/feed/")
+        self.assertIsNotNone(text, "/category/decklists/feed/ is not served")
+        self.assertEqual(feed_items(text), [])
+
+    def test_every_category_feed_lists_its_newest_posts_without_excluded_ones(self):
+        out = build()
+        posts = all_posts(ROOT / "content")
+        categories = sorted(p.parent.name for p in out.glob("category/*/index.html"))
+        self.assertGreater(len(categories), 10)
+        wrong = []
+        for slug in categories:
+            for url in [f"/category/{slug}/feed/", f"/category/{slug}/index.xml"]:
+                text = served(out, url)
+                if text is None:
+                    wrong.append((url, "not served"))
+                    continue
+                items = feed_items(text)
+                eligible = {
+                    link: datetime.fromisoformat(front["date"])
+                    for link, front in posts.items()
+                    if slug in (front.get("categories") or []) and not EXCLUDED & set(front.get("categories") or [])
+                }
+                links = [link for link, _ in items]
+                dates = [date for _, date in items]
+                if len(links) != min(FEED_LIMIT, len(eligible)):
+                    wrong.append((url, "count", len(links), len(eligible)))
+                elif not set(links) <= set(eligible):
+                    wrong.append((url, "not eligible", sorted(set(links) - set(eligible))))
+                elif dates != sorted(dates, reverse=True):
+                    wrong.append((url, "not newest first"))
+                elif links and any(eligible[link] > dates[-1] for link in set(eligible) - set(links)):
+                    wrong.append((url, "misses a newer post"))
+        self.assertEqual(wrong, [])
+
+    def test_category_feed_items_keep_wordpress_guid(self):
+        out = build()
+        posts = wordpress_posts(ROOT / "content")
+        for feed in ["category/articles/feed/index.html", "category/articles/index.xml"]:
+            with self.subTest(feed=feed):
+                items = feed_guids(out, feed)
+                self.assertEqual(len(items), FEED_LIMIT)
+                expected = [(url, f'<guid isPermaLink="false">{posts[url]["wp_guid"]}</guid>') for url, _ in items]
+                self.assertEqual(items, expected)
+
+    def test_category_feed_names_itself(self):
+        text = served(build(), "/category/articles/feed/")
+        self.assertIsNotNone(text, "/category/articles/feed/ is not served")
+        self.assertIn('<atom:link href="https://stimhack.com/category/articles/feed/" rel="self"', text)
+        self.assertIn("<link>https://stimhack.com/category/articles/</link>", text)
+
+    def test_category_pages_link_to_their_feed(self):
+        out = build()
+        for url in ["/category/articles/", "/category/articles/page/2/", "/category/decklists/"]:
+            with self.subTest(url=url):
+                slug = url.split("/")[2]
+                self.assertIn(
+                    f'<link rel="alternate" type="application/rss+xml" title="StimHack &raquo; {html.escape(slug.title())} Category Feed"'
+                    f' href="https://stimhack.com/category/{slug}/feed/">',
+                    served(out, url),
+                )
+
+    def test_site_feed_is_still_at_its_old_urls(self):
+        out = build()
+        for url in ["/feed/", "/index.xml"]:
+            with self.subTest(url=url):
+                self.assertIn('<atom:link href="https://stimhack.com/feed/" rel="self"', served(out, url))
+
+
+# Open a built page once for each query string after argv[2]: run its inline
+# scripts in node with a fetch that reads files from the build and a location
+# that records replace(). Print what each opening did as a JSON list.
+OPEN_PAGE = r"""
+const fs = require("fs"), path = require("path"), vm = require("vm");
+const [out, page, ...searches] = process.argv.slice(1);
+const html = fs.readFileSync(path.join(out, page), "utf8");
+const scripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/g)]
+  .filter(([, attrs]) => !/\bsrc=/.test(attrs)).map(([, , code]) => code);
+
+async function open(search) {
+  const result = {replaced: null, fetched: [], errors: []};
+  const location = {href: "https://stimhack.com/" + search, origin: "https://stimhack.com",
+    pathname: "/", search, hash: "", replace(url) { result.replaced = url; }};
+  function fetch(url) {
+    const pathname = new URL(url, location.href).pathname;
+    result.fetched.push(pathname);
+    const file = path.join(out, pathname);
+    const found = fs.existsSync(file) && fs.statSync(file).isFile();
+    return Promise.resolve({ok: found, status: found ? 200 : 404,
+      json: async () => { if (!found) throw new Error("404"); return JSON.parse(fs.readFileSync(file, "utf8")); }});
+  }
+  const context = vm.createContext({location, fetch, URL, URLSearchParams, console,
+    addEventListener() {}, document: {documentElement: {style: {}}}});
+  context.window = context;
+  for (const code of scripts) {
+    try { vm.runInContext(code, context); } catch (e) { result.errors.push(String(e)); }
+  }
+  await new Promise((resolve) => setTimeout(resolve, 20));
+  return result;
+}
+
+(async () => {
+  const results = [];
+  for (const search of searches) results.push(await open(search));
+  console.log(JSON.stringify(results));
+})();
+"""
+
+
+def open_page(out, page, *searches):
+    """Return what the inline scripts of page did when it was opened with each query string in searches."""
+    run = subprocess.run(["node", "-e", OPEN_PAGE, str(out), page, *searches],
+                         capture_output=True, text=True, check=True)
+    return json.loads(run.stdout)
+
+
+def wordpress_ids(content):
+    """Return {WordPress ID: URL} for each post and page in content that came from WordPress."""
+    ids = {}
+    for path in sorted((content / "posts").rglob("*.*")):
+        front = yaml.safe_load(path.read_text().split("---\n")[1])
+        if front.get("wp_id"):
+            ids[front["wp_id"]] = front.get("url") or f"/{front['slug']}/"
+    for path in sorted((content / "pages").glob("*.*")):
+        front = yaml.safe_load(path.read_text().split("---\n")[1])
+        if front.get("wp_id"):
+            ids[front["wp_id"]] = front["url"]
+    return ids
+
+
+@unittest.skipUnless(shutil.which("node"), "needs node")
+class PostIdLinks(unittest.TestCase):
+    """WordPress redirected /?p=<ID> and /?page_id=<ID> to the post or page with that ID."""
+
+    maxDiff = None
+
+    def assert_opens(self, search, expected, page="index.html"):
+        [result] = open_page(build(), page, search)
+        self.assertEqual((result["replaced"], result["errors"]), (expected, []))
+
+    def test_post_id_goes_to_the_post(self):
+        self.assert_opens("?p=5525", "/2014-world-championship-report-1st-place/")
+
+    def test_page_id_goes_to_the_page(self):
+        self.assert_opens("?page_id=1879", "/articles-and-guides/")
+
+    def test_either_parameter_takes_any_id(self):
+        # WordPress looked up ?p= and ?page_id= in the same ID space.
+        self.assert_opens("?p=1879", "/articles-and-guides/")
+        self.assert_opens("?page_id=5525", "/2014-world-championship-report-1st-place/")
+
+    def test_posts_restored_from_the_internet_archive_keep_their_id(self):
+        self.assert_opens("?p=52", "/drafting-with-netrunner/")
+        self.assert_opens("?p=798", "/cube-drafting-revisited/")
+
+    def test_other_parameters_do_not_stop_the_redirect(self):
+        self.assert_opens("?utm_source=x&p=5525&replytocom=1", "/2014-world-championship-report-1st-place/")
+
+    def test_unknown_id_stays_on_the_home_page(self):
+        for search in ["?p=999999", "?p=abc", "?p=", "?page_id=0"]:
+            with self.subTest(search=search):
+                self.assert_opens(search, None)
+
+    def test_home_page_without_id_does_not_load_the_map(self):
+        searches = ["", "?s=netrunner", "?paged=2", "?pp=5525"]
+        results = open_page(build(), "index.html", *searches)
+        self.assertEqual([(r["replaced"], r["fetched"], r["errors"]) for r in results], [(None, [], [])] * len(searches))
+
+    def test_not_found_page_redirects_old_id_links_too(self):
+        # WordPress redirected any address with ?p=<ID>, /index.php?p=<ID> too,
+        # and GitHub Pages serves 404.html for /index.php.
+        self.assert_opens("?p=5525", "/2014-world-championship-report-1st-place/", page="404.html")
+
+    def test_every_post_and_page_id_goes_to_its_url(self):
+        ids = wordpress_ids(ROOT / "content")
+        self.assertGreater(len(ids), 1900)
+        results = open_page(build(), "index.html", *(f"?p={wp_id}" for wp_id in ids))
+        wrong = [
+            (wp_id, result["replaced"], url)
+            for (wp_id, url), result in zip(ids.items(), results)
+            if (result["replaced"], result["errors"]) != (url, [])
+        ]
+        self.assertEqual(wrong[:5], [])
