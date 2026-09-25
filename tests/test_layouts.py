@@ -5,7 +5,7 @@ Run: python3 -m unittest discover tests
 import re
 import unittest
 
-from site_build import build
+from site_build import ROOT, build
 
 
 def comment_ids(path):
@@ -43,3 +43,30 @@ class HomeGrid(unittest.TestCase):
                 titles.append(title.groups())
         self.assertTrue(thumbnails)
         self.assertEqual(thumbnails, titles)
+
+
+def root_context_uses_in_blocks(text):
+    """Yield each action that uses $. inside a range or with block."""
+    stack = []
+    for action in re.findall(r"{{-?\s*(.*?)\s*-?}}", text, re.S):
+        keyword = action.split(maxsplit=1)[0] if action.split() else ""
+        if keyword in ("range", "with", "if", "define", "block"):
+            stack.append(keyword)
+        elif keyword == "end":
+            stack.pop()
+        elif ("range" in stack or "with" in stack) and "$." in action:
+            yield action
+
+
+class RootContext(unittest.TestCase):
+    def test_page_templates_do_not_use_root_context_in_blocks(self):
+        # In a page template $ is the page that is rendered, so $. inside
+        # range or with names that page and not the current item. Partials
+        # are not checked: in a partial $ is the value the caller gives, and
+        # term.html gives article-summary.html the post. No shortcode uses $.
+        found = []
+        for path in sorted((ROOT / "layouts").rglob("*")):
+            parts = path.relative_to(ROOT / "layouts").parts
+            if path.is_file() and parts[0] not in ("_partials", "_shortcodes"):
+                found += [(str(path.relative_to(ROOT)), a) for a in root_context_uses_in_blocks(path.read_text())]
+        self.assertEqual(found, [])
