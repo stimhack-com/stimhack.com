@@ -165,8 +165,12 @@ class Node(unittest.TestCase):
         self.assertGreaterEqual(int(match.group(1)), 18)
 
     def test_tests_do_not_skip_in_ci_when_node_is_missing(self):
-        # GitHub Actions sets CI=true in every step. A test that skips there
-        # when node is missing lets the job pass with the site script untested.
+        # GitHub Actions always sets CI=true: the default environment
+        # variables at
+        # https://docs.github.com/en/actions/reference/workflows-and-actions/variables
+        # say "CI: Always set to true." (checked 2026-09-25). A test that
+        # skips there when node is missing lets the job pass with the site
+        # script untested.
         with tempfile.TemporaryDirectory() as without_node, tempfile.TemporaryDirectory() as with_node:
             node = Path(with_node) / "node"
             node.write_text("#!/bin/sh\nexit 1\n")

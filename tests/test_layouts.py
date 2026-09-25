@@ -35,7 +35,9 @@ from front_matter import content_files  # noqa: E402
 
 # Tests that run the site script in node skip when node is not on PATH,
 # except in CI: GitHub Actions sets CI=true, and there they fail, so that the
-# job cannot pass with the site script untested.
+# job cannot pass with the site script untested. The default environment
+# variables at https://docs.github.com/en/actions/reference/workflows-and-actions/variables
+# say "CI: Always set to true." (checked 2026-09-25).
 needs_node = unittest.skipUnless(shutil.which("node") or os.environ.get("CI"), "needs node")
 
 
