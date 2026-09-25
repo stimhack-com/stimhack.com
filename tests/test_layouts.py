@@ -187,3 +187,51 @@ class FrontMatterSummaries(unittest.TestCase):
                     if re.search(r"\.(Summary|Params\.summary)\b", action) and (name, action) not in allowed:
                         found.append((name, action))
         self.assertEqual(found, [])
+
+
+def head(out, url):
+    """Return (title, canonical URL) from the head of the page at url."""
+    page = (out / url.strip("/") / "index.html").read_text()
+    title = re.search(r"<title>([^<]*)</title>", page)[1]
+    canonical = re.search(r'<link rel="canonical" href="([^"]*)">', page)
+    return html.unescape(title), canonical and canonical[1]
+
+
+class PaginatedArchives(unittest.TestCase):
+    """Page N of an archive has its own title and its own canonical URL."""
+
+    maxDiff = None
+
+    def test_later_page_has_own_title_and_canonical(self):
+        self.assertEqual(
+            head(build(), "/category/articles/page/2/"),
+            ("Articles - StimHack | Page 2", "https://stimhack.com/category/articles/page/2/"),
+        )
+
+    def test_every_later_archive_page_has_own_title_and_canonical(self):
+        out = build()
+        wrong = []
+        pages = 0
+        for path in sorted(out.glob("*/*/page/*/index.html")):
+            number = int(path.parent.name)
+            if number == 1:
+                continue  # Hugo writes page/1/ as a redirect to the first page.
+            pages += 1
+            url = "/" + str(path.parent.relative_to(out)) + "/"
+            title, canonical = head(out, url)
+            if not title.endswith(f" - StimHack | Page {number}") or canonical != "https://stimhack.com" + url:
+                wrong.append((url, title, canonical))
+        self.assertGreater(pages, 0)
+        self.assertEqual(wrong, [])
+
+    def test_first_page_keeps_title_and_canonical(self):
+        self.assertEqual(
+            head(build(), "/category/articles/"),
+            ("Articles - StimHack", "https://stimhack.com/category/articles/"),
+        )
+
+    def test_post_keeps_title_and_canonical(self):
+        self.assertEqual(
+            head(build(), "/drafting-with-netrunner/"),
+            ("Drafting with Netrunner - StimHack", "https://stimhack.com/drafting-with-netrunner/"),
+        )
