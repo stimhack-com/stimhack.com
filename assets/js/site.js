@@ -1,11 +1,35 @@
 // Behaviour the WordPress theme did with jQuery plugins, in plain JavaScript.
 
 // Home grid: place each box in the shortest column, like jQuery Masonry.
+// The column count follows calculateGrid in the wc-shortcodes plugin that drew
+// the grid on WordPress (public/assets/js/posts.js 3.42): fewer columns when a
+// column would be narrower than 200px, and one column when the window is 568px
+// wide or less.
+function masonryGrid(width, windowWidth, columns, gutter) {
+  if (Number.isNaN(gutter) || gutter > 50 || gutter < 0) gutter = 20;
+  const content = (n) => width - gutter * (n - 1);
+  if (Math.floor(content(columns) / columns) < 200) {
+    columns = Math.max(1, Math.floor(content(columns) / 200));
+  }
+  if (windowWidth <= 568) columns = 1;
+  return { columns, gutter, width: Math.floor(content(columns) / columns) };
+}
+
 function layoutMasonry(grid) {
-  const columns = Number(grid.dataset.columns) || 2;
-  const gutter = Number(grid.dataset.gutterSpace) || 0;
+  const { columns, gutter, width } = masonryGrid(
+    Math.floor(grid.getBoundingClientRect().width),
+    document.documentElement.clientWidth,
+    Number(grid.dataset.columns) || 2,
+    Number(grid.dataset.gutterSpace),
+  );
+  if (columns === 1) {
+    // Like the plugin, remove the layout so the boxes are in normal flow.
+    grid.removeAttribute("style");
+    for (const box of grid.children) box.removeAttribute("style");
+    grid.style.height = "auto";
+    return;
+  }
   const boxes = grid.querySelectorAll(".wc-shortcodes-post-box");
-  const width = (grid.clientWidth - gutter * (columns - 1)) / columns;
   const heights = new Array(columns).fill(0);
   boxes.forEach((box) => {
     box.style.position = "absolute";
@@ -23,7 +47,10 @@ function initMasonry() {
   const run = () => grids.forEach(layoutMasonry);
   grids.forEach((grid) => {
     grid.querySelectorAll("img").forEach((img) => {
-      if (!img.complete) img.addEventListener("load", run);
+      if (img.complete) return;
+      // The plugin laid out again when images loaded or failed (imagesLoaded().always).
+      img.addEventListener("load", run);
+      img.addEventListener("error", run);
     });
   });
   window.addEventListener("resize", run);
