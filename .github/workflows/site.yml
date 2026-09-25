@@ -15,6 +15,10 @@ concurrency:
 
 env:
   HUGO_VERSION: 0.166.0
+  # "staging" builds for static.stimhack.com and asks search engines not to
+  # index it (config/staging/). Set the repository variable SITE_ENV to
+  # "production" when stimhack.com moves to this site.
+  SITE_ENV: ${{ vars.SITE_ENV || 'staging' }}
 
 jobs:
   build:
@@ -32,7 +36,7 @@ jobs:
 
       # Do not add --minify: it would mangle the XML feed at /feed/.
       - name: Build
-        run: hugo --gc --printPathWarnings --panicOnWarning
+        run: hugo --gc --printPathWarnings --panicOnWarning --environment "$SITE_ENV"
 
       - name: Check old URLs and internal links
         run: python3 scripts/check_site.py

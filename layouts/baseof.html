@@ -6,6 +6,9 @@
 <title>{{ if .IsHome }}{{ site.Title }} | {{ site.Params.description }}{{ else }}{{ .Title }} - {{ site.Title }}{{ end }}</title>
 <meta name="description" content="{{ with .Params.summary }}{{ . | plainify | truncate 160 }}{{ else }}{{ site.Params.description }}{{ end }}">
 <link rel="canonical" href="{{ .Permalink }}">
+{{- if site.Params.noindex }}
+<meta name="robots" content="noindex, nofollow">
+{{- end }}
 <link rel="shortcut icon" href="{{ site.Params.favicon }}">
 <link rel="alternate" type="application/rss+xml" title="{{ site.Title }} &raquo; Feed" href="{{ "index.xml" | absURL }}">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato&display=swap">

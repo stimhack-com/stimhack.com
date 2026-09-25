@@ -1,0 +1,6 @@
+User-agent: *
+{{- if site.Params.noindex }}
+Disallow: /
+{{- else }}
+Disallow:
+{{- end }}

@@ -1,0 +1,6 @@
+# Preview deployment at static.stimhack.com, used to review the site before
+# it replaces WordPress. Search engines are asked not to index it.
+baseURL = "https://static.stimhack.com/"
+
+[params]
+  noindex = true

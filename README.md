@@ -15,6 +15,20 @@ hugo server
 
 The preview is at `http://localhost:1313/`.
 
+## Deployment
+
+Pushes to `main` deploy to GitHub Pages. The repository variable `SITE_ENV`
+selects the build:
+
+- `staging` (the default) builds for `https://static.stimhack.com/` and asks
+  search engines not to index the site. Use it to review the site before it
+  replaces WordPress.
+- `production` builds for `https://stimhack.com/`.
+
+To go live, set `SITE_ENV` to `production`, change the custom domain in the
+repository's Pages settings to `stimhack.com`, and point the DNS record at
+GitHub Pages.
+
 ## Layout
 
 | Path | Contents |
