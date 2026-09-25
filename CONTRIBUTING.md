@@ -21,6 +21,10 @@ anything.
 5. For a card image, use NetrunnerDB's image server with the five-digit card
    code: `https://card-images.netrunnerdb.com/v2/large/01001.jpg`.
 6. Remove `draft: true`, or set it to `false`. Drafts are not published.
+   A post with a date in the future is not published either. It appears
+   only after a build that runs after that date, and builds run only when
+   someone pushes to `main` or runs the workflow. No build runs on a
+   schedule.
 7. Open a pull request. The build check runs on it and reports problems such
    as a broken internal link.
 
@@ -28,8 +32,9 @@ The folder name must not match an existing post or page. The build fails when
 two pages have the same URL.
 
 If you have Hugo installed, `hugo new content posts/2026/weyland-primer/index.md`
-creates the file from the template, and `hugo server` shows a live preview at
-`http://localhost:1313/`.
+creates the file from the template, and `hugo server -D` shows a live preview at
+`http://localhost:1313/`. The template sets `draft: true`, and `hugo server`
+without `-D` does not show drafts.
 
 ### Front matter
 
@@ -92,7 +97,9 @@ rename them.
 
 Every pull request runs these checks:
 
-- `python3 -m unittest discover tests` tests the WordPress conversion script.
+- `python3 -m unittest discover tests` tests the WordPress migration
+  scripts, the site check script and the templates. The template tests
+  build the site with Hugo.
 - `hugo --printPathWarnings --panicOnWarning` fails when two pages have the
   same URL.
 - `python3 scripts/check_site.py` fails when a URL from the old WordPress site
@@ -107,5 +114,7 @@ Every pull request runs these checks:
   broken on WordPress are listed in `tests/known-broken-links.txt`.
   To check a site that you built to a different directory, give the
   directory: `python3 scripts/check_site.py <dir>`.
+- The build fails when the built site is 950 MB or larger. The GitHub
+  Pages limit is 1 GB.
 
 Do not build with `--minify`. The HTML minifier breaks the XML feed at `/feed/`.
