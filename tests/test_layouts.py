@@ -1278,11 +1278,8 @@ FEED_CATEGORIES = ROOT / "tests" / "fixtures" / "feed-categories"
 
 def served(out, url):
     """Return the text GitHub Pages serves for the URL path url, or None when it serves a 404."""
-    target = out / url.lstrip("/")
-    for path in (target, target / "index.html"):
-        if path.is_file():
-            return path.read_text()
-    return None
+    path = check_site.served_file(out, url)
+    return path.read_text() if path else None
 
 
 def feed_items(text):

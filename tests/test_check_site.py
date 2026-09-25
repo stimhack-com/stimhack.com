@@ -823,5 +823,91 @@ def unicode_space_calls(source):
     return found
 
 
+class UrlPathsFoundWithServedFile(unittest.TestCase):
+    # A Path drops a slash at the end, so out / "post/a.png/".lstrip("/") is
+    # the file post/a.png, which a server does not serve for /post/a.png/.
+    # Find the file for a URL path with check_site.served_file.
+    ALLOWED = {
+        # The file names that the script makes for archived images. They
+        # do not end in a slash.
+        "migration/archived_images.py: static_root / (path := local_path(url, ext)).lstrip('/')",
+        "migration/archived_images.py: static_root / path.lstrip('/')",
+        "tests/test_archived_images.py: root / archived_images.local_path(URL, '.png').lstrip('/')",
+        # Files of the WordPress site to download or keep before the build.
+        # The site check reads the links that the build makes to them.
+        "migration/download_uploads.py: STATIC / path.lstrip('/')",
+        "migration/download_uploads.py: STATIC / p.lstrip('/')",
+        "migration/wayback.py: uploads_root / avatar.lstrip('/')",
+        # The src of a script in the built site, which the site check reads
+        # in missing_targets() in tests/test_layouts.py.
+        "tests/test_layouts.py: out / script.lstrip('/')",
+    }
+
+    def test_no_new_code_joins_a_url_path_to_a_path(self):
+        found = {
+            f"{path.relative_to(check_site.ROOT).as_posix()}: {text}"
+            for folder in ("scripts", "migration", "tests")
+            for path in (check_site.ROOT / folder).rglob("*.py")
+            for text in url_path_joins(path.read_text())
+        }
+        self.assertEqual(found - self.ALLOWED, set())
+
+    def test_finds_each_spelling(self):
+        for source in [
+            'out / url.lstrip("/")',
+            'out / url.strip("/")',
+            'out / url.removeprefix("/")',
+            '(out / path.lstrip("/")).is_file()',
+            'out.joinpath(url.lstrip("/"))',
+            'Path(out, url.lstrip("/"))',
+        ]:
+            with self.subTest(source=source):
+                self.assertNotEqual(url_path_joins(source), [])
+
+    def test_ignores_other_joins(self):
+        for source in [
+            'out / url.strip("/") / "index.html"',
+            'os.path.join(out, url.lstrip("/"))',
+            'out / name',
+            'url.lstrip("/")',
+        ]:
+            with self.subTest(source=source):
+                self.assertEqual(url_path_joins(source), [])
+
+
+def url_path_joins(source):
+    """Return the source text of each place in source that joins a URL path to a Path.
+
+    A place counts when it is a / operator, a joinpath() call or a Path()
+    call with a value that has its slashes removed with lstrip("/"),
+    strip("/") or removeprefix("/"). A / operator with "index.html" after it
+    does not count, since a slash at the end of the URL path then names a
+    folder.
+    """
+    def url_path(node):
+        return isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) \
+            and node.func.attr in ("lstrip", "strip", "removeprefix") \
+            and [ast.unparse(arg) for arg in node.args] == ["'/'"]
+
+    tree = ast.parse(source)
+    index_folders = {
+        id(node.left)
+        for node in ast.walk(tree)
+        if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div)
+        and isinstance(node.right, ast.Constant) and node.right.value == "index.html"
+    }
+    found = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div) and url_path(node.right) \
+                and id(node) not in index_folders:
+            found.append(ast.unparse(node))
+        elif isinstance(node, ast.Call) and any(map(url_path, node.args)) and (
+            isinstance(node.func, ast.Attribute) and node.func.attr == "joinpath"
+            or isinstance(node.func, ast.Name) and node.func.id in ("Path", "PurePath", "PurePosixPath")
+        ):
+            found.append(ast.unparse(node))
+    return found
+
+
 if __name__ == "__main__":
     unittest.main()

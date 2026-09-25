@@ -99,8 +99,8 @@ KNOWN_BROKEN = {
 }
 
 
-def exists(public, path):
-    """Return whether a decoded path such as /post/a b.png is a file on the site.
+def served_file(public, path):
+    """Return the file in public that a decoded path such as /post/a b.png gets, or None when it gets no file.
 
     The path is joined as text, not as a Path, since a Path drops a slash at
     the end (_parse_path in Lib/pathlib.py) and a file name with a slash
@@ -111,8 +111,14 @@ def exists(public, path):
     target = os.path.join(public, path.lstrip("/"))
     for name in (target, os.path.join(target, "index.html")):
         if os.path.isfile(name):
-            return Path(name).resolve().is_relative_to(Path(public).resolve())
-    return False
+            name = Path(name)
+            return name if name.resolve().is_relative_to(Path(public).resolve()) else None
+    return None
+
+
+def exists(public, path):
+    """Return whether a decoded path such as /post/a b.png is a file on the site."""
+    return served_file(public, path) is not None
 
 
 def id_problems(public):
