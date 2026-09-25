@@ -9,8 +9,10 @@ recorded in migration/archived-images.json and migration/archived-links.json,
 which download_uploads.py writes, and old NetrunnerDB card images at
 card-images.netrunnerdb.com.
 
-Contributors edit these files after the migration, so by default a run
-keeps the content of every file that exists:
+Contributors edit these files after the migration. By default a run does
+not change a post, page, _index.md or data/decklists.yaml file that exists,
+and prints a line for each difference from the export that it leaves in
+place. It does change tests/legacy-urls.txt:
 
 - A post, page or _index.md file that does not exist yet is written. One
   that exists is kept, and listed if the export has a different version.
@@ -22,8 +24,9 @@ keeps the content of every file that exists:
   it to the new slug or date, and add its old URL to aliases.
 - data/decklists.yaml is kept if it exists. The WordPress rows that it
   does not contain are printed, to add by hand.
-- tests/legacy-urls.txt gets the URLs of the export added. No URL is removed,
-  because the files of posts removed from WordPress are kept.
+- tests/legacy-urls.txt gets the URLs of the export added and is written
+  again in sorted order. No URL is removed, because the files of posts
+  removed from WordPress are kept.
 
 --overwrite writes every file from the export and discards all edits.
 It removes a content file that has the wp_id of a post or page the export
