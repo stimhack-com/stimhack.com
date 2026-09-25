@@ -1247,7 +1247,18 @@ class FeedCategories(unittest.TestCase):
         # Templates find the posts in a category from the category page, whose
         # pages are the posts its archive lists (archive-pager.html). They do
         # not use the names as written in front matter or site.Taxonomies.
-        pattern = re.compile(r"Params\.(categories|tags|authors)\b|Taxonomies\.\w+\.Get\b")
+        # Hugo reads a key of .Params in any case (GetMapValue in
+        # tpl/tplimpl/template_funcs.go), and a Taxonomy keys its terms by
+        # the name in lower case (resources/page/taxonomy.go). Get and Count
+        # take a term and the other methods list every term.
+        taxonomy = r"(?:categories|tags|authors)\b"
+        pattern = re.compile(
+            rf"Params\.{taxonomy}"
+            rf"|\bParams?\s+[\"`]{taxonomy}[\"`]"
+            r"|Taxonomies\.\w+\.(?!(?:Alphabetical|ByCount|TaxonomyArray|Page)\b)\w+"
+            r"|\bindex\s+[\w.$]*Taxonomies\b",
+            re.IGNORECASE,
+        )
         found = [
             (str(path.relative_to(ROOT)), match[0])
             for path in sorted((ROOT / "layouts").rglob("*"))
