@@ -1381,6 +1381,37 @@ class PostIdLinks(unittest.TestCase):
         self.assertEqual(wrong[:5], [])
 
 
+EXPORT = ROOT / ".export"
+
+
+@unittest.skipUnless((EXPORT / "pages.json").exists() and (EXPORT / "posts.json").exists(), "needs the WordPress export")
+class ExportIdsInMap(unittest.TestCase):
+    """wp-ids.json has the ID of each post and page in the export that the site still serves."""
+
+    def test_every_served_export_url_has_its_id(self):
+        out = build()
+        urls = json.loads((out / "wp-ids.json").read_text())
+        pages = json.loads((EXPORT / "pages.json").read_text())
+        posts = json.loads((EXPORT / "posts.json").read_text())
+        page_urls = {urlsplit(page["link"]).path for page in pages}
+        served = [
+            (item["id"], urlsplit(item["link"]).path)
+            for item in pages + posts
+            # A link to the home page already opens the home page.
+            if urlsplit(item["link"]).path != "/"
+            and (out / urlsplit(item["link"]).path.strip("/") / "index.html").exists()
+        ]
+        self.assertGreater(len(served), 1900)
+        # A post with the URL of a page has a URL of its own (see convert_posts).
+        posts_at_page_urls = {post["id"] for post in posts if urlsplit(post["link"]).path in page_urls}
+        wrong = [
+            (wp_id, urls.get(str(wp_id)), url)
+            for wp_id, url in served
+            if urls.get(str(wp_id)) != url and not (wp_id in posts_at_page_urls and str(wp_id) in urls)
+        ]
+        self.assertEqual(wrong, [])
+
+
 BUNDLES = ROOT / "tests" / "fixtures" / "bundles"
 
 
