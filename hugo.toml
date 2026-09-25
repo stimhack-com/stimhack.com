@@ -14,7 +14,9 @@ uglyURLs = false
   # Category whose newest posts fill the home page grid.
   homeCategory = "articles"
   homePosts = 12
-  # Categories whose posts the site feed leaves out, as the WordPress feed did.
+  # Categories whose posts every feed leaves out: the site feed and each
+  # category feed (layouts/_partials/rss.xml). The WordPress feeds did the
+  # same: see WORDPRESS_FEED and CategoryFeeds in tests/test_layouts.py.
   feedExcludeCategories = ["decklists"]
   repo = "https://github.com/stimhack-com/stimhack.com"
 
