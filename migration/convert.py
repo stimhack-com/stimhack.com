@@ -33,6 +33,13 @@ URL_ATTR = re.compile(r"""\b(href|src|srcset|poster|data-src)=(["'])(.*?)\2""", 
 IFRAME_HTTP = re.compile(r"""(<iframe\b[^>]*\bsrc=["'])http://""", re.I)
 # wc-shortcodes tags that appear in the export.
 SHORTCODE_TAG = re.compile(r"\[/?(?:accordion|pane|one_fourth)\b[^\]]*\]")
+# Shortcodes of other plugins the WordPress site no longer ran, so it showed them as raw text.
+FORM_SHORTCODE = re.compile(r"\[Form\b[^\]]*\]")
+ICON_SHORTCODE = re.compile(r"\[icon name=icon-([a-z-]+)\]")
+EASY_MEDIA_SHORTCODE = re.compile(r"\[easy-media\b[^\]]*\]")
+# Font Awesome 3 icon names in the export -> Font Awesome 4.7 names, which the site loads.
+ICON_NAMES = {"facetime-video": "video-camera"}
+FORM_CLOSED = "<p><em>This form is closed.</em></p>"
 
 # Original URL -> local copy, for images other sites no longer serve (see archived_images.py).
 ARCHIVED = archived_images.load_map(ROOT / "migration" / "archived-images.json")
@@ -106,11 +113,23 @@ def convert_shortcodes(body):
         body,
         flags=re.S,
     )
-    return strip_shortcodes(body)
+    return plugin_shortcodes(strip_shortcodes(body))
 
 
 def strip_shortcodes(body):
     return SHORTCODE_TAG.sub("", body)
+
+
+def plugin_shortcodes(body):
+    """Render the shortcodes of plugins other than wc-shortcodes.
+
+    [Form] becomes a note, because a static site cannot take the
+    submissions. [icon] becomes the Font Awesome 4 icon. [easy-media] is
+    removed: the gallery it names is not in the export.
+    """
+    body = FORM_SHORTCODE.sub(FORM_CLOSED, body)
+    body = ICON_SHORTCODE.sub(lambda m: f'<i class="fa fa-{ICON_NAMES[m[1]]}" aria-hidden="true"></i>', body)
+    return EASY_MEDIA_SHORTCODE.sub("", body)
 
 
 def clean_body(body):
@@ -126,7 +145,7 @@ def iso_date(local, gmt):
 
 def excerpt(item):
     rendered = re.sub(r'<p>\s*<a class="continue-reading-link".*?</p>', "", item["excerpt"]["rendered"], flags=re.S)
-    rendered = strip_shortcodes(rendered)
+    rendered = plugin_shortcodes(strip_shortcodes(rendered))
     return re.sub(r"\s+", " ", text(rendered))
 
 
