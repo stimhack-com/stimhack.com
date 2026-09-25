@@ -3,7 +3,7 @@
 # engines not to index it. robots.txt does not block crawling, because a
 # crawler that cannot fetch a page cannot read the tag. Images and feeds
 # cannot carry the tag. The site also sends no X-Robots-Tag header: the
-# workflow (.github/workflows/site.yml, lines 68-85) uploads the files in
+# workflow (.github/workflows/site.yml, lines 70-87) uploads the files in
 # public/ to GitHub Pages and sets no response headers. So search engines can
 # index those files.
 baseURL = "https://static.stimhack.com/"

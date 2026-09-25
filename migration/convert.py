@@ -33,7 +33,7 @@ tests/wp-ids.txt:
   slug, so the permalink /:slugorcontentbasename/ (hugo.toml, line 46)
   gives them the same URL. The CI build then stops on the duplicate
   target path: it runs hugo with --printPathWarnings --panicOnWarning
-  (.github/workflows/site.yml, line 57), and Hugo logs duplicate target
+  (.github/workflows/site.yml, line 59), and Hugo logs duplicate target
   paths as a warning (hugolib/hugo_sites_build.go, printPathWarningsOnce).
   Move the file to the new path, change it to the new slug or date, and
   add its old URL to aliases.
