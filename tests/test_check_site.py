@@ -442,6 +442,17 @@ class SrcsetSpaces(unittest.TestCase):
         self.assertEqual(reported, {"broken link in /post/index.html: /post/\xa0a.png"})
 
 
+def post_problems(test, markup):
+    """Return the problems that the check reports for a site whose /post/ page has markup and whose /post/a.png exists."""
+    public = Path(tempfile.mkdtemp(prefix="check-site-")) / "public"
+    test.addCleanup(shutil.rmtree, public.parent)
+    (public / "post").mkdir(parents=True)
+    (public / "index.html").write_text('<link rel="canonical" href="https://static.example.com/">')
+    (public / "post" / "a.png").write_bytes(b"")
+    (public / "post" / "index.html").write_text(markup)
+    return problems(public)
+
+
 class UrlSpaces(unittest.TestCase):
     """A browser removes C0 controls and spaces from the ends of a URL, and tabs and line breaks inside it.
 
@@ -479,14 +490,7 @@ class UrlSpaces(unittest.TestCase):
     ]
 
     def check(self, markup):
-        """Return the problems that the check reports for a site whose /post/ page has markup."""
-        public = Path(tempfile.mkdtemp(prefix="check-site-")) / "public"
-        self.addCleanup(shutil.rmtree, public.parent)
-        (public / "post").mkdir(parents=True)
-        (public / "index.html").write_text('<link rel="canonical" href="https://static.example.com/">')
-        (public / "post" / "a.png").write_bytes(b"")
-        (public / "post" / "index.html").write_text(markup)
-        return problems(public)
+        return post_problems(self, markup)
 
     def test_reports_the_path_that_a_browser_requests(self):
         for markup, paths in self.BROKEN:
@@ -501,6 +505,49 @@ class UrlSpaces(unittest.TestCase):
                 prefix = "image from a dead address in /post/index.html: "
                 dead = {line.removeprefix(prefix) for line in self.check(markup) if line.startswith(prefix)}
                 self.assertEqual(dead, urls, f"{markup!r} reported {sorted(dead)}")
+
+
+class UrlPaths(unittest.TestCase):
+    """The check resolves a URL on this site to the path that a browser requests.
+
+    For an http or https URL, and so for a relative URL on a page of this
+    site, a browser keeps a semicolon and the text after it in the path, reads
+    a backslash before the query as a slash, and reads %2e as a dot in a "."
+    or ".." segment (URL Standard, https://url.spec.whatwg.org/#path-state).
+    The expected paths are the pathname that whatwg-url 16.0.1, the reference
+    implementation of the URL Standard, gives for each URL against
+    https://stimhack.com/post/, decoded.
+    """
+
+    # Markup on /post/, where a.png exists, and the broken paths that the
+    # check must report for it.
+    BROKEN = [
+        ('<img src="a.png;">', {"/post/a.png;"}),
+        ('<a href="/post/a.png;">', {"/post/a.png;"}),
+        ('<a href="https://stimhack.com/post/a.png;">', {"/post/a.png;"}),
+        ('<a href="//stimhack.com/post/a.png;">', {"/post/a.png;"}),
+        ('<img src="a.png;x">', {"/post/a.png;x"}),
+        ('<img src="..;/a.png">', {"/post/..;/a.png"}),
+        (r'<img src="\a.png">', {"/a.png"}),
+        (r'<img src="gone.png\">', {"/post/gone.png/"}),
+        (r'<img src="sub\..\a.png">', set()),
+        (r'<img src="gone.png?a\b#c\d">', {"/post/gone.png"}),
+        (r'<a href="https:\\stimhack.com\gone.png">', {"/gone.png"}),
+        (r'<a href="https://stimhack.com\post\a.png;">', {"/post/a.png;"}),
+        (r'<a href="\\stimhack.com\gone.png">', {"/gone.png"}),
+        (r'<a href="/\stimhack.com/gone.png">', {"/gone.png"}),
+        ('<img src="x/%2e%2e/a.png">', set()),
+        ('<img src="x/.%2E/a.png">', set()),
+        ('<img src="%2e%2e/%2e%2e/gone.png">', {"/gone.png"}),
+        ('<a href="x/%2e">', {"/post/x/"}),
+    ]
+
+    def test_reports_the_path_that_a_browser_requests(self):
+        for markup, paths in self.BROKEN:
+            with self.subTest(markup=markup):
+                prefix = "broken link in /post/index.html: "
+                broken = {line.removeprefix(prefix) for line in post_problems(self, markup) if line.startswith("broken link in ")}
+                self.assertEqual(broken, paths, f"{markup!r} reported {sorted(broken)}")
 
 
 class UrlsTrimmedWithUrlText(unittest.TestCase):
