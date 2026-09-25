@@ -120,5 +120,15 @@ class PageComments(unittest.TestCase):
         }])
 
 
+class TermDescriptions(unittest.TestCase):
+    """WordPress stores descriptions with HTML entities; the term template escapes on output."""
+
+    def test_description_entities_are_decoded(self):
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(convert, "CONTENT", Path(tmp)):
+            convert.convert_terms("authors", [{"id": 7, "slug": "ian", "name": "Ian L", "description": "Ian &amp; his wife"}])
+            written = (Path(tmp) / "authors" / "ian" / "_index.md").read_text()
+        self.assertEqual(yaml.safe_load(written.split("---\n")[1])["description"], "Ian & his wife")
+
+
 if __name__ == "__main__":
     unittest.main()

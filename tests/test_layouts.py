@@ -20,3 +20,10 @@ class PageComments(unittest.TestCase):
 
     def test_posts_still_show_their_comments(self):
         self.assertTrue(comment_ids("drafting-with-netrunner"))
+
+
+class TermDescriptions(unittest.TestCase):
+    def test_author_description_is_escaped_once(self):
+        html = (build() / "author" / "ian" / "index.html").read_text()
+        description = re.search(r'<div id="author-description"><h2>Ian L</h2>(Ian .*? his wife)', html)
+        self.assertEqual(description[1], "Ian &amp; his wife")
