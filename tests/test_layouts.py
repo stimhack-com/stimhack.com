@@ -981,14 +981,17 @@ class UntitledPages(unittest.TestCase):
 
 
 class PostsForLater(unittest.TestCase):
-    """Every post that is not a draft passes the checks of the build, also a post for later.
+    """Every post that is not a draft passes the checks of the build and the link check, also a post for later.
 
     The build step in .github/workflows/site.yml does not build a post whose
     date or publish date is in the future, or whose expiry date has passed,
-    so the checks in layouts/baseof.html do not reach it on a pull request.
-    The first deploy after the date of a post for later builds it, and a
-    check that fails then stops that deploy. No deploy builds an expired
-    post again, so the test is stricter than the deploy for it.
+    so the checks in layouts/baseof.html do not reach it on a pull request,
+    and the link check step, which runs on the output of the build step,
+    does not read it. The first deploy after the date of a post for later
+    builds it, and a check that fails then stops that deploy. No deploy
+    builds an expired post again, so the test is stricter than the deploy
+    for it. A post for later that links to another post for later with a
+    later date passes, but the link is broken between the two dates.
     """
 
     def test_posts_for_later_pass_the_checks_of_the_build(self):
@@ -1003,7 +1006,11 @@ class PostsForLater(unittest.TestCase):
                 capture_output=True,
                 text=True,
             )
-        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            output = io.StringIO()
+            with contextlib.redirect_stdout(output), contextlib.redirect_stderr(output):
+                status = check_site.main([out])
+        self.assertEqual(status, 0, output.getvalue())
 
 
 def pager_items(out, url):
