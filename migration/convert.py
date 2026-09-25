@@ -30,6 +30,9 @@ SKIP_PAGES = {"landing", "under-maintenance", "submission-successful", "decklist
 
 SITE_URL = re.compile(r"^(?:https?:)?//(?:www\.)?stimhack\.com(?=/|$)")
 URL_ATTR = re.compile(r"""\b(href|src|srcset|poster|data-src)=(["'])(.*?)\2""", re.S)
+# One srcset candidate: a URL, which ends at whitespace and loses trailing commas,
+# then either those commas or descriptors up to the next comma.
+SRCSET_CANDIDATE = re.compile(r"([\s,]*)(\S*[^\s,])(,+|[^,]*)")
 IFRAME_HTTP = re.compile(r"""(<iframe\b[^>]*\bsrc=["'])http://""", re.I)
 # wc-shortcodes tags that appear in the export.
 SHORTCODE_TAG = re.compile(r"\[/?(?:accordion|pane|one_fourth)\b[^\]]*\]")
@@ -65,14 +68,10 @@ def path_of(link):
     return unquote(urlsplit(link).path) or "/"
 
 
-def site_relative(value):
-    """Rewrite absolute stimhack.com URLs in one attribute value to root-relative."""
-    parts = []
-    for part in value.split(","):
-        stripped = part.strip()
-        rewritten = SITE_URL.sub("", stripped) or "/"
-        parts.append(part.replace(stripped, rewritten) if SITE_URL.match(stripped) else part)
-    return ",".join(parts)
+def site_relative(url):
+    """Rewrite an absolute stimhack.com URL to root-relative."""
+    stripped = url.strip()
+    return url.replace(stripped, SITE_URL.sub("", stripped) or "/") if SITE_URL.match(stripped) else url
 
 
 def rewrite_url(value):
@@ -81,8 +80,14 @@ def rewrite_url(value):
     return MOVED.get(value, value)
 
 
+def rewrite_srcset(value):
+    return SRCSET_CANDIDATE.sub(lambda m: f"{m[1]}{rewrite_url(m[2])}{m[3]}", value)
+
+
 def rewrite_urls(body):
-    body = URL_ATTR.sub(lambda m: f"{m[1]}={m[2]}{rewrite_url(m[3])}{m[2]}", body)
+    body = URL_ATTR.sub(
+        lambda m: f"{m[1]}={m[2]}{(rewrite_srcset if m[1] == 'srcset' else rewrite_url)(m[3])}{m[2]}", body
+    )
     return IFRAME_HTTP.sub(r"\1https://", body)
 
 
