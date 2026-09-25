@@ -1,4 +1,4 @@
-"""Tests for the broken link check in scripts/check_site.py, on a small built site."""
+"""Tests for the checks in scripts/check_site.py, on a small built site."""
 import contextlib
 import io
 import shutil
@@ -67,6 +67,18 @@ PAGES = {
         <meta property="og:image" content="https://stimhack.com/gone-og-image.png">
         <meta property="og:url" content="https://static.example.com/gone-og-url/">
     """,
+    # Images from addresses that no longer serve images, in each attribute
+    # that loads an image.
+    "dead-images/index.html": """
+        <img src="http://cardgamedb.com/forums/uploads/img-src.jpg">
+        <img src = "http://www.cardgamedb.com/forums/uploads/spaces-around-equals.jpg">
+        <img src="data:image/gif;base64,R0lGOD" data-src="https://netrunnerdb.com/card_image/data-src.png">
+        <img src="data:image/gif;base64,R0lGOD" srcset="https://netrunnerdb.com/web/bundles/srcset.png 2x">
+        <picture><source srcset="https://netrunnerdb.com/bundles/source-srcset.png 1x"></picture>
+        <video src="data:video/mp4;base64,AAAA" poster="http://cardgamedb.com/forums/uploads/poster.jpg"></video>
+        <meta property="og:image" content="http://cardgamedb.com/forums/uploads/og-image.jpg">
+        <img src="https://card-images.netrunnerdb.com/v2/large/01001.jpg">
+    """,
     "index.html": '<link rel="canonical" href="https://static.example.com/">',
     # A page that is not index.html is served at its own file name, so its
     # relative links resolve against the directory it is in.
@@ -75,13 +87,13 @@ PAGES = {
 FILES = ["post/hedge-fund.png", "post/small.png", "post/clip.mp4"]
 
 
-def broken_links(public):
-    """Run the check on the site in public/ and return the broken link lines."""
+def problems(public):
+    """Run the check on the site in public/ and return the lines it prints."""
     out = io.StringIO()
     with mock.patch.object(check_site, "PUBLIC", public), contextlib.redirect_stdout(out), \
             contextlib.redirect_stderr(io.StringIO()):
         check_site.main()
-    return {line for line in out.getvalue().splitlines() if line.startswith("broken link in ")}
+    return set(out.getvalue().splitlines())
 
 
 class BrokenLinks(unittest.TestCase):
@@ -94,7 +106,8 @@ class BrokenLinks(unittest.TestCase):
             (cls.public / name).write_text(html)
         for name in FILES:
             (cls.public / name).write_bytes(b"")
-        cls.broken = broken_links(cls.public)
+        cls.problems = problems(cls.public)
+        cls.broken = {line for line in cls.problems if line.startswith("broken link in ")}
 
     def test_reports_missing_relative_and_root_relative_targets(self):
         reported = {line for line in self.broken if line.startswith("broken link in /post/")}
@@ -135,6 +148,25 @@ class BrokenLinks(unittest.TestCase):
         self.assertEqual(
             {line for line in self.broken if not line.startswith(("broken link in /post/", "broken link in /own-host/"))},
             set(),
+        )
+
+    def test_reports_images_from_dead_addresses_in_each_image_attribute(self):
+        reported = {line for line in self.problems if line.startswith("image from a dead address in ")}
+        self.assertEqual(
+            reported,
+            {
+                "image from a dead address in /dead-images/index.html: " + url
+                for url in [
+                    "http://cardgamedb.com/forums/uploads/img-src.jpg",
+                    "http://www.cardgamedb.com/forums/uploads/spaces-around-equals.jpg",
+                    "https://netrunnerdb.com/card_image/data-src.png",
+                    "https://netrunnerdb.com/web/bundles/srcset.png",
+                    "https://netrunnerdb.com/bundles/source-srcset.png",
+                    "http://cardgamedb.com/forums/uploads/poster.jpg",
+                    "http://cardgamedb.com/forums/uploads/og-image.jpg",
+                ]
+            },
+            f"reported: {sorted(reported)}",
         )
 
     def test_checks_the_directory_given_on_the_command_line(self):
