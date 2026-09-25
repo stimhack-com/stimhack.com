@@ -1,0 +1,4 @@
+{{- /* The pager of a term archive, or false for a page that does not paginate.
+term.html gets its pager from here too, so the head and the list use the same pager. */ -}}
+{{- if eq .Kind "term" }}{{ return .Paginate .Pages.ByDate.Reverse }}{{ end }}
+{{- return false }}

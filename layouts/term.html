@@ -14,7 +14,7 @@
   <div id="author-description"><h2>{{ .Title }}</h2>{{ .Description }}</div>
 </div>
 {{- end }}
-{{- $pager := .Paginate .Pages.ByDate.Reverse }}
+{{- $pager := partial "archive-pager.html" . }}
 {{- range $pager.Pages }}{{ partial "article-summary.html" . }}{{ end }}
 {{ partial "pagination.html" $pager }}
 {{ end }}

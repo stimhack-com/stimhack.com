@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
-<title>{{ if .IsHome }}{{ site.Title }} | {{ site.Params.description }}{{ else }}{{ .Title }} - {{ site.Title }}{{ end }}</title>
+{{- $pager := partial "archive-pager.html" . }}
+{{- $later := and $pager (gt $pager.PageNumber 1) }}
+<title>{{ if .IsHome }}{{ site.Title }} | {{ site.Params.description }}{{ else }}{{ .Title }} - {{ site.Title }}{{ if $later }} | Page {{ $pager.PageNumber }}{{ end }}{{ end }}</title>
 <meta name="description" content="{{ if .Params.summary }}{{ partial "summary-text.html" . | truncate 160 }}{{ else }}{{ site.Params.description }}{{ end }}">
-<link rel="canonical" href="{{ .Permalink }}">
+<link rel="canonical" href="{{ if $later }}{{ $pager.URL | absURL }}{{ else }}{{ .Permalink }}{{ end }}">
 {{- if site.Params.noindex }}
 <meta name="robots" content="noindex, nofollow">
 {{- end }}
