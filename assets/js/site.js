@@ -58,8 +58,10 @@ function initMasonry() {
 }
 
 // Video players keep the shape of their width and height attributes when the
-// column is narrower than they are, like FitVids did for the same players on
-// WordPress. Audio players and maps keep their fixed height.
+// column is narrower than they are. On WordPress the theme did this with
+// FitVids (js/frontend.js in Tempera, FitVids 1.0), which found video players
+// by their address and did not change other iframes, so audio players and
+// maps keep their fixed height here too.
 const VIDEO_PLAYER = /^(https?:)?\/\/([^/]*\.)?(youtube\.com|youtube-nocookie\.com|player\.vimeo\.com)\//;
 
 function initVideoEmbeds() {

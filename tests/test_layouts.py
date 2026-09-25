@@ -212,11 +212,13 @@ def iframe_styles(iframes):
 
 @unittest.skipUnless(shutil.which("node"), "needs node")
 class VideoEmbeds(unittest.TestCase):
-    # The WordPress theme ran FitVids on post content. It kept YouTube and
-    # Vimeo players at the shape of their width and height attributes at any
-    # column width, and left other iframes alone. In the browser an inline
-    # aspect-ratio with height auto does the same, under the max-width in
-    # stimhack.css.
+    # The WordPress theme ran FitVids on post content (js/frontend.js in
+    # Tempera, FitVids 1.0). It kept YouTube and Vimeo players at the shape of
+    # their width and height attributes and did not change other iframes. The
+    # theme skipped players narrower than its content column; here every
+    # player keeps its shape, so a 600x400 player is not 400px high on a
+    # phone. These tests check the styles that the script sets, not the size
+    # that a browser renders.
     maxDiff = None
 
     def test_video_players_keep_the_shape_of_their_size_attributes(self):
