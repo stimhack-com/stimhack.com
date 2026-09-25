@@ -1,8 +1,10 @@
 /* Stimhack additions on top of the vendored Tempera theme CSS. */
 
-/* Submenus: the theme opened them with jQuery; CSS does it here. */
+/* Submenus: the theme opened them with jQuery; CSS does it here.
+   site.js adds submenu-open after the first tap on a touch screen. */
 #access li:hover > ul,
-#access li:focus-within > ul {
+#access li:focus-within > ul,
+#access li.submenu-open > ul {
   display: block;
   visibility: visible;
 }

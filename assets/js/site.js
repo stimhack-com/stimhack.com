@@ -115,6 +115,37 @@ function initMobileNav() {
   menu.after(select);
 }
 
+// Touch screens: the first tap on a top level menu item with a submenu opens
+// the submenu, and the next tap on it follows the link. On WordPress the theme
+// did this (js/frontend.js in Tempera). Here a tap follows the link when the
+// submenu was already shown as the tap started, so a browser that shows the
+// submenu on the first tap without a click needs two taps and not three. The
+// submenu-open class keeps the submenu shown in a browser that does not keep
+// :hover or focus after the cancelled click.
+function initTouchMenu() {
+  const menu = document.getElementById("prime_nav");
+  if (!menu) return;
+  const items = Array.from(menu.children).filter((li) => li.querySelector(":scope > ul"));
+  let tap = null;
+  items.forEach((li) => {
+    const link = li.querySelector(":scope > a");
+    const submenu = li.querySelector(":scope > ul");
+    link.addEventListener("pointerdown", (event) => {
+      tap = { link, touch: event.pointerType !== "mouse", shown: getComputedStyle(submenu).display !== "none" };
+    });
+    link.addEventListener("click", (event) => {
+      const first = tap && tap.link === link && tap.touch && !tap.shown;
+      tap = null;
+      if (!first) return;
+      event.preventDefault();
+      li.classList.add("submenu-open");
+    });
+  });
+  document.addEventListener("pointerdown", (event) => {
+    items.forEach((li) => { if (!li.contains(event.target)) li.classList.remove("submenu-open"); });
+  });
+}
+
 // Tournament decklists: search box filters rows, headers sort columns.
 function initDecklists() {
   const table = document.getElementById("decklists");
@@ -146,4 +177,5 @@ initVideoEmbeds();
 initMasonry();
 initBackToTop();
 initMobileNav();
+initTouchMenu();
 initDecklists();

@@ -310,7 +310,7 @@ Object.defineProperty(location, "href", {get: () => url, set: (value) => { navig
 const list = (items) => ({children: items.map((item) => {
   // A browser resolves the href property of a link against the page address.
   const a = {textContent: item.text, href: new URL(item.href, url).href,
-    getAttribute: (name) => (name === "href" ? item.href : null)};
+    getAttribute: (name) => (name === "href" ? item.href : null), addEventListener: () => {}};
   const sub = item.children ? list(item.children) : null;
   return {classList: {contains: (name) => item.classes.includes(name)},
     querySelector: (sel) => (sel === ":scope > a" ? a : sel === ":scope > ul" ? sub : null)};
@@ -335,6 +335,7 @@ const select = {options: [], listeners: {},
 let inserted = null;
 menu.after = (el) => { inserted = el; };
 const context = vm.createContext({console, Option, location, document: {documentElement: {},
+  addEventListener: () => {},
   querySelectorAll: () => [],
   getElementById: (id) => (id === "prime_nav" ? menu : null),
   createElement: (tag) => (tag === "select" ? select : null)}});
@@ -430,10 +431,10 @@ class MobileNav(unittest.TestCase):
 # classes that the site CSS uses to show the submenu of an item
 # (#access li.<class> > ul). argv[5] is a JSON object:
 #   browser: "hover-kept" keeps :hover on the last element that was tapped,
-#     and fires click on each tap (Chromium with touch emulation).
+#     and fires click on each tap, as headless Chromium with touch emulation did.
 #     "hover-lost" does not keep :hover after a tap, and fires click on each tap.
-#     "ios" keeps :hover like "hover-kept", but does not fire click when the
-#     :hover of the tap shows a submenu that was hidden (WebKit on iOS).
+#     "hover-no-click" keeps :hover like "hover-kept", but does not fire click
+#     when the :hover of the tap shows a submenu that was hidden.
 #   taps: a list of {text, input}. text is the text of a menu link, or
 #     "outside" for the page content. input is "touch", "mouse" or "keyboard".
 # A tap on a link in a hidden submenu is not possible. After a navigation the
@@ -540,7 +541,7 @@ for (const {text, input} of taps) {
     dispatch(target, "pointerup", {pointerType: "touch"});
     dispatch(target, "touchend", {touches: []});
     hovered = target;
-    if (browser === "ios" && openItems().some((item) => !hiddenBefore.has(item))) click = false;
+    if (browser === "hover-no-click" && openItems().some((item) => !hiddenBefore.has(item))) click = false;
   } else if (input === "mouse") {
     hovered = target;
     dispatch(target, "pointerdown", {pointerType: "mouse"});
@@ -612,13 +613,13 @@ class TouchMenu(unittest.TestCase):
     TAP_BROWSERS = ["hover-kept", "hover-lost"]
 
     def test_first_tap_on_item_with_submenu_opens_the_submenu(self):
-        for browser in self.TAP_BROWSERS + ["ios"]:
+        for browser in self.TAP_BROWSERS + ["hover-no-click"]:
             with self.subTest(browser=browser):
                 self.assertEqual(touch_menu(browser, [self.ARTICLES]),
                                  [{"navigated": None, "open": [self.ARTICLES]}])
 
     def test_second_tap_follows_the_link(self):
-        for browser in self.TAP_BROWSERS + ["ios"]:
+        for browser in self.TAP_BROWSERS + ["hover-no-click"]:
             with self.subTest(browser=browser):
                 self.assertEqual(touch_menu(browser, [self.ARTICLES, self.ARTICLES]), [
                     {"navigated": None, "open": [self.ARTICLES]},
@@ -626,7 +627,7 @@ class TouchMenu(unittest.TestCase):
                 ])
 
     def test_submenu_item_can_be_tapped_after_the_first_tap(self):
-        for browser in self.TAP_BROWSERS + ["ios"]:
+        for browser in self.TAP_BROWSERS + ["hover-no-click"]:
             with self.subTest(browser=browser):
                 self.assertEqual(touch_menu(browser, [self.ARTICLES, "Set Reviews"]), [
                     {"navigated": None, "open": [self.ARTICLES]},
@@ -643,7 +644,7 @@ class TouchMenu(unittest.TestCase):
                 ])
 
     def test_item_without_submenu_follows_the_link_on_the_first_tap(self):
-        for browser in self.TAP_BROWSERS + ["ios"]:
+        for browser in self.TAP_BROWSERS + ["hover-no-click"]:
             with self.subTest(browser=browser):
                 self.assertEqual(touch_menu(browser, ["About"]), [{"navigated": "/about/", "open": []}])
 
