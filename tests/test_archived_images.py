@@ -24,7 +24,10 @@ class LocalPath(unittest.TestCase):
     def test_query_strings_get_a_stable_hash_and_the_detected_extension(self):
         a = archived_images.local_path("https://encrypted-tbn3.gstatic.com/images?q=tbn:ABC&amp;s=1", ".jpg")
         b = archived_images.local_path("https://encrypted-tbn3.gstatic.com/images?q=tbn:XYZ", ".jpg")
-        self.assertRegex(a, r"^/images/archive/encrypted-tbn3\.gstatic\.com/images-[0-9a-f]{10}\.jpg$")
+        # The first 10 hex digits of the SHA-1 of "q=tbn:ABC&s=1". The path must
+        # be the same in every run, because archived-images.json and the files
+        # in static/ use it.
+        self.assertEqual(a, "/images/archive/encrypted-tbn3.gstatic.com/images-daaa2b67a2.jpg")
         self.assertNotEqual(a, b)
 
     def test_entity_encoded_and_plain_urls_share_a_path(self):
