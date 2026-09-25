@@ -85,26 +85,33 @@ function initBackToTop() {
   update();
 }
 
-// Small screens: the theme replaces the menu with a <select> (TinyNav).
+// Small screens: the theme replaces the menu with a <select>. On WordPress
+// this was TinyNav (js/frontend.js in Tempera, TinyNav 1.03 mod 0.1.1) with
+// the header " = Menu = ". The option with the page address is selected, and
+// on other pages the header stays selected. Two items can have the same
+// address; TinyNav selected both, so the select showed the last one.
 function initMobileNav() {
   const menu = document.getElementById("prime_nav");
   if (!menu) return;
   const select = document.createElement("select");
   select.className = "tinynav tinynav1";
-  let chosen = false;
+  select.add(new Option(" = Menu = ", ""));
+  const here = window.location.protocol + "//" + window.location.host + window.location.pathname;
   const add = (ul, depth) => {
     for (const li of ul.children) {
       const a = li.querySelector(":scope > a");
-      const option = new Option("- ".repeat(depth) + a.textContent.trim(), a.getAttribute("href"));
-      // Two items can share a URL; keep the first match selected.
-      if (!chosen && li.classList.contains("current-menu-item")) option.selected = chosen = true;
+      const indent = depth ? "\u00a0" + "-\u00a0".repeat(depth) : "";
+      const option = new Option(indent + a.textContent.trim(), a.getAttribute("href"));
+      if (a.href === here) option.selected = true;
       select.add(option);
       const sub = li.querySelector(":scope > ul");
       if (sub) add(sub, depth + 1);
     }
   };
   add(menu, 0);
-  select.addEventListener("change", () => { window.location.href = select.value; });
+  select.addEventListener("change", () => {
+    if (select.value) window.location.href = select.value;
+  });
   menu.after(select);
 }
 
