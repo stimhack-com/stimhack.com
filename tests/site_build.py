@@ -18,13 +18,17 @@ def build(content=None, environment=None):
     """
     out = Path(tempfile.mkdtemp(prefix="stimhack-build-"))
     atexit.register(shutil.rmtree, out, ignore_errors=True)
-    # CI (.github/workflows/site.yml) installs Hugo on PATH and has no nix;
-    # local machines run it through nix.
-    hugo = ["hugo"] if shutil.which("hugo") else ["nix", "run", "nixpkgs#hugo", "--"]
     args = ["--source", str(ROOT), "--destination", str(out), "--quiet"]
     if content:
         args += ["--contentDir", str(content)]
     if environment:
         args += ["--environment", environment]
-    subprocess.run([*hugo, *args], check=True)
+    subprocess.run([*hugo(), *args], check=True)
     return out
+
+
+def hugo():
+    """Return the command that runs Hugo."""
+    # CI (.github/workflows/site.yml) installs Hugo on PATH and has no nix;
+    # local machines run it through nix.
+    return ["hugo"] if shutil.which("hugo") else ["nix", "run", "nixpkgs#hugo", "--"]

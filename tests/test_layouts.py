@@ -8,18 +8,20 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 import tomllib
 import unittest
 from datetime import datetime
 from email.utils import parsedate_to_datetime
 from html.parser import HTMLParser
+from pathlib import Path
 from urllib.parse import urlsplit
 from urllib.robotparser import RobotFileParser
 from xml.etree import ElementTree
 
 import yaml
 
-from site_build import ROOT, build
+from site_build import ROOT, build, hugo
 
 sys.path.insert(0, str(ROOT / "scripts"))
 import check_site  # noqa: E402
@@ -880,6 +882,32 @@ class PaginatedArchives(unittest.TestCase):
             head(build(), "/drafting-with-netrunner/"),
             ("Drafting with Netrunner - StimHack", "https://stimhack.com/drafting-with-netrunner/"),
         )
+
+
+UNTITLED = ROOT / "tests" / "fixtures" / "untitled"
+
+
+class UntitledPages(unittest.TestCase):
+    """A page without a title stops the CI build, and the error names its file.
+
+    Without a title the page has the title " - StimHack", an empty heading,
+    and an empty title in the feed.
+    """
+
+    def test_page_without_title_fails_the_build_and_names_its_file(self):
+        with tempfile.TemporaryDirectory() as out:
+            # The flags of the build step in .github/workflows/site.yml.
+            result = subprocess.run(
+                [*hugo(), "--source", str(ROOT), "--destination", out, "--contentDir", str(UNTITLED),
+                 "--printPathWarnings", "--panicOnWarning"],
+                capture_output=True,
+                text=True,
+            )
+            names = ["no-title", "empty-title", "blank-title"]
+            titles = {name: head(Path(out), f"/{name}/")[0] for name in names if (Path(out) / name).exists()}
+        self.assertNotEqual(result.returncode, 0, f"The build succeeded. Page titles: {titles}")
+        for name in names:
+            self.assertIn(str(UNTITLED / "posts" / f"{name}.md"), result.stdout + result.stderr)
 
 
 def pager_items(out, url):
