@@ -1,4 +1,7 @@
-{{- $pages := first site.Config.Services.RSS.Limit (where site.RegularPages "Section" "posts").ByDate.Reverse -}}
+{{- $pages := where site.RegularPages "Section" "posts" -}}
+{{- /* The site feed leaves out posts in any category of feedExcludeCategories. */}}
+{{- if .IsHome }}{{ $pages = $pages | complement (where $pages "Params.categories" "intersect" site.Params.feedExcludeCategories) }}{{ end -}}
+{{- $pages = first site.Config.Services.RSS.Limit $pages.ByDate.Reverse -}}
 {{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
