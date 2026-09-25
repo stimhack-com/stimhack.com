@@ -416,3 +416,49 @@ class FeedGuids(unittest.TestCase):
                     "<guid>https://stimhack.com/new-post/</guid>",
                     '<guid isPermaLink="true">https://stimhack.com/new-post/</guid>',
                 ])
+
+
+# The first three pages of https://stimhack.com/feed/ (5 items each) before cutover.
+WORDPRESS_FEED = [
+    "/queen-bee-2023/",
+    "/a-look-back-at-the-borealis-cycle/",
+    "/queen-bee-2022/",
+    "/deconstructing-shellgame-by-tehepicwin/",
+    "/on-the-rational-player/",
+    "/skill-deepdive-tactical-2-runs/",
+    "/skill-deepdive-tactical-1/",
+    "/state-of-the-game-2021/",
+    "/everything-you-need-to-know-about-tournaments-besides-playing-netrunner/",
+    "/what-makes-netrunner-special/",
+    "/dead-or-alive-2018/",
+    "/skill-deepdive-strategy/",
+    "/yugioh-and-you-by-sanjay/",
+    "/single-sided-swiss-how-it-works-by-ysengrin/",
+    "/flavor-text-power-rankings/",
+]
+
+
+class FeedCategories(unittest.TestCase):
+    """The WordPress feed left out posts in the decklists category."""
+
+    maxDiff = None
+
+    def test_feed_lists_the_posts_wordpress_listed(self):
+        out = build()
+        for feed in FEEDS:
+            with self.subTest(feed=feed):
+                urls = [url for url, _ in feed_guids(out, feed)]
+                self.assertEqual(urls[:len(WORDPRESS_FEED)], WORDPRESS_FEED)
+
+    def test_feed_leaves_out_decklists(self):
+        # The newest posts in decklists. All three are in other categories too.
+        decklists = [
+            "/why-i-hate-shaper-and-you-should-too/",
+            "/no-deck-is-an-island-tech-in-context-by-eric-keilback/",
+            "/pawnshop-2020-a-primer/",
+        ]
+        out = build()
+        for feed in FEEDS:
+            with self.subTest(feed=feed):
+                urls = [url for url, _ in feed_guids(out, feed)]
+                self.assertEqual([url for url in decklists if url in urls], [])
