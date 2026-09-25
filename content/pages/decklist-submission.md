@@ -1,6 +1,7 @@
 ---
 title: Decklist Submission
 url: /tournament-decklists/decklist-submssion/
+wp_id: 7011
 ---
 
 The WordPress submission form is gone. Tournament results now live in a data
