@@ -275,7 +275,7 @@ def convert_terms(kind, terms, extra=None, used=frozenset()):
             continue
         front = {"title": html.unescape(t["name"]), "slug": t["slug"]}
         if t.get("description"):
-            front["description"] = t["description"].strip()
+            front["description"] = html.unescape(t["description"]).strip()
         front.update((extra or {}).get(t["id"], {}))
         write(CONTENT / kind / t["slug"] / "_index.md", front, "")
 
