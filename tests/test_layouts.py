@@ -20,12 +20,12 @@ from email.utils import parsedate_to_datetime
 from functools import cache
 from html.parser import HTMLParser
 from pathlib import Path
+from typing import NamedTuple
 from urllib.parse import urlsplit
 from urllib.robotparser import RobotFileParser
 from xml.etree import ElementTree
-from zoneinfo import ZoneInfo
 
-from site_build import FIXTURE_CONFIG, ROOT, build, hugo
+from site_build import FIXTURE_CONFIG, ROOT, build, hugo, published_pages
 
 sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "migration"))
@@ -754,7 +754,7 @@ def meta_description(out, url):
 
 def front_matter_summaries(content):
     """Return {post URL: front matter summary} for each post in content that has one."""
-    return {url: front["summary"] for url, front in all_posts(content).items() if front.get("summary")}
+    return {url: post.front["summary"] for url, post in all_posts(content).items() if post.front.get("summary")}
 
 
 def is_start_of(text, summary):
@@ -1100,7 +1100,7 @@ def feed_guids(out, feed):
 
 def wordpress_posts(content):
     """Return {post URL: front matter} for each post in content that came from WordPress."""
-    return {url: front for url, front in all_posts(content).items() if front.get("wp_id")}
+    return {url: post.front for url, post in all_posts(content).items() if post.front.get("wp_id")}
 
 
 @cache
@@ -1114,7 +1114,9 @@ def migrated_content(content):
     atexit.register(shutil.rmtree, copy, ignore_errors=True)
     shutil.copytree(content, copy, dirs_exist_ok=True)
     for path, front in content_files(copy / "posts"):
-        if path.name == "index.md" and not front.get("wp_id"):
+        # Hugo makes a page bundle of the folder of a content file named index
+        # in any content format (common/paths/pathparser.go in the Hugo source).
+        if path.stem == "index" and not front.get("wp_id"):
             shutil.rmtree(path.parent)
         elif path.name != "_index.md" and path.exists() and not front.get("wp_id"):
             path.unlink()
@@ -1291,44 +1293,37 @@ def feed_items(text):
     ]
 
 
-def post_url(path, front):
-    """Return the URL path at which Hugo serves the post in the file path with front matter front.
+class Post(NamedTuple):
+    """A post that Hugo publishes: its front matter, with the keys in lower case, and its date."""
 
-    The permalink of posts in hugo.toml is /:slugorcontentbasename/: the slug,
-    or the name of the file, or of the folder of an index.md. Hugo makes the
-    path lower case. A url in front matter replaces it.
-    """
-    name = path.parent.name if path.name == "index.md" else path.stem
-    return front.get("url") or f"/{(front.get('slug') or name).lower()}/"
-
-
-def is_published(front):
-    """Tell if Hugo publishes the post with front matter front now.
-
-    Hugo leaves out a draft, a post whose publishDate, or else date, is in the
-    future, and a post whose expiryDate has passed: hugo.toml and the build
-    step in .github/workflows/site.yml do not set buildDrafts, buildFuture or
-    buildExpired. Hugo reads the keys of front matter in any case.
-    """
-    keys = {key.lower(): value for key, value in front.items()}
-    now = datetime.now(TIME_ZONE)
-    publish = keys.get("publishdate") or keys["date"]
-    expiry = keys.get("expirydate")
-    return not keys.get("draft") and as_datetime(publish) <= now and (expiry is None or as_datetime(expiry) > now)
+    front: dict
+    date: datetime
 
 
 def all_posts(content):
-    """Return {post URL: front matter} for each post in content that Hugo publishes."""
-    return {
-        post_url(path, front): front
-        for path, front in content_files(content / "posts")
-        if path.name != "_index.md" and is_published(front)
-    }
+    """Return {post URL: Post} for each post in content that Hugo publishes.
+
+    Hugo gives the URL, the date and the posts that it publishes
+    (published_pages), so the tests cannot disagree with the site on them.
+    The front matter comes from the content file, with its keys in lower
+    case: Hugo reads the keys of front matter in any case (PrepareParams in
+    common/hmaps/params.go in the Hugo source). A post whose front matter is
+    not YAML raises ValueError: content_files reads only YAML.
+    """
+    fronts = {path.resolve(): front for path, front in content_files(content / "posts")}
+    posts = {}
+    for page in published_pages(content):
+        if page["kind"] != "page" or page["section"] != "posts":
+            continue
+        if page["path"] not in fronts:
+            raise ValueError(f"no YAML front matter in {page['path']}")
+        front = {key.lower(): value for key, value in fronts[page["path"]].items()}
+        posts[urlsplit(page["permalink"]).path] = Post(front, datetime.fromisoformat(page["date"]))
+    return posts
 
 
 CONFIG = tomllib.loads((ROOT / "hugo.toml").read_text())
 EXCLUDED = set(CONFIG["params"]["feedExcludeCategories"])
-TIME_ZONE = ZoneInfo(CONFIG["timeZone"])
 FEED_LIMIT = CONFIG["services"]["rss"]["limit"]
 CATEGORY_SPELLINGS = ROOT / "tests" / "fixtures" / "category-spellings"
 
@@ -1354,25 +1349,6 @@ def category_slugs(front):
     return slugs
 
 
-def post_date(front):
-    """Return the date of the post with front matter front, with its time zone."""
-    return as_datetime(front["date"])
-
-
-def as_datetime(value):
-    """Return the date value from front matter as a datetime with its time zone.
-
-    A migrated post has a quoted date string. `hugo new` writes the date
-    without quotes, so YAML reads it as a datetime, or as a date when it has no
-    time. Hugo reads a date without an offset in the timeZone of hugo.toml.
-    """
-    if isinstance(value, str):
-        value = datetime.fromisoformat(value)
-    elif not isinstance(value, datetime):
-        value = datetime.combine(value, datetime.min.time())
-    return value if value.tzinfo else value.replace(tzinfo=TIME_ZONE)
-
-
 def category_feed_errors(out, content):
     """Return what is wrong with each category feed in out, built from content.
 
@@ -1389,9 +1365,9 @@ def category_feed_errors(out, content):
                 continue
             items = feed_items(text)
             eligible = {
-                link: post_date(front)
-                for link, front in posts.items()
-                if slug in category_slugs(front) and not EXCLUDED & category_slugs(front)
+                link: post.date
+                for link, post in posts.items()
+                if slug in category_slugs(post.front) and not EXCLUDED & category_slugs(post.front)
             }
             links = [link for link, _ in items]
             dates = [date for _, date in items]

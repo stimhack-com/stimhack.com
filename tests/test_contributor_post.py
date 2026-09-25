@@ -188,16 +188,15 @@ class ContributorPost(unittest.TestCase):
         self.assertEqual(left, [])
 
     def test_category_feed_check_reads_dates_that_are_not_quoted(self):
-        # A slug, so that the post URL does not stop the check before it reads the date.
         # Hugo reads a date without an offset in the timeZone of hugo.toml. The
         # check compares the dates of the posts that are not in a feed with the
         # dates in it, so the posts with these dates are older than the feeds.
         # Hugo gives a post without a date the zero time.
         root = contributor_root(
-            ("contributor-test-post", NEW_DATE, ["slug: contributor-test-post"], False),
-            ("contributor-test-local", "date: 2013-06-01T12:00:00", ["slug: contributor-test-local"], False),
-            ("contributor-test-day", "date: 2013-06-02", ["slug: contributor-test-day"], False),
-            ("contributor-test-no-date", "# No date.", ["slug: contributor-test-no-date"], False),
+            ("contributor-test-post", NEW_DATE, [], False),
+            ("contributor-test-local", "date: 2013-06-01T12:00:00", [], False),
+            ("contributor-test-day", "date: 2013-06-02", [], False),
+            ("contributor-test-no-date", "# No date.", [], False),
         )
         content = root / "content"
         self.assertEqual(test_layouts.category_feed_errors(build(content), content), [])
