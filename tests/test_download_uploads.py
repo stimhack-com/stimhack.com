@@ -66,7 +66,7 @@ class FrontMatterImages(unittest.TestCase):
             for key in ("featured_image", "thumbnail"):
                 if key in front:
                     self.named[f"{front['slug']} {key}"] = front[key]
-        with mock.patch.object(download_uploads, "EXPORT", export):
+        with mock.patch.multiple(download_uploads, ROOT=root, EXPORT=export, STATIC=root / "static"):
             self.paths = download_uploads.upload_paths()
 
     def test_every_featured_image_and_thumbnail_is_downloaded(self):
@@ -74,6 +74,69 @@ class FrontMatterImages(unittest.TestCase):
         for name, path in self.named.items():
             with self.subTest(name):
                 self.assertIn(path, self.paths)
+
+
+# Files of the site that reference uploads the export does not have, such as
+# a post a contributor wrote or a post deleted from WordPress.
+SITE_FILES = {
+    "content/posts/2026/new.md": (
+        "---\nthumbnail: /wp-content/uploads/2026/01/thumb.jpg\n---\n"
+        "![](/wp-content/uploads/2026/01/markdown.png)\n"
+        '<img src="https://stimhack.com/wp-content/uploads/2026/01/absolute.png"'
+        ' srcset="/wp-content/uploads/2026/01/one.png, //www.stimhack.com/wp-content/uploads/2026/01/two.png 2x">\n'
+        '<a href="http://stimhack.com/wp-content/uploads/2026/01/Will-O%E2%80%99-the%20Wisp.png?w=300#top">x</a>\n'
+        # Uploads of other sites are not uploads of this site.
+        '<img src="http://other.example/wp-content/uploads/2026/01/other-host.png">\n'
+        '<img src="/images/archive/other.example/wp-content/uploads/2026/01/archived.png">\n'
+    ),
+    "data/decks.yaml": 'image: "/wp-content/uploads/2026/01/data.png"\n',
+    "hugo.toml": '[params]\n  headerImage = "/wp-content/uploads/2026/01/header.png"\n',
+    "config/staging/hugo.toml": 'favicon = "/wp-content/uploads/2026/01/staging.ico"\n',
+    "assets/css/site.css": "body { background: url(/wp-content/uploads/2026/01/background.jpg); }\n",
+    "layouts/_partials/logo.html": '<img src="https://stimhack.com/wp-content/uploads/2026/01/logo.png">\n',
+}
+REFERENCED = {
+    "2026/01/thumb.jpg", "2026/01/markdown.png", "2026/01/absolute.png", "2026/01/one.png",
+    "2026/01/two.png", "2026/01/Will-O’-the Wisp.png", "2026/01/data.png", "2026/01/header.png",
+    "2026/01/staging.ico", "2026/01/background.jpg", "2026/01/logo.png",
+}
+UNREFERENCED = {"2026/01/other-host.png", "2026/01/archived.png", "2026/01/unused.png"}
+
+
+class UploadsTheSiteReferences(unittest.TestCase):
+    """Run the downloader on a site whose files reference uploads that the export does not have."""
+
+    def setUp(self):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        self.root = root = Path(tmp.name)
+        export = root / ".export"
+        export.mkdir()
+        (export / "media.json").write_text(json.dumps([image(100, 10, "cover")]))
+        (export / "posts.json").write_text("[]")
+        (export / "pages.json").write_text("[]")
+        for name, text in SITE_FILES.items():
+            (root / name).parent.mkdir(parents=True, exist_ok=True)
+            (root / name).write_text(text)
+        self.uploads = root / "static" / "wp-content" / "uploads"
+        for name in REFERENCED | UNREFERENCED | {"2020/01/cover.jpg"}:
+            (self.uploads / name).parent.mkdir(parents=True, exist_ok=True)
+            (self.uploads / name).write_bytes(b"image")
+        patch = mock.patch.multiple(download_uploads, ROOT=root, EXPORT=export, STATIC=root / "static")
+        patch.start()
+        self.addCleanup(patch.stop)
+
+    def test_referenced_uploads_stay_in_static(self):
+        download_uploads.move_unused(download_uploads.upload_paths())
+        unused = self.root / ".export" / "unused-uploads"
+        moved = {f.relative_to(unused).as_posix() for f in unused.rglob("*") if f.is_file()}
+        self.assertEqual(moved, UNREFERENCED)
+
+    def test_referenced_uploads_are_downloaded(self):
+        paths = set(download_uploads.upload_paths())
+        self.assertEqual(
+            {name for name in REFERENCED if f"/wp-content/uploads/{name}" not in paths}, set()
+        )
 
 
 if __name__ == "__main__":
