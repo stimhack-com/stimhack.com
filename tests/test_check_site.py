@@ -269,3 +269,31 @@ class WordPressIds(unittest.TestCase):
                 self.assertLessEqual(missing, problems)
                 [other] = problems - missing
                 self.assertIn(reason, other)
+
+
+class LegacyUrls(unittest.TestCase):
+    """The check looks in the build for each URL in tests/legacy-urls.txt."""
+
+    def test_reports_the_listed_urls_that_the_build_does_not_serve(self):
+        root = Path(tempfile.mkdtemp(prefix="check-site-"))
+        self.addCleanup(shutil.rmtree, root)
+        public = root / "public"
+        # /no-index/ is a directory without an index.html, so it serves nothing.
+        for name in ["index.html", "kept/index.html", "café menu/index.html", "uploads/card.png", "no-index/other.html"]:
+            (public / name).parent.mkdir(parents=True, exist_ok=True)
+            (public / name).write_text('<link rel="canonical" href="https://static.example.com/">')
+        (root / "tests").mkdir()
+        (root / "tests" / "legacy-urls.txt").write_text(
+            "/kept/\n/uploads/card.png\n/caf%C3%A9%20menu/\n\n/gone/\n/no-index/\n/caf%C3%A9-gone/\n/uploads/gone.png\n"
+        )
+        with mock.patch.object(check_site, "ROOT", root):
+            reported = {line for line in problems(public) if line.startswith("legacy URL missing: ")}
+        self.assertEqual(
+            reported,
+            {
+                "legacy URL missing: /gone/",
+                "legacy URL missing: /no-index/",
+                "legacy URL missing: /caf%C3%A9-gone/",
+                "legacy URL missing: /uploads/gone.png",
+            },
+        )
