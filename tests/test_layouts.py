@@ -1588,6 +1588,98 @@ class CategoryParams(unittest.TestCase):
             self.assertEqual(site_feed(out), ["/decklist/", "/report/", "/article/"])
 
 
+def build_with_menu(menu, out, content=CATEGORY_SPELLINGS):
+    """Build content into out with hugo.toml and the main menu in menu, a TOML string.
+
+    Return the finished Hugo process. The menus of the second config file
+    replace the menus of hugo.toml.
+    """
+    extra = Path(out) / "menu.toml"
+    extra.write_text(menu)
+    return subprocess.run(
+        [*hugo(), "--source", str(ROOT), "--destination", str(Path(out) / "public"),
+         "--contentDir", str(content), "--config", f"{ROOT / 'hugo.toml'},{extra}"],
+        capture_output=True,
+        text=True,
+    )
+
+
+def menu_links(out):
+    """Return each item of the main menu on the home page of the site in out as 'name href="..."'."""
+    home = Path(out) / "public" / "index.html"
+    if not home.exists():
+        return None
+    parser = MenuParser()
+    parser.feed(home.read_text())
+
+    def links(items):
+        for item in items:
+            yield f'{item["text"].strip()} href="{item["href"]}"'
+            yield from links(item["children"] or [])
+
+    return list(links(parser.menu))
+
+
+# Menu entries whose pages are in CATEGORY_SPELLINGS, and a link to another site.
+MENU = """
+[[menus.main]]
+  name = "Home"
+  pageRef = "/"
+  weight = 10
+[[menus.main]]
+  name = "Forums"
+  url = "http://forum.stimhack.com/"
+  weight = 20
+[[menus.main]]
+  identifier = "articles"
+  name = "Articles and Guides"
+  pageRef = "/categories/articles"
+  weight = 30
+[[menus.main]]
+  parent = "articles"
+  name = "All Articles"
+  pageRef = "/categories/articles"
+  weight = 1
+"""
+
+
+class MenuEntries(unittest.TestCase):
+    """Each entry of the main menu in hugo.toml links to a page or to a URL.
+
+    A pageRef that names no page, such as a misspelt one or the path of a
+    page that moved, stops the build and the error names the entry.
+    Otherwise Hugo gives the entry an empty URL, and the menu links to the
+    page that shows it.
+    """
+
+    def test_entry_whose_page_ref_names_no_page_fails_the_build_and_names_it(self):
+        entries = {
+            "top level": ("Missing", '  pageRef = "/pages/nosuch"\n  weight = 40\n'),
+            "child": ("Missing Child", '  parent = "articles"\n  pageRef = "/pages/nosuch-child"\n  weight = 2\n'),
+            "no pageRef or url": ("Nowhere", "  weight = 50\n"),
+        }
+        for case, (name, fields) in entries.items():
+            with self.subTest(case=case), tempfile.TemporaryDirectory() as out:
+                result = build_with_menu(MENU + f'[[menus.main]]\n  name = "{name}"\n{fields}', out)
+                links = menu_links(out)
+                self.assertNotEqual(result.returncode, 0, f"The build succeeded. Menu: {links}")
+                self.assertIn(f'"{name}"', result.stdout + result.stderr)
+                page_ref = re.search(r'pageRef = ("[^"]*")', fields)
+                if page_ref:
+                    self.assertIn(page_ref[1], result.stdout + result.stderr)
+
+    def test_entries_with_a_page_or_a_url_build(self):
+        with tempfile.TemporaryDirectory() as out:
+            result = build_with_menu(MENU, out)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(menu_links(out), [
+                'Home href="/"',
+                'Forums href="http://forum.stimhack.com/"',
+                'Articles and Guides href="/category/articles/"',
+                'All Articles href="/category/articles/"',
+            ])
+
+
 # Open a built page once for each query string after argv[2]: run its inline
 # scripts in node with a fetch that reads files from the build and a location
 # that records replace(). Print what each opening did as a JSON list.
