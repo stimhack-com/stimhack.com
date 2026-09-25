@@ -1840,8 +1840,9 @@ BUNDLES = ROOT / "tests" / "fixtures" / "bundles"
 
 def linked_paths(out, url):
     """Return the paths on the site that the page at url links to, resolved against url."""
-    hosts = check_site.SITE_HOSTS | {check_site.built_host(out)}
-    return set(check_site.site_paths(url, (out / url.strip("/") / "index.html").read_text(), hosts))
+    site = check_site.built_url(out)
+    hosts = check_site.SITE_HOSTS | {site.hostname}
+    return set(check_site.site_paths(url, (out / url.strip("/") / "index.html").read_text(), hosts, site.scheme))
 
 
 class BundleFiles(unittest.TestCase):
@@ -1867,12 +1868,13 @@ class BundleFiles(unittest.TestCase):
 
 def missing_targets(out):
     """Return (page URL, path) for each path on the site that a page in the built site out links to and that is not a file."""
-    hosts = check_site.SITE_HOSTS | {check_site.built_host(out)}
+    site = check_site.built_url(out)
+    hosts = check_site.SITE_HOSTS | {site.hostname}
     broken = []
     for page in sorted(out.rglob("*.html")):
         url = "/" + page.relative_to(out).as_posix()
         broken += [
-            (url, path) for path in check_site.site_paths(url, page.read_text(), hosts) if not check_site.exists(out, path)
+            (url, path) for path in check_site.site_paths(url, page.read_text(), hosts, site.scheme) if not check_site.exists(out, path)
         ]
     return broken
 

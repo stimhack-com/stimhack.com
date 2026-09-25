@@ -22,9 +22,11 @@
    URL of the page they are on. An http, https or //host URL is on this site
    when its host is stimhack.com, www.stimhack.com or the host of the
    canonical link in the built index.html, which Hugo writes from the
-   baseURL of the build. Other URLs with a scheme (mailto:, data: and so
-   on), URLs on other hosts, and values that are only a #fragment or a
-   ?query are not checked.
+   baseURL of the build. An http or https URL without "//" after the scheme,
+   such as https:a.png, is relative to the page when its scheme is the
+   scheme of the canonical link, as in a browser. Other URLs with a scheme
+   (mailto:, data: and so on), URLs on other hosts, and values that are only
+   a #fragment or a ?query are not checked.
 4. No page loads an image from an address that no longer serves images. The
    check reads the src, poster, data-src and srcset attributes and the
    content of og:image meta tags.
@@ -196,11 +198,11 @@ def parse(html):
     return links
 
 
-def built_host(public):
-    """Return the host of the canonical link in the built index.html, or None if it has none."""
+def built_url(public):
+    """Return the urlsplit parts of the canonical link in the built index.html, or None if it has none."""
     home = public / "index.html"
     canonical = parse(home.read_text(errors="replace")).canonical if home.is_file() else None
-    return urlsplit(canonical).hostname if canonical else None
+    return urlsplit(canonical) if canonical else None
 
 
 def request_path(page_url, path):
@@ -228,27 +230,38 @@ def request_path(page_url, path):
     return "/" + "/".join(segments)
 
 
-def site_paths(page_url, html, hosts):
+def site_paths(page_url, html, hosts, scheme):
     """Return the decoded paths on this site that a page links to, without query or fragment.
 
-    hosts are the lower case host names whose http, https and //host URLs are on this site.
+    hosts are the lower case host names whose http, https and //host URLs are
+    on this site, and scheme is the lower case scheme of the page's URL.
     """
     for url in parse(html).urls:
-        parts = urlsplit(url)
-        if parts.scheme.lower() not in ("", "http", "https"):
+        url_scheme, url = re.match(r"(?:([A-Za-z][A-Za-z0-9+.-]*):)?(.*)", url, re.S).groups()
+        url_scheme = (url_scheme or "").lower()
+        if url_scheme not in ("", "http", "https"):
             continue
         # In an http or https URL, and so in a relative URL on a page of this
         # site, the URL parser reads a backslash before the query or the
         # fragment as a slash (URL Standard, https://url.spec.whatwg.org/#special-authority-ignore-slashes-state
         # and https://url.spec.whatwg.org/#path-state).
         before, rest = re.match(r"([^?#]*)(.*)", url, re.S).groups()
-        parts = urlsplit(before.replace("\\", "/") + rest)
-        if parts.scheme or parts.netloc:
+        before = before.replace("\\", "/")
+        # The URL parser reads the text after the scheme of the page as a URL
+        # relative to the page, so "https:a.png" on an https page is "a.png".
+        # After another scheme, and after "//", it ignores each slash and
+        # reads a host, so "http:a.png" on an https page is on the host
+        # a.png (URL Standard, https://url.spec.whatwg.org/#scheme-state,
+        # https://url.spec.whatwg.org/#special-relative-or-authority-state,
+        # https://url.spec.whatwg.org/#relative-slash-state and
+        # https://url.spec.whatwg.org/#special-authority-ignore-slashes-state).
+        if url_scheme not in ("", scheme) or before.startswith("//"):
+            parts = urlsplit("//" + before.lstrip("/") + rest)
             if parts.hostname not in hosts:
                 continue
             path = parts.path or "/"
-        elif parts.path:
-            path = parts.path
+        elif before:
+            path = before
         else:
             continue
         yield unquote(request_path(page_url, path))
@@ -261,10 +274,13 @@ def main(args=()):
 
     errors = []
     hosts = set(SITE_HOSTS)
-    if host := built_host(public):
-        hosts.add(host)
+    site = built_url(public)
+    if site and site.hostname:
+        hosts.add(site.hostname)
     else:
         errors.append("no canonical link with a host in /index.html, so links to the built site's host are not checked")
+    # The baseURL in hugo.toml and in config/staging/hugo.toml is https.
+    scheme = site.scheme.lower() if site and site.scheme else "https"
 
     for url in (ROOT / "tests" / "legacy-urls.txt").read_text().split():
         if not exists(public, unquote(urlsplit(url).path)):
@@ -280,7 +296,7 @@ def main(args=()):
         # public/<dir>/index.html is served at /<dir>/. A relative path
         # resolves to the same URL against either, since resolution drops
         # the part of the base after the last slash (RFC 3986, section 5.2.3).
-        for path in site_paths("/" + quote(name), html, hosts):
+        for path in site_paths("/" + quote(name), html, hosts, scheme):
             if path in KNOWN_BROKEN or exists(public, path):
                 continue
             errors.append(f"broken link in /{name}: {path}")
