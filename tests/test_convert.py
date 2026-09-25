@@ -3,6 +3,7 @@
 Run: python3 -m unittest discover tests
 """
 import json
+import re
 import sys
 import tempfile
 import unittest
@@ -13,6 +14,9 @@ import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "migration"))
 import convert  # noqa: E402
+
+# wc-shortcodes tags that appear in the WordPress export.
+RAW_SHORTCODE = re.compile(r"\[/?(?:accordion|pane|one_fourth)\b[^\]]*\]")
 
 
 class RewriteUrls(unittest.TestCase):
@@ -67,6 +71,26 @@ class Shortcodes(unittest.TestCase):
         out = convert.convert_shortcodes("[accordion][pane title=&#8221;Pick&#8217;s Analysis&#8221;]body[/pane][/accordion]")
         self.assertEqual(out, "<details><summary>Pick&#8217;s Analysis</summary>body</details>")
 
+    def test_pane_title_may_close_with_a_left_curly_quote(self):
+        out = convert.convert_shortcodes("[pane title=&#8221;X&#8220;]b[/pane]")
+        self.assertEqual(out, "<details><summary>X</summary>b</details>")
+
+    def test_unclosed_pane_is_removed(self):
+        # Post 1773 opens a pane with no [/pane]; its title repeats the paragraph above it.
+        out = convert.convert_shortcodes(
+            "<p><strong>Austin</strong></p>\n[pane title=&#8221;<strong>Austin</strong>&#8220;]\n<p>Stimhack x 3</p>"
+        )
+        self.assertEqual(out, "<p><strong>Austin</strong></p>\n\n<p>Stimhack x 3</p>")
+
+    def test_generated_content_has_no_raw_shortcodes(self):
+        root = Path(__file__).resolve().parent.parent / "content"
+        found = [
+            f"{path.relative_to(root)}: {m[0]}"
+            for path in sorted(root.rglob("*.html"))
+            for m in RAW_SHORTCODE.finditer(path.read_text())
+        ]
+        self.assertEqual(found, [])
+
 
 class Dates(unittest.TestCase):
     def test_offset_from_local_and_utc(self):
@@ -80,6 +104,10 @@ class Excerpt(unittest.TestCase):
     def test_read_more_link_and_tags_are_removed(self):
         item = {"excerpt": {"rendered": '<p>Set review of &#8220;X&#8221;.</p>\n<p> <a class="continue-reading-link" href="/x/">Read More<i></i></a></p>\n'}}
         self.assertEqual(convert.excerpt(item), "Set review of “X”.")
+
+    def test_shortcodes_are_removed(self):
+        item = {"excerpt": {"rendered": "<p>Austin [pane title=&#8221;Austin&#8220;] 1st Place</p>"}}
+        self.assertEqual(convert.excerpt(item), "Austin 1st Place")
 
 
 class PageComments(unittest.TestCase):
