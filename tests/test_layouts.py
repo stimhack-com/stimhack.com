@@ -3,7 +3,9 @@
 Run: python3 -m unittest discover tests
 """
 import atexit
+import contextlib
 import html
+import io
 import json
 import re
 import shutil
@@ -1613,6 +1615,32 @@ class ExportIdsInMap(unittest.TestCase):
             if urls.get(str(wp_id)) != url and not (wp_id in posts_at_page_urls and str(wp_id) in urls)
         ]
         self.assertEqual(wrong, [])
+
+
+def id_problems(out):
+    """Return the lines about WordPress IDs that scripts/check_site.py prints for the built site in out."""
+    stdout = io.StringIO()
+    with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(io.StringIO()):
+        check_site.main([str(out)])
+    return [line for line in stdout.getvalue().splitlines() if line.startswith("WordPress ID")]
+
+
+class ListedIds(unittest.TestCase):
+    """The check of the built site finds a WordPress ID that /wp-ids.json lost.
+
+    CI does not have the export, so ExportIdsInMap does not run there, and
+    PostIdLinks takes its IDs from the content files.
+    """
+
+    def test_reports_a_page_that_lost_its_wp_id(self):
+        content = Path(tempfile.mkdtemp(prefix="stimhack-lost-id-"))
+        self.addCleanup(shutil.rmtree, content, ignore_errors=True)
+        shutil.copytree(ROOT / "content", content, dirs_exist_ok=True)
+        about = content / "pages" / "about.html"
+        text = about.read_text()
+        self.assertIn("\nwp_id: 2\n", text)
+        about.write_text(text.replace("\nwp_id: 2\n", "\n", 1))
+        self.assertEqual(id_problems(build(content)), ["WordPress ID missing from /wp-ids.json: 2 /about/"])
 
 
 BUNDLES = ROOT / "tests" / "fixtures" / "bundles"
