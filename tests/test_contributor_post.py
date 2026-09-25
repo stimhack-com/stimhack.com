@@ -171,11 +171,12 @@ class ContributorPost(unittest.TestCase):
                 self.assertTrue((out / url.strip("/") / "index.html").is_file())
 
     def test_content_walkers_read_a_post_without_a_date(self):
-        # Hugo publishes a post without a date.
+        # Hugo publishes a post without a date, with the zero time. The build
+        # then stops on it (PostDatesAndCategories), but CI runs the unit
+        # tests first, so the walkers must read it.
         root = contributor_root(("contributor-test-no-date", "# No date.", [], False))
         self.assertEqual(walker_errors(root), [])
         self.assertIn("/contributor-test-no-date/", test_layouts.all_posts(root / "content"))
-        self.assertTrue((build(root / "content") / "contributor-test-no-date" / "index.html").is_file())
 
     def test_migrated_content_leaves_out_the_folders_of_new_posts(self):
         # Hugo makes a page bundle of a folder with an index file in any
@@ -192,12 +193,10 @@ class ContributorPost(unittest.TestCase):
         # Hugo reads a date without an offset in the timeZone of hugo.toml. The
         # check compares the dates of the posts that are not in a feed with the
         # dates in it, so the posts with these dates are older than the feeds.
-        # Hugo gives a post without a date the zero time.
         root = contributor_root(
             ("contributor-test-post", NEW_DATE, [], False),
             ("contributor-test-local", "date: 2013-06-01T12:00:00", [], False),
             ("contributor-test-day", "date: 2013-06-02", [], False),
-            ("contributor-test-no-date", "# No date.", [], False),
         )
         content = root / "content"
         self.assertEqual(test_layouts.category_feed_errors(build(content), content), [])

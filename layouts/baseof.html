@@ -16,6 +16,12 @@
   {{- else }}
     {{- errorf "%s has no authors. Add your author slug to its front matter, for example authors: [sneakysly]." $file }}
   {{- end }}
+  {{- if not (.GetTerms "categories") }}
+    {{- errorf "%s has no categories. Add a category slug from content/categories/ to its front matter, for example categories: [articles]." $file }}
+  {{- end }}
+  {{- if .Date.IsZero }}
+    {{- errorf "%s has no date. Add a date to its front matter, for example date: 2026-09-23T12:00:00-07:00." $file }}
+  {{- end }}
 {{- end }}
 <title>{{ if .IsHome }}{{ site.Title }} | {{ site.Params.description }}{{ else }}{{ .Title }} - {{ site.Title }}{{ if $later }} | Page {{ $pager.PageNumber }}{{ end }}{{ end }}</title>
 {{- $description := site.Params.description }}
