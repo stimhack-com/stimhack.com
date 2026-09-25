@@ -308,6 +308,9 @@ class PostAuthors(unittest.TestCase):
         missing.write_text("".join(line for line in missing.read_text().splitlines(True) if not line.startswith("authors:")))
         with tempfile.TemporaryDirectory() as out:
             # The flags of the build step in .github/workflows/site.yml.
+            # The step also passes --gc, which removes unused cache files after the
+            # build, and --environment, which sets baseURL and params.noindex
+            # (config/staging/hugo.toml). No errorf in layouts/ reads them.
             result = subprocess.run(
                 [*hugo(), "--source", str(ROOT), "--destination", out, "--contentDir", str(content),
                  "--printPathWarnings", "--panicOnWarning"],
@@ -354,6 +357,9 @@ class PostDatesAndCategories(unittest.TestCase):
         missing.write_text("".join(line for line in missing.read_text().splitlines(True) if not line.startswith("categories:")))
         with tempfile.TemporaryDirectory() as out:
             # The flags of the build step in .github/workflows/site.yml.
+            # The step also passes --gc, which removes unused cache files after the
+            # build, and --environment, which sets baseURL and params.noindex
+            # (config/staging/hugo.toml). No errorf in layouts/ reads them.
             result = subprocess.run(
                 [*hugo(), "--source", str(ROOT), "--destination", out, "--contentDir", str(content),
                  "--printPathWarnings", "--panicOnWarning"],

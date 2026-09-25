@@ -964,6 +964,9 @@ class UntitledPages(unittest.TestCase):
     def test_page_without_title_fails_the_build_and_names_its_file(self):
         with tempfile.TemporaryDirectory() as out:
             # The flags of the build step in .github/workflows/site.yml.
+            # The step also passes --gc, which removes unused cache files after the
+            # build, and --environment, which sets baseURL and params.noindex
+            # (config/staging/hugo.toml). No errorf in layouts/ reads them.
             result = subprocess.run(
                 [*hugo(), "--source", str(ROOT), "--destination", out, "--contentDir", str(UNTITLED),
                  "--config", FIXTURE_CONFIG, "--printPathWarnings", "--panicOnWarning"],
@@ -991,6 +994,9 @@ class PostsForLater(unittest.TestCase):
     def test_posts_for_later_pass_the_checks_of_the_build(self):
         with tempfile.TemporaryDirectory() as out:
             # The flags of the build step in .github/workflows/site.yml, and the posts for later.
+            # The step also passes --gc, which removes unused cache files after the
+            # build, and --environment, which sets baseURL and params.noindex
+            # (config/staging/hugo.toml). No errorf in layouts/ reads them.
             result = subprocess.run(
                 [*hugo(), "--source", str(ROOT), "--destination", out,
                  "--printPathWarnings", "--panicOnWarning", "--buildFuture", "--buildExpired"],
