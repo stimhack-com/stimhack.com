@@ -296,7 +296,8 @@ class PostAuthors(unittest.TestCase):
             ("contributor-test-empty", NEW_DATE, ["authors: []"], False),
             ("contributor-test-missing", NEW_DATE, [], False),
             ("contributor-test-unknown", NEW_DATE, ["authors: [contributor-test-nobody]"], False),
-            # Hugo does not publish these, so they need no author yet.
+            # The build step does not build these. A draft needs no author
+            # (DraftPreview), and test_layouts.PostsForLater checks a post for later.
             ("contributor-test-draft", NEW_DATE, ["draft: true", "authors: []"], False),
             ("contributor-test-later", "date: 2099-01-01T12:00:00-07:00", ["authors: []"], False),
         )
@@ -341,7 +342,8 @@ class PostDatesAndCategories(unittest.TestCase):
             ("contributor-test-empty", NEW_DATE, ["categories: []"], False),
             ("contributor-test-missing", NEW_DATE, [], False),
             ("contributor-test-no-date", "# No date.", [], False),
-            # Hugo does not publish these, so they need no category or date yet.
+            # The build step does not build these. A draft needs no category or
+            # date (DraftPreview), and test_layouts.PostsForLater checks a post for later.
             ("contributor-test-draft", "# No date.", ["draft: true", "categories: []"], False),
             ("contributor-test-later", "date: 2099-01-01T12:00:00-07:00", ["categories: []"], False),
         )

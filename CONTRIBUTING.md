@@ -49,9 +49,11 @@ without `-D` does not show drafts.
 | `summary` | No | Text for archive pages and link previews. If you leave it out, Hugo uses the start of the post. |
 | `format` | No | Set to `video` for a post that is mainly an embedded video. Archive pages then show the whole post. |
 
-The build fails when a published post has no title, date, authors or
-categories, or has an author slug that has no `_index.md` file in
-`content/authors/`.
+The checks on a pull request fail when a post that is not a draft has no
+title, date, authors or categories, or has an author slug that has no
+`_index.md` file in `content/authors/`. This includes a post with a date in
+the future. A draft can have no date, authors or categories, so `hugo server -D`
+shows a new post before you fill them in.
 
 ### Add yourself as an author
 

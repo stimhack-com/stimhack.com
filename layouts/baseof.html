@@ -10,7 +10,7 @@
 {{- if not (or .IsHome (strings.TrimSpace .Title)) }}
   {{- errorf "%s has no title. Add a title to its front matter." $file }}
 {{- end }}
-{{- if and .IsPage (eq .Section "posts") }}
+{{- if and .IsPage (eq .Section "posts") (not .Draft) }}
   {{- range .GetTerms "authors" }}
     {{- if not .File }}{{ errorf "%s has the author %q, which has no author page. Add content%s/_index.md as CONTRIBUTING.md says." $file .Data.Term .Path }}{{ end }}
   {{- else }}

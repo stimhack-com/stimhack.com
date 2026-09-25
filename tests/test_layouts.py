@@ -977,6 +977,28 @@ class UntitledPages(unittest.TestCase):
             self.assertIn(str(UNTITLED / "posts" / f"{name}.md"), result.stdout + result.stderr)
 
 
+class PostsForLater(unittest.TestCase):
+    """Every post that is not a draft passes the checks of the build, also a post for later.
+
+    The build step in .github/workflows/site.yml does not build a post whose
+    date or publish date is in the future, or whose expiry date has passed,
+    so the checks in layouts/baseof.html do not reach it on a pull request.
+    The first deploy after the date of the post builds it, and a check that
+    fails then stops that deploy.
+    """
+
+    def test_posts_for_later_pass_the_checks_of_the_build(self):
+        with tempfile.TemporaryDirectory() as out:
+            # The flags of the build step in .github/workflows/site.yml, and the posts for later.
+            result = subprocess.run(
+                [*hugo(), "--source", str(ROOT), "--destination", out,
+                 "--printPathWarnings", "--panicOnWarning", "--buildFuture", "--buildExpired"],
+                capture_output=True,
+                text=True,
+            )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+
 def pager_items(out, url):
     """Return the pager of the archive page at url as (text, href, class) items, or None when it has no pager."""
     page = (out / url.strip("/") / "index.html").read_text()
