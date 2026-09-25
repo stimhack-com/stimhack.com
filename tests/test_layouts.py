@@ -1456,6 +1456,8 @@ class StagingRobots(unittest.TestCase):
     (https://developers.google.com/search/docs/crawling-indexing/block-indexing).
     """
 
+    NOINDEX = '<meta name="robots" content="noindex, nofollow">'
+
     def test_robots_txt_lets_crawlers_fetch_the_pages_with_the_noindex_tag(self):
         out = build(environment="staging")
         robots = RobotFileParser()
@@ -1463,8 +1465,19 @@ class StagingRobots(unittest.TestCase):
         pages = [
             "/" + page.relative_to(out).as_posix().removesuffix("index.html")
             for page in sorted(out.rglob("*.html"))
-            if '<meta name="robots" content="noindex, nofollow">' in page.read_text()
+            if self.NOINDEX in page.read_text()
         ]
         self.assertIn("/", pages)
         blocked = [url for url in pages if not robots.can_fetch("*", url)]
         self.assertEqual(blocked[:5], [])
+
+    def test_every_staging_html_page_has_the_noindex_tag(self):
+        # Crawlers can fetch every page, so a page without the tag can be
+        # indexed. The feeds at feed/index.html are RSS, not HTML.
+        out = build(environment="staging")
+        missing = [
+            page.relative_to(out).as_posix()
+            for page in sorted(out.rglob("*.html"))
+            if page.read_text().startswith("<!DOCTYPE html>") and self.NOINDEX not in page.read_text()
+        ]
+        self.assertEqual(missing[:5], [])
