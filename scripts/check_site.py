@@ -53,7 +53,7 @@ REFRESH_URL = re.compile(r"""\s*[\d.]*(?:\s*[;,]\s*|\s+)(?:url\s*=\s*)?(?:(["'])
 SITE_HOSTS = {"stimhack.com", "www.stimhack.com"}
 # Image addresses that are gone. Use card-images.netrunnerdb.com for card scans.
 DEAD_IMAGES = re.compile(
-    r"^https?://(?:www\.)?(?:cardgamedb\.com/forums/uploads/"
+    r"^(?:https?:)?//(?:www\.)?(?:cardgamedb\.com/forums/uploads/"
     r"|netrunnerdb\.com/(?:web/)?(?:bundles/|card_image/))",
     re.I,
 )
