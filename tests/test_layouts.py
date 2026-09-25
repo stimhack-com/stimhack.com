@@ -1473,6 +1473,73 @@ class CategoryFeeds(unittest.TestCase):
                 self.assertIn('<atom:link href="https://stimhack.com/feed/" rel="self"', served(out, url))
 
 
+def build_with_params(params, out):
+    """Build CATEGORY_SPELLINGS into out with hugo.toml and the site params in params.
+
+    Return the finished Hugo process. The params go in a second config file:
+    Hugo reads an environment variable such as HUGO_PARAMS_FEEDEXCLUDECATEGORIES
+    as a string, not a list.
+    """
+    extra = Path(out) / "params.toml"
+    extra.write_text("[params]\n" + "".join(f"  {key} = {json.dumps(value)}\n" for key, value in params.items()))
+    return subprocess.run(
+        [*hugo(), "--source", str(ROOT), "--destination", str(Path(out) / "public"),
+         "--contentDir", str(CATEGORY_SPELLINGS), "--config", f"{ROOT / 'hugo.toml'},{extra}"],
+        capture_output=True,
+        text=True,
+    )
+
+
+def home_grid(out):
+    """Return the URL of each post in the home page grid of the site in out, or None when there is no home page."""
+    home = Path(out) / "public" / "index.html"
+    if not home.exists():
+        return None
+    return re.findall(r'wc-shortcodes-entry-title"><a href="([^"]*)"', home.read_text())
+
+
+def site_feed(out):
+    """Return the URL path of each item in the site feed of the site in out, or None when there is no feed."""
+    feed = Path(out) / "public" / "index.xml"
+    return [url for url, _ in feed_guids(feed.parent, feed.name)] if feed.exists() else None
+
+
+class CategoryParams(unittest.TestCase):
+    """homeCategory and feedExcludeCategories in hugo.toml name categories.
+
+    A name that is not a category, such as a misspelt or renamed one, stops
+    the build and the error names it. Otherwise the home page would show the
+    posts of every category, and the feeds would leave out nothing.
+    """
+
+    def test_home_category_that_is_not_a_category_fails_the_build_and_names_it(self):
+        with tempfile.TemporaryDirectory() as out:
+            result = build_with_params({"homeCategory": "nosuch"}, out)
+            grid = home_grid(out)
+        self.assertNotEqual(result.returncode, 0, f"The build succeeded. Home page grid: {grid}")
+        self.assertIn('homeCategory "nosuch"', result.stdout + result.stderr)
+
+    def test_feed_exclude_category_that_is_not_a_category_fails_the_build_and_names_it(self):
+        for name in ["nosuch", ""]:
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as out:
+                result = build_with_params({"feedExcludeCategories": [name]}, out)
+                feed = site_feed(out)
+                self.assertNotEqual(result.returncode, 0, f"The build succeeded. Site feed: {feed}")
+                self.assertIn(f'feedExcludeCategories has "{name}"', result.stdout + result.stderr)
+
+    def test_empty_home_category_shows_the_newest_posts_of_every_category(self):
+        with tempfile.TemporaryDirectory() as out:
+            result = build_with_params({"homeCategory": ""}, out)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(home_grid(out), ["/decklist/", "/report/", "/article/"])
+
+    def test_empty_feed_exclude_categories_leaves_out_nothing(self):
+        with tempfile.TemporaryDirectory() as out:
+            result = build_with_params({"feedExcludeCategories": []}, out)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(site_feed(out), ["/decklist/", "/report/", "/article/"])
+
+
 # Open a built page once for each query string after argv[2]: run its inline
 # scripts in node with a fetch that reads files from the build and a location
 # that records replace(). Print what each opening did as a JSON list.
