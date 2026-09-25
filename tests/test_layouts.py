@@ -822,15 +822,13 @@ class FrontMatterSummaries(unittest.TestCase):
 
     def test_templates_get_summaries_from_the_summary_partial(self):
         # .Summary renders the front matter summary as Markdown. Only
-        # summary-text.html reads it, and only it and the meta description
-        # guard in baseof.html read the front matter summary.
-        allowed = {("layouts/baseof.html", "if .Params.summary")}
+        # summary-text.html reads it or the front matter summary.
         found = []
         for path in sorted((ROOT / "layouts").rglob("*")):
             name = str(path.relative_to(ROOT))
             if path.is_file() and name != "layouts/_partials/summary-text.html":
                 for action in re.findall(r"{{-?\s*(.*?)\s*-?}}", path.read_text(), re.S):
-                    if re.search(r"\.(Summary|Params\.summary)\b", action) and (name, action) not in allowed:
+                    if re.search(r"\.(Summary|Params\.summary)\b", action):
                         found.append((name, action))
         self.assertEqual(found, [])
 

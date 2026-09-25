@@ -7,7 +7,9 @@
 {{- $pager := partial "archive-pager.html" . }}
 {{- $later := and $pager (gt $pager.PageNumber 1) }}
 <title>{{ if .IsHome }}{{ site.Title }} | {{ site.Params.description }}{{ else }}{{ .Title }} - {{ site.Title }}{{ if $later }} | Page {{ $pager.PageNumber }}{{ end }}{{ end }}</title>
-<meta name="description" content="{{ if .Params.summary }}{{ partial "summary-text.html" . | truncate 160 }}{{ else }}{{ site.Params.description }}{{ end }}">
+{{- $description := site.Params.description }}
+{{- if not .IsHome }}{{ with partial "summary-text.html" . }}{{ $description = . | truncate 160 }}{{ end }}{{ end }}
+<meta name="description" content="{{ $description }}">
 <link rel="canonical" href="{{ if $later }}{{ $pager.URL | absURL }}{{ else }}{{ .Permalink }}{{ end }}">
 {{- if site.Params.noindex }}
 <meta name="robots" content="noindex, nofollow">
