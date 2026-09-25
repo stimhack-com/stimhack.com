@@ -1334,7 +1334,9 @@ def all_posts(content):
     """Return {post URL: Post} for each post in content that Hugo publishes.
 
     Hugo gives the URL, the date and the posts that it publishes
-    (published_pages), so the tests cannot disagree with the site on them.
+    (published_pages), so the tests agree with the site on them. A post with
+    build option list: never is built but not listed, so it is not in the
+    result.
     The front matter comes from the content file, with its keys in lower
     case: Hugo reads the keys of front matter in any case (PrepareParams in
     common/hmaps/params.go in the Hugo source). A post whose front matter is
