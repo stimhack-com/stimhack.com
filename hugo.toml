@@ -68,10 +68,17 @@ uglyURLs = false
 # site root. The link hook does the same for a path to a page, and puts the
 # page URL in front of a #fragment. Both hooks then try resources.Get, so a
 # path that matches a file in assets/ becomes the URL of that file, and Hugo
-# publishes the file. For other relative URLs and for all absolute URLs,
-# the hooks write the URL that urls.Parse gives (Go url.Parse, see
-# tpl/urls/urls.go) converted back to a string, not the text of the
-# Markdown. Source:
+# publishes the file. In the link hook, a relative URL with an empty path
+# and a query, such as "?x=1", becomes the home page URL with that query:
+# .PageInner.GetPage with an empty path gives the home page
+# (getContentNode in hugolib/pagecollections.go reads "" as "/"). For other
+# relative URLs and for all absolute URLs, the hooks write the URL that
+# urls.Parse gives (Go url.Parse, see tpl/urls/urls.go) converted back to a
+# string, not the text of the Markdown. The hooks are HTML templates, so
+# html/template then escapes the value (for example "&" becomes "&amp;"),
+# and writes "#ZgotmplZ" for a URL whose scheme is not http, https or
+# mailto (urlFilter in tpl/internal/go_templates/htmltemplate/url.go).
+# Source:
 # tpl/tplimpl/embedded/templates/_markup/render-image.html and
 # render-link.html in the Hugo 0.166.0 source. "fallback" uses the embedded
 # hook only when layouts/_markup/ has no hook of that kind.
