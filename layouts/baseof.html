@@ -6,9 +6,16 @@
 <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
 {{- $pager := partial "archive-pager.html" . }}
 {{- $later := and $pager (gt $pager.PageNumber 1) }}
+{{- $file := .Path }}{{ with .File }}{{ $file = .Filename }}{{ end }}
 {{- if not (or .IsHome (strings.TrimSpace .Title)) }}
-  {{- $file := .Path }}{{ with .File }}{{ $file = .Filename }}{{ end }}
   {{- errorf "%s has no title. Add a title to its front matter." $file }}
+{{- end }}
+{{- if and .IsPage (eq .Section "posts") }}
+  {{- range .GetTerms "authors" }}
+    {{- if not .File }}{{ errorf "%s has the author %q, which has no author page. Add content%s/_index.md as CONTRIBUTING.md says." $file .Data.Term .Path }}{{ end }}
+  {{- else }}
+    {{- errorf "%s has no authors. Add your author slug to its front matter, for example authors: [sneakysly]." $file }}
+  {{- end }}
 {{- end }}
 <title>{{ if .IsHome }}{{ site.Title }} | {{ site.Params.description }}{{ else }}{{ .Title }} - {{ site.Title }}{{ if $later }} | Page {{ $pager.PageNumber }}{{ end }}{{ end }}</title>
 {{- $description := site.Params.description }}

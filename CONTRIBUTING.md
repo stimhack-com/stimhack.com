@@ -63,6 +63,8 @@ avatar: https://example.com/your-avatar.png
 ```
 
 Your author page is published at `https://stimhack.com/author/<your-slug>/`.
+The build fails when a published post has no authors, or has an author slug
+that has no `_index.md` file in `content/authors/`.
 
 ## Add a tournament result
 
