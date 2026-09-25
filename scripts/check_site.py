@@ -9,7 +9,12 @@
    Internet Archive. It does not have the home page,
    feeds, archive pages after the first (/page/2/), date archives or
    attachment pages.
-2. Every URL on this site in the built HTML must point to a file. The check
+2. /wp-ids.json maps every WordPress ID in tests/wp-ids.txt to the URL
+   that the list gives for it, so the old links /?p=<ID> and
+   /?page_id=<ID> keep working. Hugo writes the map from the wp_id front
+   matter of the content files (layouts/home.wpids.json), so a file that
+   loses its wp_id takes the ID out of it.
+3. Every URL on this site in the built HTML must point to a file. The check
    reads the href, src, poster, data-src and srcset attributes, the url in a
    meta refresh tag (Hugo's alias pages redirect with one), and the content
    of og:image and og:url meta tags. Relative paths, such as an image
@@ -20,7 +25,7 @@
    baseURL of the build. Other URLs with a scheme (mailto:, data: and so
    on), URLs on other hosts, and values that are only a #fragment or a
    ?query are not checked.
-3. No page loads an image from an address that no longer serves images. The
+4. No page loads an image from an address that no longer serves images. The
    check reads the src, poster, data-src and srcset attributes and the
    content of og:image meta tags.
 
@@ -29,6 +34,7 @@ Usage: hugo && python3 scripts/check_site.py [DIR]
 DIR is the built site to check. The default is public/.
 """
 import argparse
+import json
 import re
 import sys
 from html.parser import HTMLParser
@@ -37,6 +43,8 @@ from urllib.parse import quote, unquote, urljoin, urlsplit
 
 ROOT = Path(__file__).resolve().parent.parent
 PUBLIC = ROOT / "public"
+# WordPress ID and URL of each post and page that migration/convert.py wrote.
+WP_IDS = ROOT / "tests" / "wp-ids.txt"
 # Attributes that hold one URL. srcset holds a list of URLs.
 LINK_ATTRS = {"href", "src", "poster", "data-src"}
 # Attributes in LINK_ATTRS that can hold the URL of an image. srcset holds a
@@ -69,6 +77,29 @@ def exists(public, path):
     """Return whether a decoded path such as /post/a b.png is a file on the site."""
     target = public / path.lstrip("/")
     return target.is_file() or (target / "index.html").is_file()
+
+
+def id_problems(public):
+    """Return a problem for each WordPress ID in WP_IDS that /wp-ids.json in public does not map to its URL."""
+    problems = []
+    try:
+        urls = json.loads((public / "wp-ids.json").read_text())
+    except (OSError, ValueError) as error:
+        urls = {}
+        problems.append(f"WordPress ID map /wp-ids.json cannot be read: {error}")
+    if not isinstance(urls, dict):
+        urls = {}
+        problems.append("WordPress ID map /wp-ids.json is not a JSON object")
+    for line in WP_IDS.read_text().splitlines():
+        if not line.strip():
+            continue
+        wp_id, url = line.split()
+        built = urls.get(str(int(wp_id)))
+        if built is None:
+            problems.append(f"WordPress ID missing from /wp-ids.json: {wp_id} {url}")
+        elif unquote(built) != url:
+            problems.append(f"WordPress ID goes to the wrong URL in /wp-ids.json: {wp_id} {built}, not {url}")
+    return problems
 
 
 def srcset_urls(srcset):
@@ -177,6 +208,7 @@ def main(args=()):
     for url in (ROOT / "tests" / "legacy-urls.txt").read_text().split():
         if not exists(public, unquote(urlsplit(url).path)):
             errors.append(f"legacy URL missing: {url}")
+    errors += id_problems(public)
 
     for page in public.rglob("*.html"):
         html = page.read_text(errors="replace")

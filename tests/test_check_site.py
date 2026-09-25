@@ -193,7 +193,7 @@ class NoCanonicalLink(unittest.TestCase):
         with mock.patch.object(check_site, "PUBLIC", public), contextlib.redirect_stdout(out), \
                 contextlib.redirect_stderr(io.StringIO()):
             check_site.main()
-        problems = [line for line in out.getvalue().splitlines() if not line.startswith("legacy URL missing: ")]
+        problems = [line for line in out.getvalue().splitlines() if not line.startswith(("legacy URL missing: ", "WordPress ID"))]
         self.assertEqual(len(problems), 1, f"problems: {problems}")
         self.assertIn("canonical", problems[0])
 
@@ -220,3 +220,52 @@ class ImageUrlsReadWithTheParser(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class WordPressIds(unittest.TestCase):
+    """The check compares /wp-ids.json in the build with the IDs in tests/wp-ids.txt."""
+
+    def problems(self, wp_ids_json):
+        """Run the check on a site whose /wp-ids.json has the text wp_ids_json, or no /wp-ids.json if it is None."""
+        root = Path(tempfile.mkdtemp(prefix="check-site-"))
+        self.addCleanup(shutil.rmtree, root)
+        public = root / "public"
+        public.mkdir()
+        (public / "index.html").write_text('<link rel="canonical" href="https://static.example.com/">')
+        if wp_ids_json is not None:
+            (public / "wp-ids.json").write_text(wp_ids_json)
+        (root / "wp-ids.txt").write_text("2 /about/\n\n1879 /articles-and-guides/\n7011 /café/\n")
+        with mock.patch.object(check_site, "WP_IDS", root / "wp-ids.txt"):
+            return {line for line in problems(public) if line.startswith("WordPress ID")}
+
+    def test_accepts_a_map_with_every_listed_id_and_more(self):
+        self.assertEqual(
+            self.problems('{"2": "/about/", "1879": "/articles-and-guides/", "7011": "/caf%C3%A9/", "5": "/new/"}'), set()
+        )
+
+    def test_reports_a_listed_id_that_the_map_does_not_have(self):
+        self.assertEqual(
+            self.problems('{"1879": "/articles-and-guides/", "7011": "/café/"}'),
+            {"WordPress ID missing from /wp-ids.json: 2 /about/"},
+        )
+
+    def test_reports_a_listed_id_that_goes_to_another_url(self):
+        self.assertEqual(
+            self.problems('{"2": "/about-us/", "1879": "/articles-and-guides/", "7011": "/café/"}'),
+            {"WordPress ID goes to the wrong URL in /wp-ids.json: 2 /about-us/, not /about/"},
+        )
+
+    def test_reports_every_listed_id_when_the_map_is_missing_or_not_an_object(self):
+        missing = {
+            "WordPress ID missing from /wp-ids.json: 2 /about/",
+            "WordPress ID missing from /wp-ids.json: 1879 /articles-and-guides/",
+            "WordPress ID missing from /wp-ids.json: 7011 /café/",
+        }
+        # Hugo writes null when no content file has a wp_id.
+        for text, reason in [("null", "is not a JSON object"), ("[]", "is not a JSON object"),
+                             ("{", "cannot be read"), (None, "cannot be read")]:
+            with self.subTest(text=text):
+                problems = self.problems(text)
+                self.assertLessEqual(missing, problems)
+                [other] = problems - missing
+                self.assertIn(reason, other)

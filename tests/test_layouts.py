@@ -1642,6 +1642,9 @@ class ListedIds(unittest.TestCase):
         about.write_text(text.replace("\nwp_id: 2\n", "\n", 1))
         self.assertEqual(id_problems(build(content)), ["WordPress ID missing from /wp-ids.json: 2 /about/"])
 
+    def test_the_site_has_every_listed_id(self):
+        self.assertEqual(id_problems(build()), [])
+
 
 BUNDLES = ROOT / "tests" / "fixtures" / "bundles"
 

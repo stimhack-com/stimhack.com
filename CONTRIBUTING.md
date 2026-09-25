@@ -105,7 +105,9 @@ Every pull request runs these checks:
 - `hugo --printPathWarnings --panicOnWarning` fails when two pages have the
   same URL.
 - `python3 scripts/check_site.py` fails when the URL of an old WordPress
-  post, page or archive is missing, when a page links to a path on this site that does not
+  post, page or archive is missing, when an old `/?p=<ID>` or
+  `/?page_id=<ID>` link in `tests/wp-ids.txt` does not go to its post or
+  page, when a page links to a path on this site that does not
   exist, or when a page loads an image from an old cardgamedb.com or
   netrunnerdb.com address that no longer works. The link check reads the
   `href`, `src`, `poster`, `data-src` and `srcset` attributes, the URL in
@@ -118,7 +120,9 @@ Every pull request runs these checks:
   does not check other URLs with a scheme (`mailto:`, `data:`), URLs on
   other hosts, or values that are only a `#fragment` or a `?query`. Old
   links that were already broken on WordPress are listed in
-  `tests/known-broken-links.txt`.
+  `tests/known-broken-links.txt`. The site finds the post or page of an
+  old ID link by the `wp_id` in its front matter, so keep that line when
+  you edit a migrated post or page.
   To check a site that you built to a different directory, give the
   directory: `python3 scripts/check_site.py <dir>`.
 - The build fails when the built site is 950 MB or larger. The GitHub

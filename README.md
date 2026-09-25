@@ -66,7 +66,7 @@ for stimhack.com at GitHub Pages.
 | `assets/css/vendor/` | CSS from the Tempera theme and WordPress plugins (GPL). |
 | `static/wp-content/uploads/` | Files uploaded to WordPress, at their old URLs. |
 | `migration/` | The scripts that exported the WordPress site and converted it. |
-| `scripts/check_site.py` | Checks the built site for missing old URLs and broken links. |
+| `scripts/check_site.py` | Checks the built site for missing old URLs, old ID links and broken links. |
 
 ## Migration from WordPress
 
@@ -78,14 +78,15 @@ WordPress REST API. They need the Python packages in `requirements.txt`
 python3 migration/export.py                 # writes .export/*.json
 python3 migration/check_external_images.py  # finds images other sites no longer serve
 python3 migration/download_uploads.py       # downloads uploads and archived copies to static/
-python3 migration/convert.py                # writes content/, data/ and tests/legacy-urls.txt
+python3 migration/convert.py                # writes content/, data/, tests/legacy-urls.txt and tests/wp-ids.txt
 ```
 
 By default `convert.py` keeps the content files and `data/decklists.yaml`
 that exist, because contributors edit posts, author pages and
 `data/decklists.yaml` after the migration. A run writes the posts, pages,
 categories, tags and authors that do not have a file yet, and adds the URLs
-of the export to `tests/legacy-urls.txt`. It lists each kept file that
+of the export to `tests/legacy-urls.txt` and their WordPress IDs to
+`tests/wp-ids.txt`. It lists each kept file that
 the export has a different version of; to take the export version of one,
 delete the file and run `convert.py` again. It prints the WordPress
 tournament results that `data/decklists.yaml` does not contain; add them to

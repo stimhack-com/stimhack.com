@@ -368,6 +368,36 @@ class Rerun(unittest.TestCase):
         self.assertEqual({p: (self.root / p).read_text() for p in paths}, before)
         self.assertEqual(urls.read_text(), urls_before)
 
+    def test_run_lists_the_id_and_url_of_each_post_and_page_that_the_site_serves(self):
+        page = lambda page_id, slug, link: dict(decklists_page([]), id=page_id, slug=slug, link=f"https://stimhack.com{link}")
+        self.export["pages"] += [
+            page(7011, "decklist-submssion", "/tournament-decklists/decklist-submssion/"),
+            page(3717, "under-maintenance", "/under-maintenance/"),
+            page(4939, "spoilers", "/spoilers/"),
+        ]
+        # WordPress served the page at this URL and the post only by ID.
+        self.export["posts"].append(post(101, "spoilers"))
+        self.run_convert(overwrite=True)
+        self.assertEqual(
+            (self.root / "tests/wp-ids.txt").read_text(),
+            "20 /tournament-decklists/\n100 /first-post/\n101 /spoilers-2/\n4939 /spoilers/\n"
+            "7011 /tournament-decklists/decklist-submssion/\n",
+        )
+
+    def test_default_run_keeps_the_ids_that_the_export_does_not_have(self):
+        ids = self.root / "tests/wp-ids.txt"
+        ids.write_text("5 /removed-from-wordpress/\n100 /old-url/\n")
+        self.export["posts"].append(post(101, "second-post"))
+        self.run_convert()
+        self.assertEqual(ids.read_text(), "5 /removed-from-wordpress/\n20 /tournament-decklists/\n100 /first-post/\n101 /second-post/\n")
+
+    def test_overwrite_run_lists_only_the_ids_of_the_export(self):
+        ids = self.root / "tests/wp-ids.txt"
+        before = ids.read_text()
+        ids.write_text(before + "5 /removed-from-wordpress/\n")
+        self.run_convert(overwrite=True)
+        self.assertEqual(ids.read_text(), before)
+
 
 def front_matter(path):
     return yaml.safe_load(path.read_text().split("---\n")[1])

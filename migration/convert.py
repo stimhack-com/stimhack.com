@@ -3,16 +3,16 @@
 
 Migrated posts and pages keep their WordPress HTML as .html content files,
 so they render as they did. The script writes content/posts/<year>/<slug>.html,
-content/pages/<slug>.html, taxonomy _index.md files, data/decklists.yaml and
-tests/legacy-urls.txt. It points images and cardgamedb links at the copies
-recorded in migration/archived-images.json and migration/archived-links.json,
-which download_uploads.py writes, and old NetrunnerDB card images at
-card-images.netrunnerdb.com.
+content/pages/<slug>.html, taxonomy _index.md files, data/decklists.yaml,
+tests/legacy-urls.txt and tests/wp-ids.txt. It points images and cardgamedb
+links at the copies recorded in migration/archived-images.json and
+migration/archived-links.json, which download_uploads.py writes, and old
+NetrunnerDB card images at card-images.netrunnerdb.com.
 
 Contributors edit these files after the migration. By default a run does
 not change a post, page, _index.md or data/decklists.yaml file that exists,
 and prints a line for each difference from the export that it leaves in
-place. It does change tests/legacy-urls.txt:
+place. It does change tests/legacy-urls.txt and tests/wp-ids.txt:
 
 - A post, page or _index.md file that does not exist yet is written. One
   that exists is kept, and listed if the export has a different version.
@@ -27,6 +27,9 @@ place. It does change tests/legacy-urls.txt:
 - tests/legacy-urls.txt gets the URLs of the export added and is written
   again in sorted order. No URL is removed, because the files of posts
   removed from WordPress are kept.
+- tests/wp-ids.txt gets the ID and URL of each post and page of the
+  export, and is written again in order of ID. The line of an ID that the
+  export does not have is kept, for the same reason.
 
 --overwrite writes every file from the export and discards all edits.
 It removes a content file that has the wp_id of a post or page the export
@@ -281,6 +284,13 @@ def post_images(post, media, attached):
     return {}
 
 
+def post_url(post, page_paths):
+    """Return the URL of a post on the site. page_paths are the URLs of the pages."""
+    link = path_of(post["link"])
+    # WordPress served the page at this URL and the post only by ID.
+    return f"/{post['slug']}-2/" if link in page_paths else link
+
+
 def convert_posts(posts, users, cats, tags, media, attached, comments, page_paths, overwrite):
     files = wp_id_files()
     for p in posts:
@@ -302,8 +312,7 @@ def convert_posts(posts, users, cats, tags, media, attached, comments, page_path
         if old := [old for old, new in MOVED.items() if new == path_of(p["link"])]:
             front["aliases"] = old
         if path_of(p["link"]) in page_paths:
-            # WordPress served the page at this URL and the post only by ID.
-            front["url"] = f"/{p['slug']}-2/"
+            front["url"] = post_url(p, page_paths)
         front["wp_id"] = p["id"]
         # The feed writes this as the item GUID, so feed readers know the post.
         front["wp_guid"] = html.unescape(p["guid"]["rendered"])
@@ -376,10 +385,14 @@ def convert_pages(pages, comments, overwrite):
 
 
 def convert_wayback_posts(users, cats, tags, overwrite):
-    """Write the deleted posts in wayback.POSTS. Returns the category and tag slugs they use."""
+    """Write the deleted posts in wayback.POSTS.
+
+    Returns the category and tag slugs they use, and {wp_id: URL} of the posts.
+    """
     by_name = lambda terms: {html.unescape(t["name"]).lower(): t["slug"] for t in terms}
     users, cats, tags = by_name(users), by_name(cats), by_name(tags)
     used = set()
+    ids = {}
     files = wp_id_files()
     for slug, timestamp in wayback.POSTS.items():
         post = wayback.parse(EXPORT / "wayback" / f"{slug}.html", ROOT / "static")
@@ -398,13 +411,14 @@ def convert_wayback_posts(users, cats, tags, overwrite):
             "archived_from": wayback.capture_url(slug),
         }
         used |= set(front["categories"]) | set(front["tags"])
+        ids[front["wp_id"]] = f"/{slug}/"
         note = (
             f'<p><em>This article was deleted from the WordPress site. It is restored from the '
             f'<a href="{front["archived_from"]}">Internet Archive copy</a> of '
             f'{datetime.strptime(timestamp[:8], "%Y%m%d"):%B %-d, %Y}.</em></p>\n'
         )
         write_item(CONTENT / "posts" / post["date"][:4] / f"{slug}.html", front, note + clean_body(post["content"]), overwrite, files)
-    return used
+    return used, ids
 
 
 def convert_terms(kind, terms, overwrite, extra=None, used=frozenset()):
@@ -440,12 +454,34 @@ def legacy_urls(posts, pages, cats, tags, users, overwrite):
     path.write_text("\n".join(sorted(urls)) + "\n")
 
 
+def wp_ids(posts, pages, page_paths, archived, overwrite):
+    """Write tests/wp-ids.txt, which scripts/check_site.py checks against /wp-ids.json in the build.
+
+    Each line is the WordPress ID and the URL of a post or page that the site
+    serves, and /?p=<ID> and /?page_id=<ID> go to that URL. The list has
+    each post, each page not in SKIP_PAGES (and decklist-submssion, which
+    content/pages/decklist-submission.md replaces), and each post in
+    wayback.POSTS: archived is {wp_id: URL} of those.
+
+    Without overwrite the lines of IDs that the export does not have are
+    kept, for the same reason as in legacy_urls.
+    """
+    ids = {p["id"]: post_url(p, page_paths) for p in posts} | archived
+    ids |= {p["id"]: path_of(p["link"]) for p in pages if p["slug"] not in SKIP_PAGES - {"decklist-submssion"}}
+    path = ROOT / "tests" / "wp-ids.txt"
+    if path.exists() and not overwrite:
+        kept = dict(line.split() for line in path.read_text().splitlines() if line.strip())
+        ids = {int(wp_id): url for wp_id, url in kept.items()} | ids
+    path.write_text("".join(f"{wp_id} {url}\n" for wp_id, url in sorted(ids.items())))
+
+
 def main(overwrite=False):
     posts, pages, media = load("posts"), load("pages"), load("media")
     cats, tags, users = load("categories"), load("tags"), load("users")
     authors_with_posts = {p["author"] for p in posts}
     users = [u for u in users if u["id"] in authors_with_posts]
     comments = comments_by_post(load("comments"))
+    page_paths = {path_of(p["link"]) for p in pages if p["slug"] not in SKIP_PAGES}
     convert_posts(
         posts,
         {u["id"]: u["slug"] for u in users},
@@ -454,15 +490,16 @@ def main(overwrite=False):
         media_paths(media),
         first_attachments(media),
         comments,
-        {path_of(p["link"]) for p in pages if p["slug"] not in SKIP_PAGES},
+        page_paths,
         overwrite,
     )
     convert_pages(pages, comments, overwrite)
-    used = convert_wayback_posts(users, cats, tags, overwrite)
+    used, archived = convert_wayback_posts(users, cats, tags, overwrite)
     convert_terms("categories", cats, overwrite, used=used)
     convert_terms("tags", tags, overwrite, used=used)
     convert_terms("authors", users, overwrite, {u["id"]: {"avatar": u["avatar_urls"].get("96", "")} for u in users})
     legacy_urls(posts, pages, cats, tags, users, overwrite)
+    wp_ids(posts, pages, page_paths, archived, overwrite)
 
 
 if __name__ == "__main__":
