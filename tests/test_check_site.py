@@ -442,11 +442,16 @@ class SrcsetSpaces(unittest.TestCase):
         self.assertEqual(reported, {"broken link in /post/index.html: /post/\xa0a.png"})
 
 
-def post_problems(test, markup, site="https://static.example.com/"):
-    """Return the problems that the check reports for a site at the URL site whose /post/ page has markup and whose /post/a.png exists."""
+def post_problems(test, markup, site="https://static.example.com/", outside=()):
+    """Return the problems that the check reports for a site at the URL site whose /post/ page has markup and whose /post/a.png exists.
+
+    outside are the names of files to write in the directory that holds public/.
+    """
     public = Path(tempfile.mkdtemp(prefix="check-site-")) / "public"
     test.addCleanup(shutil.rmtree, public.parent)
     (public / "post").mkdir(parents=True)
+    for name in outside:
+        (public.parent / name).write_bytes(b"")
     (public / "index.html").write_text(f'<link rel="canonical" href="{site}">')
     (public / "post" / "a.png").write_bytes(b"")
     (public / "post" / "index.html").write_text(markup)
@@ -547,6 +552,39 @@ class UrlPaths(unittest.TestCase):
             with self.subTest(markup=markup):
                 prefix = "broken link in /post/index.html: "
                 broken = {line.removeprefix(prefix) for line in post_problems(self, markup) if line.startswith("broken link in ")}
+                self.assertEqual(broken, paths, f"{markup!r} reported {sorted(broken)}")
+
+
+class FilePaths(unittest.TestCase):
+    """The check finds a file for a path only where a static server finds one.
+
+    A file name with a slash after it names no file (path_resolution(7),
+    "Trailing slashes"), so /post/a.png/ is broken when /post/a.png is a file.
+    A server serves only the files in its root, so a path that goes out of
+    public/, such as /../a.png from a link to /..%2Fa.png, is broken.
+    """
+
+    # Markup on /post/, where a.png exists and outside.png exists next to
+    # public/, and the broken paths that the check must report for it.
+    BROKEN = [
+        ('<img src="a.png/">', {"/post/a.png/"}),
+        (r'<img src="a.png\">', {"/post/a.png/"}),
+        ('<a href="/post/a.png/">', {"/post/a.png/"}),
+        ('<a href="https://stimhack.com/post/a.png/">', {"/post/a.png/"}),
+        ('<a href="a.png/.">', {"/post/a.png/"}),
+        ('<a href="/..%2Foutside.png">', {"/../outside.png"}),
+        ('<img src="..%2F..%2Foutside.png">', {"/post/../../outside.png"}),
+        ('<a href="./">', set()),
+        ('<a href="/post">', set()),
+        ('<img src="a.png">', set()),
+    ]
+
+    def test_reports_the_paths_that_a_server_has_no_file_for(self):
+        for markup, paths in self.BROKEN:
+            with self.subTest(markup=markup):
+                prefix = "broken link in /post/index.html: "
+                problems = post_problems(self, markup, outside=["outside.png"])
+                broken = {line.removeprefix(prefix) for line in problems if line.startswith("broken link in ")}
                 self.assertEqual(broken, paths, f"{markup!r} reported {sorted(broken)}")
 
 
