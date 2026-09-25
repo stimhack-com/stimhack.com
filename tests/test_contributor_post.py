@@ -210,6 +210,8 @@ class ContributorPost(unittest.TestCase):
         # The build step of CI does not build a post for later, but the first
         # deploy after its date does. A post for later that that build would
         # stop must stop the pull request, and the error must name its file.
+        # No deploy builds an expired post again; PostsForLater checks it too,
+        # which is stricter than the deploy.
         stopped = {
             "contributor-test-later-bare": ("date: 2099-01-01T12:00:00-07:00", ["authors: []", "categories: []", "summary: Later."]),
             "contributor-test-expired-bare": (NEW_DATE, ["expiryDate: 2026-01-01", "authors: [contributor-test-nobody]", "summary: Gone."]),

@@ -983,8 +983,9 @@ class PostsForLater(unittest.TestCase):
     The build step in .github/workflows/site.yml does not build a post whose
     date or publish date is in the future, or whose expiry date has passed,
     so the checks in layouts/baseof.html do not reach it on a pull request.
-    The first deploy after the date of the post builds it, and a check that
-    fails then stops that deploy.
+    The first deploy after the date of a post for later builds it, and a
+    check that fails then stops that deploy. No deploy builds an expired
+    post again, so the test is stricter than the deploy for it.
     """
 
     def test_posts_for_later_pass_the_checks_of_the_build(self):
