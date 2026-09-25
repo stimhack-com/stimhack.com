@@ -481,5 +481,85 @@ class UrlSpaces(unittest.TestCase):
                 self.assertEqual(dead, urls, f"{markup!r} reported {sorted(dead)}")
 
 
+class UrlsTrimmedWithUrlText(unittest.TestCase):
+    # str.strip(), str.split() and \s in a pattern remove a no-break space,
+    # which a browser keeps in a URL. Trim a URL with check_site.url_text.
+    ALLOWED = {
+        # Lines of the lists in tests/, not HTML.
+        "line.strip()",
+        "line.split()",
+        "(ROOT / 'tests' / 'legacy-urls.txt').read_text().split()",
+        # Keywords, not URLs. A browser does not strip http-equiv, so the
+        # check can read a refresh that a browser ignores. That adds a
+        # report and does not hide a broken link.
+        "attrs.get('rel', '').lower().split()",
+        "attrs.get('http-equiv', '').strip()",
+        "attrs.get('property', '').strip()",
+        "attrs['property'].strip()",
+    }
+
+    def test_no_new_code_in_scripts_removes_unicode_white_space(self):
+        found = {
+            f"{path.name}: {text}"
+            for path in (check_site.ROOT / "scripts").rglob("*.py")
+            for text in unicode_space_calls(path.read_text())
+            if text not in self.ALLOWED
+        }
+        self.assertEqual(found, set())
+
+    def test_finds_each_spelling(self):
+        for source in [
+            "value.strip()",
+            "value.lstrip()",
+            "value.rstrip()",
+            "value.split()",
+            'import re\nre.compile(r"\\s*url")',
+            'import re\nre.match(f"[^\\s{x}]", value)',
+            'import re as regex\nregex.sub(r"\\s+", " ", value)',
+        ]:
+            with self.subTest(source=source):
+                self.assertNotEqual(unicode_space_calls(source), [])
+
+    def test_ignores_code_that_keeps_unicode_white_space(self):
+        for source in [
+            "value.strip(URL_TRIM)",
+            'value.split(",")',
+            'import re\nre.compile(r"[\\t\\n\\f\\r ]*\\S")',
+            'print(r"\\s")',
+        ]:
+            with self.subTest(source=source):
+                self.assertEqual(unicode_space_calls(source), [])
+
+
+def unicode_space_calls(source):
+    """Return the source text of each call in source that removes or matches Unicode white space.
+
+    A call counts when it is strip(), lstrip(), rstrip() or split() without
+    arguments, or a function of the re module whose pattern argument has a
+    string constant with \\s in it.
+    """
+    tree = ast.parse(source)
+    modules = {
+        alias.asname or alias.name
+        for node in ast.walk(tree) if isinstance(node, ast.Import)
+        for alias in node.names if alias.name == "re"
+    }
+    found = []
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Call) or not isinstance(node.func, ast.Attribute):
+            continue
+        func = node.func
+        if func.attr in ("strip", "lstrip", "rstrip", "split") and not node.args and not node.keywords:
+            found.append(ast.unparse(node))
+        elif isinstance(func.value, ast.Name) and func.value.id in modules and func.attr in RE_FUNCTIONS:
+            patterns = node.args[:1] + [keyword.value for keyword in node.keywords if keyword.arg == "pattern"]
+            if any(
+                isinstance(child, ast.Constant) and isinstance(child.value, str) and "\\s" in child.value
+                for pattern in patterns for child in ast.walk(pattern)
+            ):
+                found.append(ast.unparse(node))
+    return found
+
+
 if __name__ == "__main__":
     unittest.main()
