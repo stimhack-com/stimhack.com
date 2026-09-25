@@ -84,8 +84,9 @@ DOT_SEGMENTS = {".": 1, "%2e": 1, "..": 2, ".%2e": 2, "%2e.": 2, "%2e%2e": 2}
 # canonical link, since a staging build has another baseURL.
 SITE_HOSTS = {"stimhack.com", "www.stimhack.com"}
 # Image addresses that are gone. Use card-images.netrunnerdb.com for card scans.
+# The pattern matches the host and the path of an image URL.
 DEAD_IMAGES = re.compile(
-    r"^(?:https?:)?//(?:www\.)?(?:cardgamedb\.com/forums/uploads/"
+    r"^(?:www\.)?(?:cardgamedb\.com/forums/uploads/"
     r"|netrunnerdb\.com/(?:web/)?(?:bundles/|card_image/))",
     re.I,
 )
@@ -230,6 +231,38 @@ def request_path(page_url, path):
     return "/" + "/".join(segments)
 
 
+def split_url(url, scheme):
+    """Return the host and the path of an http, https or relative URL on a page whose scheme is scheme, without query or fragment.
+
+    The host is lower case, empty when the URL has a host part with no host
+    in it, or None when the URL is relative to the page. The path of a URL
+    that is not relative starts with a slash. Return None for a URL with
+    another scheme.
+    """
+    url_scheme, url = re.match(r"(?:([A-Za-z][A-Za-z0-9+.-]*):)?(.*)", url, re.S).groups()
+    url_scheme = (url_scheme or "").lower()
+    if url_scheme not in ("", "http", "https"):
+        return None
+    # In an http or https URL, and so in a relative URL on a page of this
+    # site, the URL parser reads a backslash before the query or the
+    # fragment as a slash (URL Standard, https://url.spec.whatwg.org/#special-authority-ignore-slashes-state
+    # and https://url.spec.whatwg.org/#path-state).
+    before, rest = re.match(r"([^?#]*)(.*)", url, re.S).groups()
+    before = before.replace("\\", "/")
+    # The URL parser reads the text after the scheme of the page as a URL
+    # relative to the page, so "https:a.png" on an https page is "a.png".
+    # After another scheme, and after "//", it ignores each slash and reads a
+    # host, so "http:a.png" on an https page is on the host a.png (URL
+    # Standard, https://url.spec.whatwg.org/#scheme-state,
+    # https://url.spec.whatwg.org/#special-relative-or-authority-state,
+    # https://url.spec.whatwg.org/#relative-slash-state and
+    # https://url.spec.whatwg.org/#special-authority-ignore-slashes-state).
+    if url_scheme not in ("", scheme) or before.startswith("//"):
+        parts = urlsplit("//" + before.lstrip("/") + rest)
+        return parts.hostname or "", parts.path or "/"
+    return None, before
+
+
 def site_paths(page_url, html, hosts, scheme):
     """Return the decoded paths on this site that a page links to, without query or fragment.
 
@@ -237,34 +270,12 @@ def site_paths(page_url, html, hosts, scheme):
     on this site, and scheme is the lower case scheme of the page's URL.
     """
     for url in parse(html).urls:
-        url_scheme, url = re.match(r"(?:([A-Za-z][A-Za-z0-9+.-]*):)?(.*)", url, re.S).groups()
-        url_scheme = (url_scheme or "").lower()
-        if url_scheme not in ("", "http", "https"):
+        split = split_url(url, scheme)
+        if split is None:
             continue
-        # In an http or https URL, and so in a relative URL on a page of this
-        # site, the URL parser reads a backslash before the query or the
-        # fragment as a slash (URL Standard, https://url.spec.whatwg.org/#special-authority-ignore-slashes-state
-        # and https://url.spec.whatwg.org/#path-state).
-        before, rest = re.match(r"([^?#]*)(.*)", url, re.S).groups()
-        before = before.replace("\\", "/")
-        # The URL parser reads the text after the scheme of the page as a URL
-        # relative to the page, so "https:a.png" on an https page is "a.png".
-        # After another scheme, and after "//", it ignores each slash and
-        # reads a host, so "http:a.png" on an https page is on the host
-        # a.png (URL Standard, https://url.spec.whatwg.org/#scheme-state,
-        # https://url.spec.whatwg.org/#special-relative-or-authority-state,
-        # https://url.spec.whatwg.org/#relative-slash-state and
-        # https://url.spec.whatwg.org/#special-authority-ignore-slashes-state).
-        if url_scheme not in ("", scheme) or before.startswith("//"):
-            parts = urlsplit("//" + before.lstrip("/") + rest)
-            if parts.hostname not in hosts:
-                continue
-            path = parts.path or "/"
-        elif before:
-            path = before
-        else:
-            continue
-        yield unquote(request_path(page_url, path))
+        host, path = split
+        if host is None and path or host in hosts:
+            yield unquote(request_path(page_url, path))
 
 
 def main(args=()):
@@ -291,7 +302,8 @@ def main(args=()):
         html = page.read_text(errors="replace")
         name = page.relative_to(public).as_posix()
         for src in parse(html).images:
-            if DEAD_IMAGES.match(src):
+            host, path = split_url(src, scheme) or (None, "")
+            if host and DEAD_IMAGES.match(host + request_path("/", path)):
                 errors.append(f"image from a dead address in /{name}: {src}")
         # public/<dir>/index.html is served at /<dir>/. A relative path
         # resolves to the same URL against either, since resolution drops

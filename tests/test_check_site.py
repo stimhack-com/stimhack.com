@@ -587,6 +587,9 @@ class UrlSchemes(unittest.TestCase):
         ('<a href="http:gone.png">', set()),
         ('<a href="http:/gone.png">', set()),
         ('<a href="http:">', set()),
+        # Not a valid URL, since the host is empty.
+        ('<a href="http:@/gone.png">', set()),
+        ('<a href="https:@/gone.png">', {"/post/@/gone.png"}),
     ]
     # Markup on /post/ of an http site and the broken paths.
     BROKEN_ON_HTTP = [
@@ -597,6 +600,25 @@ class UrlSchemes(unittest.TestCase):
         ('<img src="https:gone.png">', set()),
         ('<a href="https:">', set()),
     ]
+
+    # Markup on /post/ of an https site and the image URLs that the check must
+    # report as from a dead address.
+    DEAD = [
+        ('<img src="https:///netrunnerdb.com/card_image/a.png">', {"https:///netrunnerdb.com/card_image/a.png"}),
+        ('<img src="http:netrunnerdb.com/card_image/b.png">', {"http:netrunnerdb.com/card_image/b.png"}),
+        (r'<img src="https:\\netrunnerdb.com\card_image\c.png">', {r"https:\\netrunnerdb.com\card_image\c.png"}),
+        ('<img src="https://netrunnerdb.com/x/../card_image/e.png">', {"https://netrunnerdb.com/x/../card_image/e.png"}),
+        ('<img src="//NetrunnerDB.com:443/card_image/f.png">', {"//NetrunnerDB.com:443/card_image/f.png"}),
+        # A path on this site, /post/netrunnerdb.com/card_image/d.png.
+        ('<img src="https:netrunnerdb.com/card_image/d.png">', set()),
+    ]
+
+    def test_reports_an_image_that_a_browser_loads_from_a_dead_address(self):
+        for markup, urls in self.DEAD:
+            with self.subTest(markup=markup):
+                prefix = "image from a dead address in /post/index.html: "
+                dead = {line.removeprefix(prefix) for line in post_problems(self, markup) if line.startswith(prefix)}
+                self.assertEqual(dead, urls, f"{markup!r} reported {sorted(dead)}")
 
     def check(self, site, cases):
         for markup, paths in cases:
@@ -611,6 +633,76 @@ class UrlSchemes(unittest.TestCase):
 
     def test_reports_the_path_that_a_browser_requests_on_an_http_site(self):
         self.check("http://static.example.com/", self.BROKEN_ON_HTTP)
+
+
+class HostsReadWithSplitUrl(unittest.TestCase):
+    # urlsplit and a pattern such as "^https?://host" find no host in
+    # "http:host/a.png" or "https:///host/a.png", which a browser loads from
+    # host. Read the host of a URL in the built HTML with check_site.split_url.
+    ALLOWED = {
+        "split_url: parts.hostname",
+        "split_url: '//'",
+        # The canonical link of the built home page, which Hugo writes as
+        # scheme://host/ from the baseURL.
+        "main: site.hostname",
+    }
+
+    def test_no_new_code_in_scripts_reads_the_host_of_a_url(self):
+        found = {
+            f"{path.name}: {text}"
+            for path in (check_site.ROOT / "scripts").rglob("*.py")
+            for text in host_reads(path.read_text())
+            if text not in self.ALLOWED
+        }
+        self.assertEqual(found, set())
+
+    def test_finds_each_spelling(self):
+        for source in [
+            "urlsplit(url).hostname",
+            "parts.netloc",
+            'import re\nre.compile(r"^(?:https?:)?//(?:www\\.)?example\\.com")',
+            'HOST = f"https://{name}/"',
+        ]:
+            with self.subTest(source=source):
+                self.assertNotEqual(host_reads(source), [])
+
+    def test_ignores_docstrings_and_other_text(self):
+        for source in [
+            '"""See https://url.spec.whatwg.org/."""',
+            'def f():\n    """Read //host URLs."""',
+            'print("a/b")',
+            "parts.path",
+        ]:
+            with self.subTest(source=source):
+                self.assertEqual(host_reads(source), [])
+
+
+def host_reads(source):
+    """Return "<function>: <source text>" for each place in source that can read the host of a URL.
+
+    A place counts when it reads a hostname or netloc attribute, or when it is
+    a string constant with "//" in it that is not a docstring. The function is
+    the top level function that has the place in it, or <module>.
+    """
+    tree = ast.parse(source)
+    function = {
+        id(child): node.name
+        for node in tree.body if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))
+        for child in ast.walk(node)
+    }
+    docstrings = {
+        id(node.body[0].value)
+        for node in ast.walk(tree)
+        if isinstance(node, (ast.Module, ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))
+        and node.body and isinstance(node.body[0], ast.Expr) and isinstance(node.body[0].value, ast.Constant)
+    }
+    found = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Attribute) and node.attr in ("hostname", "netloc") \
+                or isinstance(node, ast.Constant) and isinstance(node.value, str) and "//" in node.value \
+                and id(node) not in docstrings:
+            found.append(f"{function.get(id(node), '<module>')}: {ast.unparse(node)}")
+    return found
 
 
 class UrlsTrimmedWithUrlText(unittest.TestCase):
