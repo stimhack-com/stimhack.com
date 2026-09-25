@@ -992,9 +992,15 @@ def pager_items(out, url):
 
 
 def wordpress_pager(base, pages, current, span=2):
-    """Return the pager items the WordPress theme showed on page current of an archive with pages pages.
+    """Return the pager items on page current of an archive with pages pages, as the WordPress theme did.
 
-    This is the pager function of the old theme: range 2, showitems 2 * range + 1.
+    This is a model of the pager of the old theme, with range 2 and showitems
+    2 * range + 1. The repository has no PHP of the theme to check it
+    against, and neither has .export/theme. The model gives the items of the
+    live WordPress samples in ArchivePager: an archive of 5 pages, and pages
+    1, 3, 4 and 25 of an archive of 26 pages. The samples fit any limit from
+    5 to 25 pages for an archive that shows every page and no arrows, so
+    they do not confirm showitems.
     """
     if pages == 1:
         return None
