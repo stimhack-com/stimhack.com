@@ -9,6 +9,7 @@ Run: python3 -m unittest discover tests
 """
 import ast
 import atexit
+import re
 import shutil
 import subprocess
 import tempfile
@@ -233,6 +234,50 @@ class ContributorPost(unittest.TestCase):
         self.assertGreater(result.testsRun, 50)
         failed = [(test.id(), trace.strip().splitlines()[-1]) for test, trace in result.failures + result.errors]
         self.assertEqual(failed, [])
+
+
+class PostAuthors(unittest.TestCase):
+    """A published post without a known author stops the CI build, and the error names its file.
+
+    CONTRIBUTING.md says that authors is required and that the author slug
+    needs a file content/authors/<slug>/_index.md. Without an author the post
+    has an empty author line and no creator in the feed. With a slug that
+    has no such file, Hugo makes an author page from the slug alone.
+    """
+
+    maxDiff = None
+
+    def test_post_without_a_known_author_fails_the_build_and_names_its_file(self):
+        root = contributor_root(
+            ("contributor-test-empty", NEW_DATE, ["authors: []"], False),
+            ("contributor-test-missing", NEW_DATE, [], False),
+            ("contributor-test-unknown", NEW_DATE, ["authors: [contributor-test-nobody]"], False),
+            # Hugo does not publish these, so they need no author yet.
+            ("contributor-test-draft", NEW_DATE, ["draft: true", "authors: []"], False),
+            ("contributor-test-later", "date: 2099-01-01T12:00:00-07:00", ["authors: []"], False),
+        )
+        content = root / "content"
+        missing = content / "posts" / "2026" / "contributor-test-missing" / "index.md"
+        missing.write_text("".join(line for line in missing.read_text().splitlines(True) if not line.startswith("authors:")))
+        with tempfile.TemporaryDirectory() as out:
+            # The flags of the build step in .github/workflows/site.yml.
+            result = subprocess.run(
+                [*hugo(), "--source", str(ROOT), "--destination", out, "--contentDir", str(content),
+                 "--printPathWarnings", "--panicOnWarning"],
+                capture_output=True,
+                text=True,
+            )
+            authors = {}
+            for page in sorted(Path(out).glob("contributor-test-*/index.html")):
+                line = re.search(r'<span class="author vcard">(.*?)<span class="bl_sep">', page.read_text(), re.S)
+                authors[page.parent.name] = re.sub(r"<[^>]*>", "", line[1]).strip()
+        self.assertNotEqual(result.returncode, 0, f"The build succeeded. Author lines: {authors}")
+        output = result.stdout + result.stderr
+        names = ["empty", "missing", "unknown", "draft", "later"]
+        named = [f"contributor-test-{n}" for n in names if str(content / "posts" / "2026" / f"contributor-test-{n}" / "index.md") in output]
+        self.assertEqual(named, ["contributor-test-empty", "contributor-test-missing", "contributor-test-unknown"])
+        self.assertIn("Add your author slug", output)
+        self.assertIn("content/authors/contributor-test-nobody/_index.md", output)
 
 
 def content_walks():
