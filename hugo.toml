@@ -61,8 +61,12 @@ uglyURLs = false
 # there resolves against the archive URL. Hugo's embedded render hooks
 # replace a file name that is a resource of the page with its URL from the
 # site root. The link hook does the same for a path to a page, and puts the
-# page URL in front of a #fragment. Other URLs stay as written. "fallback"
-# uses the embedded hook only when layouts/_markup/ has no hook of that kind.
+# page URL in front of a #fragment. Both hooks then try resources.Get, so a
+# path that matches a file in assets/ becomes the URL of that file, and Hugo
+# publishes the file. Other relative URLs and all absolute URLs stay as
+# written. Source: embedded/templates/_markup/render-image.html and
+# render-link.html in the Hugo 0.166.0 binary. "fallback" uses the embedded
+# hook only when layouts/_markup/ has no hook of that kind.
 [markup.goldmark.renderHooks.image]
   useEmbedded = "fallback"
 [markup.goldmark.renderHooks.link]
