@@ -75,8 +75,11 @@ def srcset_urls(srcset):
     """Return the URLs in a srcset such as "a.png 300w, b.png 600w".
 
     A URL is a run of characters that are not spaces, so it can contain a
-    comma, as a data: URL does. A comma after the descriptors, or at the end
-    of a URL that has no descriptors, separates the candidates.
+    comma, as the data: URL in tests/test_check_site.py does. A comma after
+    the descriptors, or at the end of a URL that has no descriptors, separates
+    the candidates. A comma inside parentheses in a descriptor also separates
+    them. No srcset in .export/posts.json or .export/pages.json has
+    parentheses. SRCSET_CANDIDATE in migration/convert.py splits the same way.
     """
     urls = []
     rest = srcset

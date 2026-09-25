@@ -74,7 +74,8 @@ def parse(path, uploads_root):
     m = re.search(r"Posted by: (.+?) \| (\w+ \d+, \d{4}) \| Posted in (.+?) \|", meta)
     post_id = re.search(r"postid-(\d+)", " ".join(soup.body["class"]))
     content = soup.select_one(".entry-content")
-    # Read the tags first: their only links are in the footer removed below.
+    # Read the tags first. In both captures in .export/wayback/*.html (line 31)
+    # the only rel~=tag links to /tag/ are in .entry-content div.tags, which is removed below.
     tags = [a.get_text() for a in soup.select("a[rel~=tag]") if "/tag/" in a["href"]]
     # The 2013 theme put the tag list inside the content; the new templates add their own.
     for el in content.select("div.tags, hr.divider-dotted, div.clear"):

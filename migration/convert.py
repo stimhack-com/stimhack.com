@@ -58,12 +58,16 @@ SKIP_PAGES = {"landing", "under-maintenance", "submission-successful", "decklist
 SITE_URL = re.compile(r"^(?:https?:)?//(?:www\.)?stimhack\.com(?=/|$)")
 URL_ATTR = re.compile(r"""\b(href|src|srcset|poster|data-src)=(["'])(.*?)\2""", re.S)
 # One srcset candidate: a URL, which ends at whitespace and loses trailing commas,
-# then either those commas or descriptors up to the next comma.
+# then either those commas or descriptors up to the next comma. A comma inside
+# parentheses in a descriptor also ends the candidate. No srcset in
+# .export/posts.json or .export/pages.json has parentheses.
+# srcset_urls() in scripts/check_site.py splits a srcset the same way.
 SRCSET_CANDIDATE = re.compile(r"([\s,]*)(\S*[^\s,])(,+|[^,]*)")
 IFRAME_HTTP = re.compile(r"""(<iframe\b[^>]*\bsrc=["'])http://""", re.I)
 # wc-shortcodes tags that appear in the export.
 SHORTCODE_TAG = re.compile(r"\[/?(?:accordion|pane|one_fourth)\b[^\]]*\]")
-# Shortcodes of other plugins the WordPress site no longer ran, so it showed them as raw text.
+# Shortcodes of other plugins. content.rendered in .export/posts.json and
+# .export/pages.json has them as text.
 FORM_SHORTCODE = re.compile(r"\[Form\b[^\]]*\]")
 ICON_SHORTCODE = re.compile(r"\[icon name=icon-([a-z-]+)\]")
 EASY_MEDIA_SHORTCODE = re.compile(r"\[easy-media\b[^\]]*\]")
@@ -125,12 +129,13 @@ def shortcode_attr(raw):
 
 
 def convert_shortcodes(body):
-    """Render wc-shortcodes that the live site shows as raw text.
+    """Render the wc-shortcodes tags that content.rendered in .export/posts.json has as text.
 
     [one_fourth] becomes a column, consecutive columns share a row;
     [accordion][pane title="x"] becomes collapsible <details> sections.
-    Tags left without a partner are removed: the one unclosed [pane] in
-    the export repeats the heading above it and would wrap the whole post.
+    Tags left without a partner are removed. The one unclosed [pane] in the
+    export, in post 1773 of .export/posts.json, repeats the heading above
+    it and would wrap the whole post.
     """
     body = re.sub(r"\[one_fourth\](.*?)\[/one_fourth\]", r'<div class="sh-col">\1</div>', body, flags=re.S)
     body = re.sub(
@@ -184,7 +189,9 @@ def excerpt(item):
 def save(path, content, overwrite):
     """Write content to path. Without overwrite, keep a file that exists and say if it differs."""
     if path.exists() and not overwrite:
-        # newline="" reads a carriage return as written, which read_text() would change to "\n".
+        # newline="" returns line endings as written (python3 -c "help(open)").
+        # read_text() opens the file with the default newline=None, which
+        # changes "\r" and "\r\n" to "\n" (Path.read_text in the Python 3.12 pathlib.py).
         with path.open(newline="") as f:
             differs = f.read() != content
         if differs:

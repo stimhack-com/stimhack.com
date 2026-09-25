@@ -435,7 +435,11 @@ class WordPressGuid(unittest.TestCase):
 
 
 class TermDescriptions(unittest.TestCase):
-    """WordPress stores descriptions with HTML entities; the term template escapes on output."""
+    """The export has descriptions with HTML entities.
+
+    User 73 in .export/users.json has "Ian &amp; his wife". The term template
+    escapes on output: see TermDescriptions in tests/test_layouts.py.
+    """
 
     def test_description_entities_are_decoded(self):
         with tempfile.TemporaryDirectory() as tmp, mock.patch.object(convert, "CONTENT", Path(tmp)):
