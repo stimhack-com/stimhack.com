@@ -60,8 +60,9 @@ uglyURLs = false
 # Archive pages show the whole content of a video post, so a relative URL
 # there resolves against the archive URL. Hugo's embedded render hooks
 # replace a file name that is a resource of the page with its URL from the
-# site root, and leave other URLs as written. "fallback" uses them when
-# layouts/_markup/ has no hook of the same kind.
+# site root. The link hook does the same for a path to a page, and puts the
+# page URL in front of a #fragment. Other URLs stay as written. "fallback"
+# uses the embedded hook only when layouts/_markup/ has no hook of that kind.
 [markup.goldmark.renderHooks.image]
   useEmbedded = "fallback"
 [markup.goldmark.renderHooks.link]
