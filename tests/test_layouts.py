@@ -182,6 +182,71 @@ class HomeGridLayout(unittest.TestCase):
                 self.assertEqual(results[1]["boxes"][2], box(0, 60, 430))
 
 
+# Run the site script from argv[1] in node with a fake page whose post content
+# has the iframes in argv[2], a JSON list of attribute objects. Print the
+# style that the script gives each iframe as a JSON list.
+STYLE_IFRAMES = r"""
+const fs = require("fs"), vm = require("vm");
+const [file, json] = process.argv.slice(1);
+const iframes = JSON.parse(json).map((attrs) => ({
+  style: {}, src: attrs.src, getAttribute: (name) => (name in attrs ? attrs[name] : null),
+}));
+const context = vm.createContext({console, document: {documentElement: {},
+  querySelectorAll: (sel) => (sel.includes("iframe") ? iframes : []),
+  getElementById: () => null}});
+context.window = context;
+context.addEventListener = () => {};
+vm.runInContext(fs.readFileSync(file, "utf8"), context);
+console.log(JSON.stringify(iframes.map((iframe) => ({...iframe.style}))));
+"""
+
+
+def iframe_styles(iframes):
+    """Return the style that the built site script gives each iframe in iframes, as STYLE_IFRAMES describes."""
+    out = build()
+    script = re.search(r'<script src="(/js/site[^"]*\.js)"', (out / "index.html").read_text())[1]
+    run = subprocess.run(["node", "-e", STYLE_IFRAMES, str(out / script.lstrip("/")), json.dumps(iframes)],
+                         capture_output=True, text=True, check=True)
+    return dict(zip((f"{i['src']} {i.get('width')}x{i.get('height')}" for i in iframes), json.loads(run.stdout)))
+
+
+@unittest.skipUnless(shutil.which("node"), "needs node")
+class VideoEmbeds(unittest.TestCase):
+    # The WordPress theme ran FitVids on post content. It kept YouTube and
+    # Vimeo players at the shape of their width and height attributes at any
+    # column width, and left other iframes alone. In the browser an inline
+    # aspect-ratio with height auto does the same, under the max-width in
+    # stimhack.css.
+    maxDiff = None
+
+    def test_video_players_keep_the_shape_of_their_size_attributes(self):
+        # Sizes from content/: 900x506 is most YouTube embeds, 900x675 and
+        # 600x400 are older ones.
+        videos = [
+            {"src": "https://www.youtube.com/embed/vIUevBbIzkI?feature=oembed", "width": "900", "height": "506"},
+            {"src": "https://www.youtube.com/embed/jpsrCVbeb1g?feature=oembed", "width": "900", "height": "675"},
+            {"src": "https://www.youtube.com/embed/4Wf3k1ThAaE?autohide=2", "width": "600", "height": "400"},
+            {"src": "https://www.youtube-nocookie.com/embed/vIUevBbIzkI", "width": "560", "height": "315"},
+            {"src": "https://player.vimeo.com/video/1", "width": "640", "height": "360"},
+        ]
+        self.assertEqual(iframe_styles(videos), {
+            f"{v['src']} {v['width']}x{v['height']}": {"aspectRatio": f"{v['width']} / {v['height']}", "height": "auto"}
+            for v in videos})
+
+    def test_other_iframes_keep_their_height(self):
+        # Audio players and the map on /playgroup-finder/ have a fixed height,
+        # and a player without numeric sizes has no shape to keep.
+        others = [
+            {"src": "https://w.soundcloud.com/player/?visual=true", "width": "900", "height": "450"},
+            {"src": "https://waitwaitdrm.podomatic.com/embed/frame/posting/1", "width": "580", "height": "85"},
+            {"src": "https://mapsengine.google.com/map/embed?mid=1", "width": "640", "height": "480"},
+            {"src": "https://www.youtube.com/embed/vIUevBbIzkI"},
+            {"src": "https://www.youtube.com/embed/vIUevBbIzkI", "width": "100%", "height": "506"},
+        ]
+        self.assertEqual(iframe_styles(others), {
+            f"{o['src']} {o.get('width')}x{o.get('height')}": {} for o in others})
+
+
 def root_context_uses_in_blocks(text):
     """Yield each action that uses $. inside a range or with block."""
     stack = []
