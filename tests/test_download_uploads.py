@@ -9,11 +9,10 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
-import yaml
-
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "migration"))
 import convert  # noqa: E402
 import download_uploads  # noqa: E402
+from front_matter import content_files  # noqa: E402
 
 UPLOADS = "https://stimhack.com/wp-content/uploads/2020/01/"
 
@@ -61,8 +60,7 @@ class FrontMatterImages(unittest.TestCase):
                 mock.patch.object(convert.wayback, "POSTS", {}):
             convert.main()
         self.named = {}
-        for f in (root / "content" / "posts").rglob("*.html"):
-            front = yaml.safe_load(f.read_text().split("---\n")[1])
+        for _, front in content_files(root / "content" / "posts"):
             for key in ("featured_image", "thumbnail"):
                 if key in front:
                     self.named[f"{front['slug']} {key}"] = front[key]

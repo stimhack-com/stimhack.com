@@ -45,6 +45,7 @@ from bs4 import BeautifulSoup
 
 import archived_images
 import archived_links
+import front_matter
 import nrdb_images
 import wayback
 
@@ -209,11 +210,9 @@ def write(path, front, body, overwrite):
 def wp_id_files():
     """Map each wp_id in the front matter of a content file to the paths of the files that have it."""
     files = {}
-    for path in CONTENT.rglob("*"):
-        if path.is_file() and path.read_bytes().startswith(b"---\n"):
-            front = yaml.safe_load(path.read_text().split("---\n")[1]) or {}
-            if "wp_id" in front:
-                files.setdefault(front["wp_id"], set()).add(path)
+    for path, front in front_matter.content_files(CONTENT):
+        if "wp_id" in front:
+            files.setdefault(front["wp_id"], set()).add(path)
     return files
 
 

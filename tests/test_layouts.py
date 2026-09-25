@@ -2,6 +2,7 @@
 
 Run: python3 -m unittest discover tests
 """
+import atexit
 import html
 import json
 import re
@@ -13,18 +14,20 @@ import tomllib
 import unittest
 from datetime import datetime
 from email.utils import parsedate_to_datetime
+from functools import cache
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit
 from urllib.robotparser import RobotFileParser
 from xml.etree import ElementTree
-
-import yaml
+from zoneinfo import ZoneInfo
 
 from site_build import ROOT, build, hugo
 
 sys.path.insert(0, str(ROOT / "scripts"))
+sys.path.insert(0, str(ROOT / "migration"))
 import check_site  # noqa: E402
+from front_matter import content_files  # noqa: E402
 
 
 def comment_ids(path):
@@ -740,12 +743,7 @@ def meta_description(out, url):
 
 def front_matter_summaries(content):
     """Return {post URL: front matter summary} for each post in content that has one."""
-    summaries = {}
-    for path in sorted((content / "posts").rglob("*.*")):
-        front = yaml.safe_load(path.read_text().split("---\n")[1])
-        if front.get("summary"):
-            summaries[front.get("url") or f"/{front['slug']}/"] = front["summary"]
-    return summaries
+    return {url: front["summary"] for url, front in all_posts(content).items() if front.get("summary")}
 
 
 def is_start_of(text, summary):
@@ -1021,7 +1019,11 @@ def archive_page_counts(out):
 
 
 class ArchivePager(unittest.TestCase):
-    """The archive pager shows the same items as the pager of the WordPress theme."""
+    """The archive pager shows the same items as the pager of the WordPress theme.
+
+    The tests build the posts that came from WordPress, which gave the
+    archives the numbers of pages that they had on WordPress.
+    """
 
     maxDiff = None
 
@@ -1029,9 +1031,9 @@ class ArchivePager(unittest.TestCase):
         # Live WordPress, /category/tournament-report/ page 1:
         # <span class='current'>1</span> and links to pages 2 to 5, no arrows.
         base = "/category/tournament-report/"
-        self.assertEqual(archive_page_counts(build())[base], 5)
+        self.assertEqual(archive_page_counts(migrated_site())[base], 5)
         self.assertEqual(
-            pager_items(build(), base),
+            pager_items(migrated_site(), base),
             [("1", None, "current")] + [(str(n), f"{base}page/{n}/", "inactive") for n in range(2, 6)],
         )
 
@@ -1039,7 +1041,7 @@ class ArchivePager(unittest.TestCase):
         # Live WordPress, /category/articles/ (26 pages).
         base = "/category/articles/"
         p = lambda n: base if n == 1 else f"{base}page/{n}/"
-        self.assertEqual(archive_page_counts(build())[base], 26)
+        self.assertEqual(archive_page_counts(migrated_site())[base], 26)
         expected = {
             1: [("1", None, "current"), ("2", p(2), "inactive"), ("3", p(3), "inactive"),
                 ("›", p(2), None), ("»", p(26), None)],
@@ -1055,10 +1057,10 @@ class ArchivePager(unittest.TestCase):
         }
         for number, items in expected.items():
             with self.subTest(page=number):
-                self.assertEqual(pager_items(build(), p(number)), items)
+                self.assertEqual(pager_items(migrated_site(), p(number)), items)
 
     def test_every_archive_page_matches_wordpress(self):
-        out = build()
+        out = migrated_site()
         counts = archive_page_counts(out)
         # The build must have archives on both sides of the five page limit.
         self.assertTrue({1, 2, 5, 6, 26} <= set(counts.values()))
@@ -1087,16 +1089,39 @@ def feed_guids(out, feed):
 
 def wordpress_posts(content):
     """Return {post URL: front matter} for each post in content that came from WordPress."""
-    posts = {}
-    for path in sorted((content / "posts").rglob("*.*")):
-        front = yaml.safe_load(path.read_text().split("---\n")[1])
-        if front.get("wp_id"):
-            posts[front.get("url") or f"/{front['slug']}/"] = front
-    return posts
+    return {url: front for url, front in all_posts(content).items() if front.get("wp_id")}
+
+
+@cache
+def migrated_content(content):
+    """Return a copy of content without the posts that did not come from WordPress.
+
+    The checks against the live WordPress feeds and archives build the site
+    from this copy, so the posts that contributors add do not change them.
+    """
+    copy = Path(tempfile.mkdtemp(prefix="stimhack-migrated-"))
+    atexit.register(shutil.rmtree, copy, ignore_errors=True)
+    shutil.copytree(content, copy, dirs_exist_ok=True)
+    for path, front in content_files(copy / "posts"):
+        if path.name == "index.md" and not front.get("wp_id"):
+            shutil.rmtree(path.parent)
+        elif path.name != "_index.md" and path.exists() and not front.get("wp_id"):
+            path.unlink()
+    return copy
+
+
+def migrated_site(environment=None):
+    """Return the site built from the posts in content/ that came from WordPress."""
+    return build(migrated_content(ROOT / "content"), environment)
 
 
 class FeedGuids(unittest.TestCase):
-    """Feed readers know items by GUID, so migrated posts keep the GUID WordPress gave them."""
+    """Feed readers know items by GUID, so migrated posts keep the GUID WordPress gave them.
+
+    The tests build only the posts that came from WordPress, so each site
+    feed has 20 of them. Each post that a contributor adds takes the place of
+    one of them in the feeds of the real site.
+    """
 
     maxDiff = None
 
@@ -1110,10 +1135,10 @@ class FeedGuids(unittest.TestCase):
                 self.assertEqual(items, expected)
 
     def test_migrated_posts_keep_wordpress_guid(self):
-        self.assert_wordpress_guids(build())
+        self.assert_wordpress_guids(migrated_site())
 
     def test_staging_feed_has_production_guids(self):
-        self.assert_wordpress_guids(build(environment="staging"))
+        self.assert_wordpress_guids(migrated_site(environment="staging"))
 
     def test_older_post_keeps_its_http_guid(self):
         # WordPress wrote http: GUIDs for its older posts. The main feed shows
@@ -1144,6 +1169,7 @@ class FeedGuids(unittest.TestCase):
 
 
 # The first three pages of https://stimhack.com/feed/ (5 items each) before cutover.
+# The site built from the posts that came from WordPress (migrated_site) starts with them.
 WORDPRESS_FEED = [
     "/queen-bee-2023/",
     "/a-look-back-at-the-borealis-cycle/",
@@ -1169,7 +1195,7 @@ class FeedCategories(unittest.TestCase):
     maxDiff = None
 
     def test_feed_lists_the_posts_wordpress_listed(self):
-        out = build()
+        out = migrated_site()
         for feed in FEEDS:
             with self.subTest(feed=feed):
                 urls = [url for url, _ in feed_guids(out, feed)]
@@ -1243,18 +1269,29 @@ def feed_items(text):
     ]
 
 
+def post_url(path, front):
+    """Return the URL path at which Hugo serves the post in the file path with front matter front.
+
+    The permalink of posts in hugo.toml is /:slugorcontentbasename/: the slug,
+    or the name of the file, or of the folder of an index.md. Hugo makes the
+    path lower case. A url in front matter replaces it.
+    """
+    name = path.parent.name if path.name == "index.md" else path.stem
+    return front.get("url") or f"/{(front.get('slug') or name).lower()}/"
+
+
 def all_posts(content):
     """Return {post URL: front matter} for each post in content."""
-    posts = {}
-    for path in sorted((content / "posts").rglob("*.*")):
-        if path.name != "_index.md":
-            front = yaml.safe_load(path.read_text().split("---\n")[1])
-            posts[front.get("url") or f"/{front['slug']}/"] = front
-    return posts
+    return {
+        post_url(path, front): front
+        for path, front in content_files(content / "posts")
+        if path.name != "_index.md"
+    }
 
 
 CONFIG = tomllib.loads((ROOT / "hugo.toml").read_text())
 EXCLUDED = set(CONFIG["params"]["feedExcludeCategories"])
+TIME_ZONE = ZoneInfo(CONFIG["timeZone"])
 FEED_LIMIT = CONFIG["services"]["rss"]["limit"]
 CATEGORY_SPELLINGS = ROOT / "tests" / "fixtures" / "category-spellings"
 
@@ -1280,6 +1317,21 @@ def category_slugs(front):
     return slugs
 
 
+def post_date(front):
+    """Return the date of the post with front matter front, with its time zone.
+
+    A migrated post has a quoted date string. `hugo new` writes the date
+    without quotes, so YAML reads it as a datetime, or as a date when it has no
+    time. Hugo reads a date without an offset in the timeZone of hugo.toml.
+    """
+    value = front["date"]
+    if isinstance(value, str):
+        value = datetime.fromisoformat(value)
+    elif not isinstance(value, datetime):
+        value = datetime.combine(value, datetime.min.time())
+    return value if value.tzinfo else value.replace(tzinfo=TIME_ZONE)
+
+
 def category_feed_errors(out, content):
     """Return what is wrong with each category feed in out, built from content.
 
@@ -1296,7 +1348,7 @@ def category_feed_errors(out, content):
                 continue
             items = feed_items(text)
             eligible = {
-                link: datetime.fromisoformat(front["date"])
+                link: post_date(front)
                 for link, front in posts.items()
                 if slug in category_slugs(front) and not EXCLUDED & category_slugs(front)
             }
@@ -1330,7 +1382,7 @@ class CategoryFeeds(unittest.TestCase):
         ]
         for url in ["/category/articles/feed/", "/category/articles/index.xml"]:
             with self.subTest(url=url):
-                text = served(build(), url)
+                text = served(migrated_site(), url)
                 self.assertIsNotNone(text, f"{url} is not served")
                 urls = [link for link, _ in feed_items(text)]
                 self.assertEqual(urls[:len(wordpress)], wordpress)
@@ -1367,7 +1419,7 @@ class CategoryFeeds(unittest.TestCase):
                 self.assertEqual(category_feed_errors(build(content), content), [])
 
     def test_category_feed_items_keep_wordpress_guid(self):
-        out = build()
+        out = migrated_site()
         posts = wordpress_posts(ROOT / "content")
         for feed in ["category/articles/feed/index.html", "category/articles/index.xml"]:
             with self.subTest(feed=feed):
@@ -1449,13 +1501,8 @@ def open_page(out, page, *searches):
 
 def wordpress_ids(content):
     """Return {WordPress ID: URL} for each post and page in content that came from WordPress."""
-    ids = {}
-    for path in sorted((content / "posts").rglob("*.*")):
-        front = yaml.safe_load(path.read_text().split("---\n")[1])
-        if front.get("wp_id"):
-            ids[front["wp_id"]] = front.get("url") or f"/{front['slug']}/"
-    for path in sorted((content / "pages").glob("*.*")):
-        front = yaml.safe_load(path.read_text().split("---\n")[1])
+    ids = {front["wp_id"]: url for url, front in wordpress_posts(content).items()}
+    for path, front in content_files(content / "pages"):
         if front.get("wp_id"):
             ids[front["wp_id"]] = front["url"]
     return ids

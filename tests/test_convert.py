@@ -15,6 +15,7 @@ import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "migration"))
 import convert  # noqa: E402
+from front_matter import content_files  # noqa: E402
 
 # Shortcodes in the WordPress export whose plugins the static site does not run:
 # wc-shortcodes, a contact form plugin, Font Awesome icons and Easy Media Gallery.
@@ -136,7 +137,7 @@ class Shortcodes(unittest.TestCase):
         root = Path(__file__).resolve().parent.parent
         found = [
             f"{path.relative_to(root)}: {m[0]}"
-            for path in sorted([*(root / "content").rglob("*"), *(root / "data").rglob("*")])
+            for path in [*(path for path, _ in content_files(root / "content")), *sorted((root / "data").rglob("*"))]
             if path.is_file()
             for pattern in (RAW_SHORTCODE, ATTRIBUTE_SHORTCODE)
             for m in pattern.finditer(path.read_text())
@@ -378,10 +379,9 @@ def shared_wp_ids(root):
     Hugo would serve each of them, and /wp-ids.json can map the ID to only one.
     """
     files = {}
-    for path in sorted((root / "content").rglob("*")):
-        if path.is_file() and path.read_text().startswith("---\n"):
-            if (wp_id := (front_matter(path) or {}).get("wp_id")) is not None:
-                files.setdefault(wp_id, []).append(str(path.relative_to(root)))
+    for path, front in content_files(root / "content"):
+        if (wp_id := front.get("wp_id")) is not None:
+            files.setdefault(wp_id, []).append(str(path.relative_to(root)))
     return {wp_id: paths for wp_id, paths in files.items() if len(paths) > 1}
 
 

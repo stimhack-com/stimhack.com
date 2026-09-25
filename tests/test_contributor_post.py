@@ -7,6 +7,7 @@ deploys the site, so a check that fails on such a post stops every deploy.
 
 Run: python3 -m unittest discover tests
 """
+import ast
 import atexit
 import shutil
 import subprocess
@@ -92,6 +93,21 @@ def walker_errors(root):
     return errors
 
 
+def each_test(suite):
+    """Yield each test case in suite and the suites in it."""
+    for test in suite:
+        if isinstance(test, unittest.TestSuite):
+            yield from each_test(test)
+        else:
+            yield test
+
+
+# Tests that test_site_checks_pass_with_a_new_post does not run again. This one
+# opens the home page once for each of about 1900 IDs and takes most of the time
+# of test_layouts. It reads content/ with wordpress_ids(), which
+# test_content_walkers_* check.
+SLOW = {"test_layouts.PostIdLinks.test_every_post_and_page_id_goes_to_its_url"}
+
 # A date as `hugo new` writes it: not quoted, so YAML reads a datetime.
 NEW_DATE = "date: 2026-09-20T12:00:00-07:00"
 
@@ -138,12 +154,43 @@ class ContributorPost(unittest.TestCase):
             *((f"probe-post-{n}", f"date: 2026-09-1{n}T12:00:00-07:00", [], False) for n in range(1, 5)),
         )
         default = lambda content=None, environment=None: site_build.build(content or root / "content", environment)
+        tests = unittest.TestSuite(
+            test for test in each_test(unittest.TestLoader().loadTestsFromModule(test_layouts)) if test.id() not in SLOW
+        )
         result = unittest.TestResult()
         with mock.patch.object(test_layouts, "ROOT", root), mock.patch.object(test_layouts, "build", default):
-            unittest.TestLoader().loadTestsFromModule(test_layouts).run(result)
+            tests.run(result)
         self.assertGreater(result.testsRun, 50)
         failed = [(test.id(), trace.strip().splitlines()[-1]) for test, trace in result.failures + result.errors]
         self.assertEqual(failed, [])
+
+
+def content_walks():
+    """Return file:line for each glob() or rglob() on a path under content/ outside front_matter.py.
+
+    Such a walk also finds the images in a post folder. content_files() in
+    migration/front_matter.py returns only the content files.
+    """
+    found = []
+    for folder in ["migration", "scripts", "tests"]:
+        for path in sorted((ROOT / folder).glob("*.py")):
+            if path == ROOT / "migration" / "front_matter.py":
+                continue
+            text = path.read_text()
+            for node in ast.walk(ast.parse(text, str(path))):
+                if (
+                    isinstance(node, ast.Call)
+                    and isinstance(node.func, ast.Attribute)
+                    and node.func.attr in ("glob", "rglob")
+                    and "content" in ast.get_source_segment(text, node.func.value).lower()
+                ):
+                    found.append(f"{path.relative_to(ROOT)}:{node.lineno}")
+    return found
+
+
+class ContentWalks(unittest.TestCase):
+    def test_code_walks_content_only_with_content_files(self):
+        self.assertEqual(content_walks(), [])
 
 
 if __name__ == "__main__":
