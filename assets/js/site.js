@@ -57,6 +57,22 @@ function initMasonry() {
   run();
 }
 
+// Video players keep the shape of their width and height attributes when the
+// column is narrower than they are, like FitVids did for the same players on
+// WordPress. Audio players and maps keep their fixed height.
+const VIDEO_PLAYER = /^(https?:)?\/\/([^/]*\.)?(youtube\.com|youtube-nocookie\.com|player\.vimeo\.com)\//;
+
+function initVideoEmbeds() {
+  document.querySelectorAll(".entry-content iframe").forEach((iframe) => {
+    const width = iframe.getAttribute("width");
+    const height = iframe.getAttribute("height");
+    if (!VIDEO_PLAYER.test(iframe.getAttribute("src") || "")) return;
+    if (!/^[1-9]\d*$/.test(width) || !/^[1-9]\d*$/.test(height)) return;
+    iframe.style.aspectRatio = `${width} / ${height}`;
+    iframe.style.height = "auto";
+  });
+}
+
 // Back to top button, shown after scrolling 500px.
 function initBackToTop() {
   const button = document.getElementById("toTop");
@@ -117,6 +133,7 @@ function initDecklists() {
   });
 }
 
+initVideoEmbeds();
 initMasonry();
 initBackToTop();
 initMobileNav();
