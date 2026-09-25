@@ -7,6 +7,7 @@ import json
 import re
 import shutil
 import subprocess
+import sys
 import tomllib
 import unittest
 from datetime import datetime
@@ -17,6 +18,9 @@ from xml.etree import ElementTree
 import yaml
 
 from site_build import ROOT, build
+
+sys.path.insert(0, str(ROOT / "scripts"))
+import check_site  # noqa: E402
 
 
 def comment_ids(path):
@@ -707,3 +711,37 @@ class PostIdLinks(unittest.TestCase):
             if (result["replaced"], result["errors"]) != (url, [])
         ]
         self.assertEqual(wrong[:5], [])
+
+
+BUNDLES = ROOT / "tests" / "fixtures" / "bundles"
+
+
+def linked_paths(out, url):
+    """Return the paths on the site that the page at url links to, resolved against url."""
+    return set(check_site.site_paths(url, (out / url.strip("/") / "index.html").read_text()))
+
+
+class BundleFiles(unittest.TestCase):
+    """A new post keeps its images and files in its folder and refers to them by file name.
+
+    A video post shows its whole content on archive pages, so there the
+    references must still point to the files in the post folder.
+    """
+
+    maxDiff = None
+
+    def test_archive_pages_link_to_the_files_in_the_post_folder(self):
+        out = build(BUNDLES)
+        files = {"/bundle-video/hedge-fund.png", "/bundle-video/rules.pdf"}
+        for url in ["/bundle-video/", "/category/videos-and-podcasts/", "/tag/bundles/", "/author/ian/"]:
+            with self.subTest(url=url):
+                paths = linked_paths(out, url)
+                self.assertEqual(files - paths, set(), sorted(p for p in paths if p.endswith((".png", ".pdf"))))
+
+    def test_no_page_has_a_broken_link(self):
+        out = build(BUNDLES)
+        broken = []
+        for page in sorted(out.rglob("*.html")):
+            url = "/" + page.relative_to(out).as_posix()
+            broken += [(url, path) for path in check_site.site_paths(url, page.read_text()) if not check_site.exists(out, path)]
+        self.assertEqual(broken, [])
