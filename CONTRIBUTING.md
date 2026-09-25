@@ -117,4 +117,12 @@ Every pull request runs these checks:
 - The build fails when the built site is 950 MB or larger. The GitHub
   Pages limit is 1 GB.
 
+To run the checks locally, install Hugo and Python 3.11 or later. Then
+install the Python packages that the checks use, for example in a virtual
+environment:
+
+```sh
+python3 -m pip install -r requirements.txt
+```
+
 Do not build with `--minify`. The HTML minifier breaks the XML feed at `/feed/`.

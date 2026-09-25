@@ -35,6 +35,14 @@ jobs:
           curl -sSL -o hugo.deb "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb"
           sudo dpkg -i hugo.deb
 
+      # Python 3.11 or later: tests/test_layouts.py imports tomllib.
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install Python packages
+        run: python3 -m pip install -r requirements.txt
+
       - name: Unit tests
         run: python3 -m unittest discover tests
 

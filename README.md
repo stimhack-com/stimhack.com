@@ -71,7 +71,8 @@ for stimhack.com at GitHub Pages.
 ## Migration from WordPress
 
 The site ran on WordPress until 2026. The migration scripts read the public
-WordPress REST API:
+WordPress REST API. They need the Python packages in `requirements.txt`
+(`python3 -m pip install -r requirements.txt`).
 
 ```sh
 python3 migration/export.py                 # writes .export/*.json

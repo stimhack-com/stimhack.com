@@ -1,0 +1,5 @@
+# Python packages for tests/, scripts/ and migration/.
+# Install with: python3 -m pip install -r requirements.txt
+beautifulsoup4==4.12.3
+PyYAML==6.0.1
+requests==2.31.0
