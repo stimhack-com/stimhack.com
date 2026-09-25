@@ -316,7 +316,7 @@ class Rerun(unittest.TestCase):
         self.assertLessEqual({"/added-by-hand/", "/first-post/", "/second-post/"}, set(urls.read_text().split()))
 
     def test_default_run_does_not_write_a_second_file_for_a_renamed_post(self):
-        # WordPress keeps the ID of a post when an editor changes its slug.
+        # An editor changed the slug of post 100 in WordPress.
         edited = self.edit("content/posts/2016/first-post.html")
         self.export["posts"] = [post(100, "renamed-post")]
         self.run_convert()
