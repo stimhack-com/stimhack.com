@@ -118,10 +118,10 @@ def each_test(suite):
             yield test
 
 
-# Tests that test_site_checks_pass_with_a_new_post does not run again. This one
-# opens the home page once for each of about 1900 IDs and takes most of the time
-# of test_layouts. It reads content/ with wordpress_ids(), which
-# test_content_walkers_* check.
+# Tests that test_site_checks_pass_with_new_posts_and_stop_posts_for_later does
+# not run again. This one opens the home page once for each of about 1900 IDs
+# and takes most of the time of test_layouts. It reads content/ with
+# wordpress_ids(), which test_content_walkers_* check.
 SLOW = {"test_layouts.PostIdLinks.test_every_post_and_page_id_goes_to_its_url"}
 
 # A date as `hugo new` writes it: not quoted, so YAML reads a datetime.
@@ -201,13 +201,22 @@ class ContributorPost(unittest.TestCase):
         content = root / "content"
         self.assertEqual(test_layouts.category_feed_errors(build(content), content), [])
 
-    def test_site_checks_pass_with_a_new_post(self):
+    def test_site_checks_pass_with_new_posts_and_stop_posts_for_later(self):
         # Run every test of test_layouts with this content/ in place of the real one.
         # A new loader: the default one keeps the -k patterns of the command line.
         # The new posts in articles give its archive at least one page more than WordPress had.
         # CONTRIBUTING.md says that Hugo does not publish a draft or a post with
         # a date in the future, so a pull request can add one.
+        # The build step of CI does not build a post for later, but the first
+        # deploy after its date does. A post for later that that build would
+        # stop must stop the pull request, and the error must name its file.
+        stopped = {
+            "contributor-test-later-bare": ("date: 2099-01-01T12:00:00-07:00", ["authors: []", "categories: []", "summary: Later."]),
+            "contributor-test-expired-bare": (NEW_DATE, ["expiryDate: 2026-01-01", "authors: [contributor-test-nobody]", "summary: Gone."]),
+            "contributor-test-publish-bare": (NEW_DATE, ["publishdate: 2099-01-01", "categories: []", "summary: Not yet."]),
+        }
         root = contributor_root(
+            *((name, date, extra, False) for name, (date, extra) in stopped.items()),
             ("contributor-test-post", NEW_DATE, [], True),
             *((f"contributor-test-post-{n}", f"date: 2026-09-1{n}T12:00:00-07:00", [], False) for n in range(1, 5)),
             ("contributor-test-later", "date: 2099-01-01T12:00:00-07:00", ["summary: A post for later."], False),
@@ -231,8 +240,44 @@ class ContributorPost(unittest.TestCase):
         with mock.patch.object(test_layouts, "ROOT", root), mock.patch.object(test_layouts, "build", default):
             tests.run(result)
         self.assertGreater(result.testsRun, 50)
-        failed = [(test.id(), trace.strip().splitlines()[-1]) for test, trace in result.failures + result.errors]
+        files = {name: str(root / "content" / "posts" / "2026" / name / "index.md") for name in stopped}
+        traces = [(test.id(), trace) for test, trace in result.failures + result.errors]
+        failed = [
+            (test, trace.strip().splitlines()[-1])
+            for test, trace in traces
+            if not any(file in trace for file in files.values())
+        ]
         self.assertEqual(failed, [])
+        named = sorted(name for name, file in files.items() if any(file in trace for _, trace in traces))
+        self.assertEqual(named, sorted(stopped))
+
+
+class DraftPreview(unittest.TestCase):
+    """The preview in CONTRIBUTING.md shows a new post before the contributor fills in its front matter.
+
+    CONTRIBUTING.md says to make the post with `hugo new content` and to
+    preview it with `hugo server -D`, before the step that adds the author.
+    `hugo --buildDrafts` renders the same pages as `hugo server -D`.
+    """
+
+    maxDiff = None
+
+    def test_preview_with_drafts_shows_a_new_post(self):
+        root = contributor_root(
+            # The archetype as `hugo new` writes it.
+            ("contributor-test-draft", None, ["draft: true", "authors: []"], False),
+            ("contributor-test-bare", "# No date.", ["draft: true", "authors: []", "categories: []"], False),
+            ("contributor-test-unknown", None, ["draft: true", "authors: [contributor-test-nobody]"], False),
+        )
+        with tempfile.TemporaryDirectory() as out:
+            result = subprocess.run(
+                [*hugo(), "--source", str(root), "--destination", out, "--buildDrafts"],
+                capture_output=True,
+                text=True,
+            )
+            built = sorted(page.parent.name for page in Path(out).glob("contributor-test-*/index.html"))
+        self.assertEqual((result.returncode, result.stderr.strip()), (0, ""))
+        self.assertEqual(built, ["contributor-test-bare", "contributor-test-draft", "contributor-test-unknown"])
 
 
 class PostAuthors(unittest.TestCase):
