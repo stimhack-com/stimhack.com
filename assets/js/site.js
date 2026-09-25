@@ -121,7 +121,9 @@ function initMobileNav() {
 // submenu was already shown as the tap started, so a browser that shows the
 // submenu on the first tap without a click needs two taps and not three. The
 // submenu-open class keeps the submenu shown in a browser that does not keep
-// :hover or focus after the cancelled click.
+// :hover or focus after the cancelled click. Unlike the theme, a mouse click
+// on a computer with a touch screen follows the link, and after a tap outside
+// the item the next tap on it opens the submenu again.
 function initTouchMenu() {
   const menu = document.getElementById("prime_nav");
   if (!menu) return;
