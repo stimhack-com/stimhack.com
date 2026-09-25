@@ -1230,6 +1230,27 @@ FEED_LIMIT = CONFIG["services"]["rss"]["limit"]
 CATEGORY_SPELLINGS = ROOT / "tests" / "fixtures" / "category-spellings"
 
 
+def category_slugs(front):
+    """Return the slugs of the categories that Hugo files the post with front matter front under.
+
+    Hugo takes one value that is not a list as one category, and makes the
+    slug of a name in lower case with a hyphen for each space (the archives in
+    test_feeds_leave_out_decklists_written_other_ways and
+    test_feed_check_finds_posts_whose_categories_are_not_written_as_slugs).
+    A name with other characters raises ValueError: this function does not
+    copy what Hugo does with them.
+    """
+    names = front.get("categories") or []
+    if isinstance(names, str):
+        names = [names]
+    slugs = set()
+    for name in names:
+        if not re.fullmatch(r"[A-Za-z0-9]+(?:[ -][A-Za-z0-9]+)*", name):
+            raise ValueError(f"no known slug for category {name!r}")
+        slugs.add(name.lower().replace(" ", "-"))
+    return slugs
+
+
 def category_feed_errors(out, content):
     """Return what is wrong with each category feed in out, built from content.
 
@@ -1248,7 +1269,7 @@ def category_feed_errors(out, content):
             eligible = {
                 link: datetime.fromisoformat(front["date"])
                 for link, front in posts.items()
-                if slug in (front.get("categories") or []) and not EXCLUDED & set(front.get("categories") or [])
+                if slug in category_slugs(front) and not EXCLUDED & category_slugs(front)
             }
             links = [link for link, _ in items]
             dates = [date for _, date in items]
