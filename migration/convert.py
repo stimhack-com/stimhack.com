@@ -31,6 +31,8 @@ SKIP_PAGES = {"landing", "under-maintenance", "submission-successful", "decklist
 SITE_URL = re.compile(r"^(?:https?:)?//(?:www\.)?stimhack\.com(?=/|$)")
 URL_ATTR = re.compile(r"""\b(href|src|srcset|poster|data-src)=(["'])(.*?)\2""", re.S)
 IFRAME_HTTP = re.compile(r"""(<iframe\b[^>]*\bsrc=["'])http://""", re.I)
+# wc-shortcodes tags that appear in the export.
+SHORTCODE_TAG = re.compile(r"\[/?(?:accordion|pane|one_fourth)\b[^\]]*\]")
 
 # Original URL -> local copy, for images other sites no longer serve (see archived_images.py).
 ARCHIVED = archived_images.load_map(ROOT / "migration" / "archived-images.json")
@@ -79,7 +81,7 @@ def rewrite_urls(body):
 
 def shortcode_attr(raw):
     """Read title="..." from a shortcode whose quotes WordPress curled into entities."""
-    m = re.search(r"title=(?:&#8221;|&#8220;|&quot;|\")(.*?)(?:&#8221;|&#8243;|&quot;|\")", raw)
+    m = re.search(r"title=(?:&#8221;|&#8220;|&quot;|\")(.*?)(?:&#8221;|&#8220;|&#8243;|&quot;|\")", raw)
     return m[1] if m else ""
 
 
@@ -88,6 +90,8 @@ def convert_shortcodes(body):
 
     [one_fourth] becomes a column, consecutive columns share a row;
     [accordion][pane title="x"] becomes collapsible <details> sections.
+    Tags left without a partner are removed: the one unclosed [pane] in
+    the export repeats the heading above it and would wrap the whole post.
     """
     body = re.sub(r"\[one_fourth\](.*?)\[/one_fourth\]", r'<div class="sh-col">\1</div>', body, flags=re.S)
     body = re.sub(
@@ -102,7 +106,11 @@ def convert_shortcodes(body):
         body,
         flags=re.S,
     )
-    return re.sub(r"\[/?accordion\]", "", body)
+    return strip_shortcodes(body)
+
+
+def strip_shortcodes(body):
+    return SHORTCODE_TAG.sub("", body)
 
 
 def clean_body(body):
@@ -118,6 +126,7 @@ def iso_date(local, gmt):
 
 def excerpt(item):
     rendered = re.sub(r'<p>\s*<a class="continue-reading-link".*?</p>', "", item["excerpt"]["rendered"], flags=re.S)
+    rendered = strip_shortcodes(rendered)
     return re.sub(r"\s+", " ", text(rendered))
 
 
