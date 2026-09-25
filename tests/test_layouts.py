@@ -360,14 +360,14 @@ def feed_guids(out, feed):
     return [(urlsplit(link).path, guid) for link, guid in items]
 
 
-def wordpress_ids(content):
-    """Return {post URL: WordPress post ID} for each post in content that has one."""
-    ids = {}
+def wordpress_posts(content):
+    """Return {post URL: front matter} for each post in content that came from WordPress."""
+    posts = {}
     for path in sorted((content / "posts").rglob("*.*")):
         front = yaml.safe_load(path.read_text().split("---\n")[1])
         if front.get("wp_id"):
-            ids[front.get("url") or f"/{front['slug']}/"] = front["wp_id"]
-    return ids
+            posts[front.get("url") or f"/{front['slug']}/"] = front
+    return posts
 
 
 class FeedGuids(unittest.TestCase):
@@ -376,12 +376,12 @@ class FeedGuids(unittest.TestCase):
     maxDiff = None
 
     def assert_wordpress_guids(self, out):
-        ids = wordpress_ids(ROOT / "content")
+        posts = wordpress_posts(ROOT / "content")
         for feed in FEEDS:
             with self.subTest(feed=feed):
-                items = [(url, guid) for url, guid in feed_guids(out, feed) if url in ids]
+                items = [(url, guid) for url, guid in feed_guids(out, feed) if url in posts]
                 self.assertEqual(len(items), 20)
-                expected = [(url, f'<guid isPermaLink="false">https://stimhack.com/?p={ids[url]}</guid>') for url, _ in items]
+                expected = [(url, f'<guid isPermaLink="false">{posts[url].get("wp_guid")}</guid>') for url, _ in items]
                 self.assertEqual(items, expected)
 
     def test_migrated_posts_keep_wordpress_guid(self):
@@ -389,6 +389,23 @@ class FeedGuids(unittest.TestCase):
 
     def test_staging_feed_has_production_guids(self):
         self.assert_wordpress_guids(build(environment="staging"))
+
+    def test_older_post_keeps_its_http_guid(self):
+        # WordPress wrote http: GUIDs for its older posts. The main feed shows
+        # only the newest posts, so the fixture has an older one.
+        out = build(FIXTURE)
+        for feed in FEEDS:
+            with self.subTest(feed=feed):
+                guids = dict(feed_guids(out, feed))
+                self.assertEqual(guids["/old-post/"], '<guid isPermaLink="false">http://stimhack.com/?p=23</guid>')
+
+    def test_every_migrated_post_has_its_wordpress_guid(self):
+        wrong = [
+            (url, front.get("wp_guid"))
+            for url, front in wordpress_posts(ROOT / "content").items()
+            if not re.fullmatch(rf"https?://stimhack\.com/\?p={front['wp_id']}", str(front.get("wp_guid")))
+        ]
+        self.assertEqual(wrong[:5], [])
 
     def test_post_without_wordpress_id_has_permalink_guid(self):
         out = build(FIXTURE)

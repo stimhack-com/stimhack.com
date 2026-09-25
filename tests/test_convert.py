@@ -326,6 +326,39 @@ class Rerun(unittest.TestCase):
         self.assertEqual(urls.read_text(), urls_before)
 
 
+def front_matter(path):
+    return yaml.safe_load(path.read_text().split("---\n")[1])
+
+
+class WordPressGuid(unittest.TestCase):
+    """Feed readers know items by GUID, so each post keeps the GUID WordPress gave it."""
+
+    def convert(self, guid):
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(convert, "CONTENT", Path(tmp)):
+            item = dict(post(23, "old-post"), guid={"rendered": guid})
+            convert.convert_posts([item], {7: "ian"}, {3: "articles"}, {}, {}, {}, {}, set(), False)
+            return front_matter(Path(tmp) / "posts" / "2016" / "old-post.html")
+
+    def test_post_keeps_its_http_guid(self):
+        self.assertEqual(self.convert("http://stimhack.com/?p=23").get("wp_guid"), "http://stimhack.com/?p=23")
+
+    def test_guid_entities_are_decoded(self):
+        self.assertEqual(self.convert("http://stimhack.com/?p=23&amp;x=1").get("wp_guid"), "http://stimhack.com/?p=23&x=1")
+
+    def test_archived_post_gets_the_http_guid_of_its_time(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / ".export" / "wayback").mkdir(parents=True)
+            fixture = Path(__file__).parent / "fixtures" / "wayback-post.html"
+            (root / ".export" / "wayback" / "drafting-with-netrunner.html").write_text(fixture.read_text())
+            terms = lambda *names: [{"name": n, "slug": n.lower().replace(" ", "")} for n in names]
+            with mock.patch.multiple(convert, ROOT=root, EXPORT=root / ".export", CONTENT=root / "content"), \
+                    mock.patch.object(convert.wayback, "POSTS", {"drafting-with-netrunner": "20131113101435"}):
+                convert.convert_wayback_posts(terms("SneakySly"), terms("Cube Drafting"), terms("Draft", "Drafting"), False)
+            front = front_matter(root / "content" / "posts" / "2013" / "drafting-with-netrunner.html")
+        self.assertEqual(front.get("wp_guid"), "http://stimhack.com/?p=52")
+
+
 class TermDescriptions(unittest.TestCase):
     """WordPress stores descriptions with HTML entities; the term template escapes on output."""
 
