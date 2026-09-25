@@ -97,9 +97,11 @@ rename them.
 
 Every pull request runs these checks:
 
-- `python3 -m unittest discover tests` tests the WordPress migration
-  scripts, the site check script and the templates. The template tests
-  build the site with Hugo.
+- `python3 -m unittest discover tests` tests the site check script, the
+  templates, and these migration scripts: `convert.py`, `wayback.py`,
+  `download_uploads.py`, `archived_images.py`, `archived_links.py` and
+  `nrdb_images.py`. It does not test `export.py` or
+  `check_external_images.py`. The template tests build the site with Hugo.
 - `hugo --printPathWarnings --panicOnWarning` fails when two pages have the
   same URL.
 - `python3 scripts/check_site.py` fails when the URL of an old WordPress
