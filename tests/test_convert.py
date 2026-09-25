@@ -2,9 +2,14 @@
 
 Run: python3 -m unittest discover tests
 """
+import json
 import sys
+import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
+
+import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "migration"))
 import convert  # noqa: E402
@@ -75,6 +80,44 @@ class Excerpt(unittest.TestCase):
     def test_read_more_link_and_tags_are_removed(self):
         item = {"excerpt": {"rendered": '<p>Set review of &#8220;X&#8221;.</p>\n<p> <a class="continue-reading-link" href="/x/">Read More<i></i></a></p>\n'}}
         self.assertEqual(convert.excerpt(item), "Set review of “X”.")
+
+
+class PageComments(unittest.TestCase):
+    """Run main() on a one page export and read the page it writes."""
+
+    def setUp(self):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        root = Path(tmp.name)
+        export = root / ".export"
+        export.mkdir()
+        (root / "tests").mkdir()
+        page = {
+            "id": 19, "slug": "drafting", "link": "https://stimhack.com/drafting/",
+            "title": {"rendered": "Drafting"}, "content": {"rendered": "<p>Body.</p>"},
+            "date": "2013-04-06T00:36:49", "date_gmt": "2013-04-06T07:36:49",
+            "modified": "2014-01-26T23:05:43", "modified_gmt": "2014-01-27T06:05:43",
+        }
+        comment = {
+            "id": 318, "post": 19, "parent": 0, "author_name": "Reader",
+            "author_avatar_urls": {"48": "https://example.org/a.png"},
+            "date": "2014-02-01T10:00:00", "date_gmt": "2014-02-01T18:00:00",
+            "content": {"rendered": "<p>Nice.</p>\n"},
+        }
+        export_files = {"posts": [], "pages": [page], "media": [], "categories": [], "tags": [], "users": [], "comments": [comment]}
+        for name, items in export_files.items():
+            (export / f"{name}.json").write_text(json.dumps(items))
+        with mock.patch.multiple(convert, ROOT=root, EXPORT=export, CONTENT=root / "content"), \
+                mock.patch.object(convert.wayback, "POSTS", {}):
+            convert.main()
+        written = (root / "content" / "pages" / "drafting.html").read_text()
+        self.front = yaml.safe_load(written.split("---\n")[1])
+
+    def test_page_comments_are_in_front_matter(self):
+        self.assertEqual(self.front.get("comments"), [{
+            "id": 318, "parent": 0, "author": "Reader", "avatar": "https://example.org/a.png",
+            "date": "2014-02-01T10:00:00-08:00", "content": "<p>Nice.</p>",
+        }])
 
 
 if __name__ == "__main__":
