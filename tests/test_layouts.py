@@ -216,13 +216,15 @@ def iframe_styles(iframes):
 
 @unittest.skipUnless(shutil.which("node"), "needs node")
 class VideoEmbeds(unittest.TestCase):
-    # The WordPress theme ran FitVids on post content (js/frontend.js in
-    # Tempera, FitVids 1.0). It kept YouTube and Vimeo players at the shape of
-    # their width and height attributes and did not change other iframes. The
-    # theme skipped players narrower than its content column; here every
-    # player keeps its shape, so a 600x400 player is not 400px high on a
-    # phone. These tests check the styles that the script sets, not the size
-    # that a browser renders.
+    # FitVids 1.0 ($.fn.fitVids in the Tempera theme, .export/theme/wp-content/themes/tempera/js/frontend.js)
+    # keeps YouTube and Vimeo players, Kickstarter video.html iframes, and all
+    # object and embed elements at the shape of their width and height
+    # attributes (frontend.js lines 213-220). content/ has no Kickstarter
+    # iframe, object or embed, so the site script matches only YouTube and
+    # Vimeo players. FitVids skips players narrower than the content column
+    # (frontend.js line 235); here every player keeps its shape, so a 600x400
+    # player is not 400px high on a phone. These tests check the styles that
+    # the script sets, not the size that a browser renders.
     maxDiff = None
 
     def test_video_players_keep_the_shape_of_their_size_attributes(self):
@@ -375,9 +377,10 @@ def mobile_nav(path, choose=()):
 
 @unittest.skipUnless(shutil.which("node"), "needs node")
 class MobileNav(unittest.TestCase):
-    # On small screens the WordPress theme showed the menu as a select made by
-    # TinyNav (js/frontend.js in Tempera, TinyNav 1.03 mod 0.1.1), called with
-    # header: ' = Menu = '. The header is the first option. The option whose
+    # On small screens the site shows the menu as a select like the one that
+    # TinyNav 1.03 mod 0.1.1 makes ($.fn.tinyNav in the Tempera theme,
+    # .export/theme/wp-content/themes/tempera/js/frontend.js), with the
+    # header ' = Menu = '. The header is the first option. The option whose
     # address is the page address is selected, and on other pages the header
     # stays selected. Choosing the header does not navigate. Child items start
     # with a non-breaking space and "- " with a non-breaking space.

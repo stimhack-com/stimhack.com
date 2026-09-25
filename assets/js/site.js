@@ -58,10 +58,13 @@ function initMasonry() {
 }
 
 // Video players keep the shape of their width and height attributes when the
-// column is narrower than they are. On WordPress the theme did this with
-// FitVids (js/frontend.js in Tempera, FitVids 1.0), which found video players
-// by their address and did not change other iframes, so audio players and
-// maps keep their fixed height here too.
+// column is narrower than they are, as FitVids 1.0 does. The Tempera theme
+// defines FitVids in .export/theme/wp-content/themes/tempera/js/frontend.js
+// but does not call it there. FitVids matches YouTube and Vimeo iframes,
+// Kickstarter video.html iframes, and all object and embed elements
+// (frontend.js lines 213-220). content/ has no Kickstarter iframe, object or
+// embed, so this script matches only YouTube and Vimeo players. Other
+// iframes, such as audio players and maps, keep their fixed height.
 const VIDEO_PLAYER = /^(https?:)?\/\/([^/]*\.)?(youtube\.com|youtube-nocookie\.com|player\.vimeo\.com)\//;
 
 function initVideoEmbeds() {
@@ -85,11 +88,13 @@ function initBackToTop() {
   update();
 }
 
-// Small screens: the theme replaces the menu with a <select>. On WordPress
-// this was TinyNav (js/frontend.js in Tempera, TinyNav 1.03 mod 0.1.1) with
-// the header " = Menu = ". The option with the page address is selected, and
-// on other pages the header stays selected. Two items can have the same
-// address; TinyNav selected both, so the select showed the last one.
+// Small screens: the theme replaces the menu with a <select>, as TinyNav 1.03
+// mod 0.1.1 does. The Tempera theme defines TinyNav in
+// .export/theme/wp-content/themes/tempera/js/frontend.js
+// but does not call it there. This select has the header option " = Menu = ".
+// The option with the page address is selected, and on other pages the header
+// stays selected. Two items can have the same address; TinyNav selects both
+// (frontend.js lines 144-145), so the select shows the last one.
 function initMobileNav() {
   const menu = document.getElementById("prime_nav");
   if (!menu) return;
