@@ -1,6 +1,7 @@
 """Tests for the checks in scripts/check_site.py, on a small built site."""
 import contextlib
 import io
+import re
 import shutil
 import subprocess
 import sys
@@ -191,6 +192,26 @@ class NoCanonicalLink(unittest.TestCase):
         problems = [line for line in out.getvalue().splitlines() if not line.startswith("legacy URL missing: ")]
         self.assertEqual(len(problems), 1, f"problems: {problems}")
         self.assertIn("canonical", problems[0])
+
+
+class ImageUrlsReadWithTheParser(unittest.TestCase):
+    # A regular expression on "<img ... src=" misses srcset, poster, data-src
+    # and other spellings of the tag. Read image URLs with check_site.Links.
+    ALLOWED = {
+        # Reads the WordPress export, not the built site. It is run once, by hand.
+        "migration/check_external_images.py",
+        # Removes whole img tags. check_site.py finds any icon it leaves in the built site.
+        "migration/nrdb_images.py",
+    }
+
+    def test_no_new_regular_expression_reads_img_tags(self):
+        found = {
+            path.relative_to(check_site.ROOT).as_posix()
+            for folder in ("scripts", "migration")
+            for path in (check_site.ROOT / folder).rglob("*.py")
+            if re.search(r"<img\\[bs]", path.read_text())
+        }
+        self.assertEqual(found - self.ALLOWED, set())
 
 
 if __name__ == "__main__":
