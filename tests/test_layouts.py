@@ -755,6 +755,44 @@ class FrontMatterSummaries(unittest.TestCase):
         self.assertEqual(" ".join(dict(archive_summaries(out))["/new-post/"].split()), expected)
         self.assertEqual(" ".join(dict(feed_descriptions(out))["/new-post/"].split()), expected)
 
+    def test_post_without_summary_has_meta_description_from_content(self):
+        # The new post archetype writes summary: "", and CONTRIBUTING.md
+        # says a post without a summary gets the start of the post.
+        out = build(FIXTURE)
+        site_description = tomllib.loads((ROOT / "hugo.toml").read_text())["params"]["description"]
+        for url, start in [
+            ("/new-post/", "First paragraph of a “new” post & more."),
+            ("/empty-summary/", "A post made from the archetype, which leaves summary empty."),
+        ]:
+            with self.subTest(url=url):
+                text = meta_description(out, url)
+                self.assertNotEqual(text, site_description)
+                self.assertTrue(text.startswith(start), text)
+
+    def test_page_has_meta_description_from_content(self):
+        text = meta_description(build(), "/drafting/")
+        self.assertTrue(text.startswith("Cube drafting is a fun Netrunner variant"), text)
+
+    def test_home_and_archive_pages_have_site_description(self):
+        out = build(FIXTURE)
+        site_description = tomllib.loads((ROOT / "hugo.toml").read_text())["params"]["description"]
+        for url in ["/", "/category/articles/", "/author/ian/"]:
+            with self.subTest(url=url):
+                self.assertEqual(meta_description(out, url), site_description)
+
+    def test_long_meta_description_is_cut_between_characters_not_inside_an_entity(self):
+        # The text has "R&D a < b AT&T" at character 160, so a cut made after
+        # escaping would leave part of an entity such as "&am".
+        out = build(FIXTURE)
+        attribute = re.search(
+            r'<meta name="description" content="([^"]*)">',
+            (out / "long-post" / "index.html").read_text(),
+        )[1]
+        self.assertEqual(re.findall(r"&(?!amp;|lt;|gt;|#34;|#39;|quot;)", attribute), [])
+        post = (FIXTURE / "posts" / "long-post.md").read_text().split("---\n")[2].strip()
+        self.assertTrue(is_start_of(html.unescape(attribute), post), attribute)
+        self.assertLessEqual(len(html.unescape(attribute)), 162)
+
     def test_every_archive_entry_shows_summary_as_written(self):
         summaries = front_matter_summaries(ROOT / "content")
         wrong = [
