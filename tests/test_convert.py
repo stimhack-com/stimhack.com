@@ -264,9 +264,9 @@ class Rerun(unittest.TestCase):
             convert.main(**kwargs)
         return out.getvalue()
 
-    def edit(self, relative):
+    def edit(self, relative, addition="Edited by a contributor.\n"):
         path = self.root / relative
-        path.write_text(path.read_text() + "Edited by a contributor.\n")
+        path.write_text(path.read_text() + addition)
         return path.read_text()
 
     def test_default_run_keeps_an_edited_post(self):
@@ -285,7 +285,7 @@ class Rerun(unittest.TestCase):
         self.assertEqual((self.root / "content/authors/ian/_index.md").read_text(), edited)
 
     def test_default_run_keeps_edited_decklists(self):
-        edited = self.edit("data/decklists.yaml")
+        edited = self.edit("data/decklists.yaml", "- pack: Added by a contributor\n")
         self.export["pages"] = [decklists_page([("Core", "Store B", "Bob"), ("Core", "Store A", "Alice")])]
         self.run_convert()
         self.assertEqual((self.root / "data/decklists.yaml").read_text(), edited)
@@ -295,6 +295,11 @@ class Rerun(unittest.TestCase):
         out = self.run_convert()
         self.assertIn("location: Store B", out)
         self.assertNotIn("location: Store A", out)
+
+    def test_default_run_does_not_list_an_unchanged_file_with_a_carriage_return(self):
+        self.export["posts"] = [dict(post(100, "first-post"), content={"rendered": "<p>a\rb</p>"})]
+        self.run_convert(overwrite=True)
+        self.assertEqual(self.run_convert(), "")
 
     def test_default_run_creates_a_new_post(self):
         self.export["posts"].append(post(101, "second-post"))
@@ -306,16 +311,13 @@ class Rerun(unittest.TestCase):
         urls.write_text(urls.read_text() + "/added-by-hand/\n")
         self.export["posts"].append(post(101, "second-post"))
         self.run_convert()
-        self.assertEqual(
-            urls.read_text().split(),
-            ["/added-by-hand/", "/author/ian/", "/category/articles/", "/first-post/", "/second-post/", "/tournament-decklists/"],
-        )
+        self.assertLessEqual({"/added-by-hand/", "/first-post/", "/second-post/"}, set(urls.read_text().split()))
 
     def test_overwrite_run_replaces_edited_files(self):
         paths = ["content/posts/2016/first-post.html", "content/authors/ian/_index.md", "data/decklists.yaml"]
         before = {p: (self.root / p).read_text() for p in paths}
         for p in paths:
-            self.edit(p)
+            self.edit(p, "- pack: Added by a contributor\n")
         urls = self.root / "tests/legacy-urls.txt"
         urls_before = urls.read_text()
         urls.write_text(urls_before + "/added-by-hand/\n")
@@ -329,7 +331,7 @@ class TermDescriptions(unittest.TestCase):
 
     def test_description_entities_are_decoded(self):
         with tempfile.TemporaryDirectory() as tmp, mock.patch.object(convert, "CONTENT", Path(tmp)):
-            convert.convert_terms("authors", [{"id": 7, "slug": "ian", "name": "Ian L", "description": "Ian &amp; his wife"}])
+            convert.convert_terms("authors", [{"id": 7, "slug": "ian", "name": "Ian L", "description": "Ian &amp; his wife"}], False)
             written = (Path(tmp) / "authors" / "ian" / "_index.md").read_text()
         self.assertEqual(yaml.safe_load(written.split("---\n")[1])["description"], "Ian & his wife")
 

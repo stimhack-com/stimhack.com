@@ -55,6 +55,17 @@ python3 migration/download_uploads.py       # downloads uploads and archived cop
 python3 migration/convert.py                # writes content/, data/ and tests/legacy-urls.txt
 ```
 
+`convert.py` does not change files that exist, because contributors edit
+posts, author pages and `data/decklists.yaml` after the migration. A run
+writes the posts, pages, categories, tags and authors that do not have a
+file yet, and adds their URLs to `tests/legacy-urls.txt`. It lists each
+kept file that the export has a different version of. It prints the
+WordPress tournament results that `data/decklists.yaml` does not contain;
+add them to the file by hand.
+`python3 migration/convert.py --overwrite` writes every file from the
+export again and discards all edits. Use it only before anyone edits the
+repository.
+
 `export.py` also downloads Internet Archive copies of two posts that were
 deleted from WordPress but are still linked from other posts
 (`migration/wayback.py`), and `convert.py` restores them.

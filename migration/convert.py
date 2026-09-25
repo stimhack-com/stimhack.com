@@ -2,10 +2,24 @@
 """Convert the WordPress export in .export/ into Hugo content.
 
 Migrated posts and pages keep their WordPress HTML as .html content files,
-so they render as they did. Only files this script owns are written:
-content/posts/<year>/<slug>.html, content/pages/<slug>.html, taxonomy
-_index.md files, data/decklists.yaml and tests/legacy-urls.txt.
+so they render as they did. The script writes content/posts/<year>/<slug>.html,
+content/pages/<slug>.html, taxonomy _index.md files, data/decklists.yaml and
+tests/legacy-urls.txt.
+
+Contributors edit these files after the migration, so by default a run
+changes no file that exists:
+
+- A post, page or _index.md file that does not exist yet is written. One
+  that exists is kept, and listed if the export has a different version.
+- data/decklists.yaml is kept if it exists. The WordPress rows that it
+  does not contain are printed, to add by hand.
+- tests/legacy-urls.txt gets the URLs of the export added. No URL is removed,
+  because the files of posts removed from WordPress are kept.
+
+--overwrite writes every file from the export and discards all edits.
+Use it only before anyone edits the repository.
 """
+import argparse
 import html
 import json
 import re
@@ -154,10 +168,22 @@ def excerpt(item):
     return re.sub(r"\s+", " ", text(rendered))
 
 
-def write(path, front, body):
+def save(path, content, overwrite):
+    """Write content to path. Without overwrite, keep a file that exists and say if it differs."""
+    if path.exists() and not overwrite:
+        # newline="" reads a carriage return as written, which read_text() would change to "\n".
+        with path.open(newline="") as f:
+            differs = f.read() != content
+        if differs:
+            print(f"kept {path.relative_to(ROOT)}: the export has a different version")
+        return
     path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(content)
+
+
+def write(path, front, body, overwrite):
     fm = yaml.safe_dump(front, allow_unicode=True, sort_keys=False, width=10_000)
-    path.write_text(f"---\n{fm}---\n{body.strip()}\n")
+    save(path, f"---\n{fm}---\n{body.strip()}\n", overwrite)
 
 
 def media_paths(media):
@@ -203,7 +229,7 @@ def post_images(post, media, attached):
     return {}
 
 
-def convert_posts(posts, users, cats, tags, media, attached, comments, page_paths):
+def convert_posts(posts, users, cats, tags, media, attached, comments, page_paths, overwrite):
     for p in posts:
         front = {
             "title": text(p["title"]["rendered"]),
@@ -226,7 +252,9 @@ def convert_posts(posts, users, cats, tags, media, attached, comments, page_path
             # WordPress served the page at this URL and the post only by ID.
             front["url"] = f"/{p['slug']}-2/"
         front["wp_id"] = p["id"]
-        write(CONTENT / "posts" / p["date"][:4] / f"{p['slug']}.html", front, clean_body(p["content"]["rendered"]))
+        write(
+            CONTENT / "posts" / p["date"][:4] / f"{p['slug']}.html", front, clean_body(p["content"]["rendered"]), overwrite
+        )
 
 
 def split_decklists(body):
@@ -256,17 +284,27 @@ def split_decklists(body):
     return body[:start], rows, body[end:]
 
 
-def convert_pages(pages, comments):
+def save_decklists(rows, overwrite):
+    """Write data/decklists.yaml. Without overwrite, keep the file and print the rows it does not have."""
+    path = ROOT / "data" / "decklists.yaml"
+    dump = lambda rows: yaml.safe_dump(rows, allow_unicode=True, sort_keys=False, width=10_000)
+    if path.exists() and not overwrite:
+        # Contributors add results to this file too, so the export cannot replace it.
+        have = yaml.safe_load(path.read_text()) or []
+        if missing := [r for r in rows if r not in have]:
+            print(f"kept {path.relative_to(ROOT)}: add these WordPress rows by hand:\n{dump(missing)}")
+        return
+    save(path, dump(rows), overwrite)
+
+
+def convert_pages(pages, comments, overwrite):
     for p in pages:
         if p["slug"] in SKIP_PAGES:
             continue
         body = p["content"]["rendered"]
         if p["slug"] == "tournament-decklists":
             intro, rows, older = split_decklists(body)
-            (ROOT / "data").mkdir(exist_ok=True)
-            (ROOT / "data" / "decklists.yaml").write_text(
-                yaml.safe_dump(rows, allow_unicode=True, sort_keys=False, width=10_000)
-            )
+            save_decklists(rows, overwrite)
             intro = re.sub(r'<p style="text-align: center;">\s*$', "", intro.rstrip())
             body = intro + "\n{{< decklists >}}\n" + older
         front = {
@@ -278,10 +316,10 @@ def convert_pages(pages, comments):
         }
         if p["id"] in comments:
             front["comments"] = comments[p["id"]]
-        write(CONTENT / "pages" / f"{p['slug']}.html", front, clean_body(body))
+        write(CONTENT / "pages" / f"{p['slug']}.html", front, clean_body(body), overwrite)
 
 
-def convert_wayback_posts(users, cats, tags):
+def convert_wayback_posts(users, cats, tags, overwrite):
     """Write the deleted posts in wayback.POSTS. Returns the category and tag slugs they use."""
     by_name = lambda terms: {html.unescape(t["name"]).lower(): t["slug"] for t in terms}
     users, cats, tags = by_name(users), by_name(cats), by_name(tags)
@@ -305,11 +343,11 @@ def convert_wayback_posts(users, cats, tags):
             f'<a href="{front["archived_from"]}">Internet Archive copy</a> of '
             f'{datetime.strptime(timestamp[:8], "%Y%m%d"):%B %-d, %Y}.</em></p>\n'
         )
-        write(CONTENT / "posts" / post["date"][:4] / f"{slug}.html", front, note + clean_body(post["content"]))
+        write(CONTENT / "posts" / post["date"][:4] / f"{slug}.html", front, note + clean_body(post["content"]), overwrite)
     return used
 
 
-def convert_terms(kind, terms, extra=None, used=frozenset()):
+def convert_terms(kind, terms, overwrite, extra=None, used=frozenset()):
     for t in terms:
         if t.get("count", 1) == 0 and t["slug"] not in used:
             continue
@@ -317,19 +355,26 @@ def convert_terms(kind, terms, extra=None, used=frozenset()):
         if t.get("description"):
             front["description"] = html.unescape(t["description"]).strip()
         front.update((extra or {}).get(t["id"], {}))
-        write(CONTENT / kind / t["slug"] / "_index.md", front, "")
+        write(CONTENT / kind / t["slug"] / "_index.md", front, "", overwrite)
 
 
-def legacy_urls(posts, pages, cats, tags, users):
-    """Every public WordPress URL. A test checks each one still exists in the build."""
+def legacy_urls(posts, pages, cats, tags, users, overwrite):
+    """Every public WordPress URL. A test checks each one still exists in the build.
+
+    Without overwrite the URLs in the file are kept: the files of posts
+    removed from WordPress since the last run are kept, so the site still serves them.
+    """
     urls = {path_of(p["link"]) for p in posts} | set(MOVED) | {f"/{slug}/" for slug in wayback.POSTS}
     urls |= {path_of(p["link"]) for p in pages if p["slug"] not in SKIP_PAGES - {"decklist-submssion"}}
     for terms in (cats, tags, users):
         urls |= {path_of(t["link"]) for t in terms if t.get("count", 1)}
-    (ROOT / "tests" / "legacy-urls.txt").write_text("\n".join(sorted(urls)) + "\n")
+    path = ROOT / "tests" / "legacy-urls.txt"
+    if path.exists() and not overwrite:
+        urls |= set(path.read_text().split())
+    path.write_text("\n".join(sorted(urls)) + "\n")
 
 
-def main():
+def main(overwrite=False):
     posts, pages, media = load("posts"), load("pages"), load("media")
     cats, tags, users = load("categories"), load("tags"), load("users")
     authors_with_posts = {p["author"] for p in posts}
@@ -344,14 +389,19 @@ def main():
         first_attachments(media),
         comments,
         {path_of(p["link"]) for p in pages if p["slug"] not in SKIP_PAGES},
+        overwrite,
     )
-    convert_pages(pages, comments)
-    used = convert_wayback_posts(users, cats, tags)
-    convert_terms("categories", cats, used=used)
-    convert_terms("tags", tags, used=used)
-    convert_terms("authors", users, {u["id"]: {"avatar": u["avatar_urls"].get("96", "")} for u in users})
-    legacy_urls(posts, pages, cats, tags, users)
+    convert_pages(pages, comments, overwrite)
+    used = convert_wayback_posts(users, cats, tags, overwrite)
+    convert_terms("categories", cats, overwrite, used=used)
+    convert_terms("tags", tags, overwrite, used=used)
+    convert_terms("authors", users, overwrite, {u["id"]: {"avatar": u["avatar_urls"].get("96", "")} for u in users})
+    legacy_urls(posts, pages, cats, tags, users, overwrite)
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description=__doc__.split("\n", 1)[0])
+    parser.add_argument(
+        "--overwrite", action="store_true", help="write every file from the export and discard edits made since the last run"
+    )
+    main(parser.parse_args().overwrite)
