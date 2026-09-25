@@ -6,11 +6,11 @@
 <div class="entry-content">
 <div class="wc-shortcodes-posts-wrapper">
 <div class="wc-shortcodes-posts wc-shortcodes-clearfix wc-shortcodes-posts-col-2 wc-shortcodes-posts-layout-masonry wc-shortcodes-posts-template-box wc-shortcodes-posts-gutter-space-20" data-columns="2" data-gutter-space="20">
-{{- range first site.Params.homePosts $posts.ByDate.Reverse }}
+{{- range $post := first site.Params.homePosts $posts.ByDate.Reverse }}
   <div class="wc-shortcodes-post-box {{ partial "post-classes.html" . }}">
     <div class="wc-shortcodes-post-border">
       {{- with partial "image-url.html" (dict "page" . "param" "featured_image") }}
-      <div class="wc-shortcodes-entry-thumbnail"><a href="{{ $.RelPermalink }}" title="{{ $.Title }}"><img src="{{ . }}" alt="" class="wp-post-image" decoding="async"></a></div>
+      <div class="wc-shortcodes-entry-thumbnail"><a href="{{ $post.RelPermalink }}" title="{{ $post.Title }}"><img src="{{ . }}" alt="" class="wp-post-image" decoding="async"></a></div>
       {{- end }}
       <div class="wc-shortcodes-post-content">
         <div class="wc-shortcodes-entry-header">
