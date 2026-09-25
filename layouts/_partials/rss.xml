@@ -2,8 +2,11 @@
 {{- $pages := where (cond .IsHome site.RegularPages .Pages) "Section" "posts" -}}
 {{- /* Every feed leaves out posts in any category of feedExcludeCategories,
 as the WordPress site feed and category feeds did: its decklists category
-feed had no items. */}}
-{{- $pages = $pages | complement (where $pages "Params.categories" "intersect" site.Params.feedExcludeCategories) -}}
+feed had no items. The pages of the category are the posts its archive
+lists, also those whose front matter spells the category another way. */}}
+{{- range site.Params.feedExcludeCategories }}
+{{- with site.GetPage (printf "/categories/%s" .) }}{{ $pages = $pages | complement .Pages }}{{ end }}
+{{- end }}
 {{- $pages = first site.Config.Services.RSS.Limit $pages.ByDate.Reverse -}}
 {{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
