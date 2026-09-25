@@ -11,7 +11,9 @@ from pathlib import Path
 from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "migration"))
 import check_site  # noqa: E402
+import convert  # noqa: E402
 
 # Each page is served at /<dir>/ from public/<dir>/index.html.
 PAGES = {
@@ -293,6 +295,49 @@ class LegacyUrls(unittest.TestCase):
                 "legacy URL missing: /uploads/gone.png",
             },
         )
+
+
+class SrcsetSpaces(unittest.TestCase):
+    """Only space, tab, line feed, form feed and carriage return separate the parts of a srcset.
+
+    A no-break space (&nbsp; in the HTML) or a vertical tab is part of a URL.
+    """
+
+    SRCSETS = [
+        "\xa0a.png 1x",
+        "\x0ba.png 1x",
+        "a.png\xa01x, b.png 2x",
+        "\x1c a.png 1x,\u2003b.png",
+        " \t\n\r\fa.png\f1x,\rb.png",
+        "small.png 300w, big-missing.png 600w, /post/small.png 2x",
+        "data:image/png;base64,iVBOR,w0KGgo= 1x, ../post/small.png 2x",
+        "../post/small.png, ../post/hedge-fund.png 2x",
+        "https://example.com/i?u=,https://stimhack.com/y.png 1x, https://stimhack.com/z.png 2x",
+    ]
+
+    def test_a_url_can_start_with_a_space_that_is_not_ascii(self):
+        self.assertEqual(check_site.srcset_urls("\xa0a.png 1x"), ["\xa0a.png"])
+        self.assertEqual(check_site.srcset_urls("\x0ba.png 1x"), ["\x0ba.png"])
+        self.assertEqual(check_site.srcset_urls("a.png\xa01x, b.png 2x"), ["a.png\xa01x", "b.png"])
+
+    def test_convert_finds_the_same_urls_as_the_check(self):
+        for srcset in self.SRCSETS:
+            with self.subTest(srcset=srcset):
+                found = []
+                with mock.patch.object(convert, "rewrite_url", side_effect=lambda url: found.append(url) or url):
+                    self.assertEqual(convert.rewrite_srcset(srcset), srcset)
+                self.assertEqual(found, check_site.srcset_urls(srcset))
+
+    def test_the_check_reports_a_url_that_starts_with_a_no_break_space(self):
+        public = Path(tempfile.mkdtemp(prefix="check-site-")) / "public"
+        self.addCleanup(shutil.rmtree, public.parent)
+        (public / "post").mkdir(parents=True)
+        (public / "index.html").write_text('<link rel="canonical" href="https://static.example.com/">')
+        (public / "post" / "a.png").write_bytes(b"")
+        # The URL is "\xa0a.png", not "a.png", and the site has no file with that name.
+        (public / "post" / "index.html").write_text('<img srcset="&nbsp;a.png 1x">')
+        reported = {line for line in problems(public) if line.startswith("broken link in ")}
+        self.assertEqual(reported, {"broken link in /post/index.html: /post/\xa0a.png"})
 
 
 if __name__ == "__main__":
