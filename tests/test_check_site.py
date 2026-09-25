@@ -42,7 +42,32 @@ PAGES = {
         <a HREF=" ../post/ ">upper case name and spaces</a>
         <img srcset="data:image/png;base64,iVBOR,w0KGgo= 1x, ../post/small.png 2x">
         <img srcset="../post/small.png, ../post/hedge-fund.png 2x">
+        <a href="https://forum.stimhack.com/missing/">another host of stimhack.com</a>
+        <a href="https://notstimhack.com/missing/">a host that ends in stimhack.com</a>
+        <a href="https://stimhack.com.example.com/missing/">a host that starts with stimhack.com</a>
+        <a href="ftp://stimhack.com/missing/">not http</a>
+        <a href="https://stimhack.com/post/small.png">exists on the production host</a>
+        <a href="https://static.example.com">home page of the built host, no path</a>
+        <meta http-equiv="refresh" content="5">
+        <meta property="og:title" content="https://stimhack.com/missing-title/">
     """,
+    # Absolute URLs on this site: the production host with and without www.,
+    # and the host of the built site, which index.html names in its canonical
+    # link. Alias pages redirect with a meta refresh tag.
+    "own-host/index.html": """
+        <link rel="canonical" href="https://static.example.com/own-host/gone-canonical/">
+        <a href="https://stimhack.com/gone-https/">https</a>
+        <a href="http://www.stimhack.com/gone-www/">http and www.</a>
+        <img src="//stimhack.com/gone-scheme-relative.png">
+        <a href="HTTPS://StimHack.com/gone-upper-case/">upper case</a>
+        <a href="https://stimhack.com/gone%20encoded/?p=1#top">encoded, query and fragment</a>
+        <img srcset="https://static.example.com/gone-srcset.png 2x">
+        <meta http-equiv="refresh" content="0; url=https://static.example.com/gone-alias/">
+        <meta HTTP-EQUIV="Refresh" content="0;URL='../gone-quoted/'">
+        <meta property="og:image" content="https://stimhack.com/gone-og-image.png">
+        <meta property="og:url" content="https://static.example.com/gone-og-url/">
+    """,
+    "index.html": '<link rel="canonical" href="https://static.example.com/">',
     # A page that is not index.html is served at its own file name, so its
     # relative links resolve against the directory it is in.
     "404.html": '<a href="post/">post</a><img src="post/small.png">',
@@ -86,8 +111,31 @@ class BrokenLinks(unittest.TestCase):
             f"reported: {sorted(reported)}",
         )
 
+    def test_reports_missing_targets_of_absolute_urls_on_this_site(self):
+        reported = {line for line in self.broken if line.startswith("broken link in /own-host/")}
+        self.assertEqual(
+            reported,
+            {
+                "broken link in /own-host/index.html: /own-host/gone-canonical/",
+                "broken link in /own-host/index.html: /gone-https/",
+                "broken link in /own-host/index.html: /gone-www/",
+                "broken link in /own-host/index.html: /gone-scheme-relative.png",
+                "broken link in /own-host/index.html: /gone-upper-case/",
+                "broken link in /own-host/index.html: /gone encoded/",
+                "broken link in /own-host/index.html: /gone-srcset.png",
+                "broken link in /own-host/index.html: /gone-alias/",
+                "broken link in /own-host/index.html: /gone-quoted/",
+                "broken link in /own-host/index.html: /gone-og-image.png",
+                "broken link in /own-host/index.html: /gone-og-url/",
+            },
+            f"reported: {sorted(reported)}",
+        )
+
     def test_skips_urls_that_are_not_paths_on_this_site(self):
-        self.assertEqual({line for line in self.broken if not line.startswith("broken link in /post/")}, set())
+        self.assertEqual(
+            {line for line in self.broken if not line.startswith(("broken link in /post/", "broken link in /own-host/"))},
+            set(),
+        )
 
     def test_checks_the_directory_given_on_the_command_line(self):
         result = subprocess.run(
@@ -96,6 +144,21 @@ class BrokenLinks(unittest.TestCase):
         )
         self.assertEqual(result.returncode, 1)
         self.assertIn("broken link in /post/index.html: /post/hedge-fnd.png", result.stdout.splitlines())
+
+
+class NoCanonicalLink(unittest.TestCase):
+    def test_reports_a_home_page_without_a_canonical_link(self):
+        public = Path(tempfile.mkdtemp(prefix="check-site-")) / "public"
+        self.addCleanup(shutil.rmtree, public.parent)
+        public.mkdir()
+        (public / "index.html").write_text('<a href="https://static.example.com/gone/">built host</a>')
+        out = io.StringIO()
+        with mock.patch.object(check_site, "PUBLIC", public), contextlib.redirect_stdout(out), \
+                contextlib.redirect_stderr(io.StringIO()):
+            check_site.main()
+        problems = [line for line in out.getvalue().splitlines() if not line.startswith("legacy URL missing: ")]
+        self.assertEqual(len(problems), 1, f"problems: {problems}")
+        self.assertIn("canonical", problems[0])
 
 
 if __name__ == "__main__":
