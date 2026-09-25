@@ -59,7 +59,8 @@ python3 migration/convert.py                # writes content/, data/ and tests/l
 posts, author pages and `data/decklists.yaml` after the migration. A run
 writes the posts, pages, categories, tags and authors that do not have a
 file yet, and adds their URLs to `tests/legacy-urls.txt`. It lists each
-kept file that the export has a different version of. It prints the
+kept file that the export has a different version of; to take the export
+version of one, delete the file and run `convert.py` again. It prints the
 WordPress tournament results that `data/decklists.yaml` does not contain;
 add them to the file by hand.
 `python3 migration/convert.py --overwrite` writes every file from the

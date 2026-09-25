@@ -11,6 +11,7 @@ changes no file that exists:
 
 - A post, page or _index.md file that does not exist yet is written. One
   that exists is kept, and listed if the export has a different version.
+  Delete a listed file and run again to take the export version.
 - data/decklists.yaml is kept if it exists. The WordPress rows that it
   does not contain are printed, to add by hand.
 - tests/legacy-urls.txt gets the URLs of the export added. No URL is removed,
