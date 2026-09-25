@@ -7,6 +7,7 @@ import contextlib
 import html
 import io
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -30,6 +31,12 @@ sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "migration"))
 import check_site  # noqa: E402
 from front_matter import content_files  # noqa: E402
+
+
+# Tests that run the site script in node skip when node is not on PATH,
+# except in CI: GitHub Actions sets CI=true, and there they fail, so that the
+# job cannot pass with the site script untested.
+needs_node = unittest.skipUnless(shutil.which("node") or os.environ.get("CI"), "needs node")
 
 
 def comment_ids(path):
@@ -146,7 +153,7 @@ def box(left, top, width):
 ONE_COLUMN = {"grid": {"height": "auto"}, "boxes": [{}, {}, {}]}
 
 
-@unittest.skipUnless(shutil.which("node"), "needs node")
+@needs_node
 class HomeGridLayout(unittest.TestCase):
     maxDiff = None
 
@@ -219,7 +226,7 @@ def iframe_styles(iframes):
     return dict(zip((f"{i['src']} {i.get('width')}x{i.get('height')}" for i in iframes), json.loads(run.stdout)))
 
 
-@unittest.skipUnless(shutil.which("node"), "needs node")
+@needs_node
 class VideoEmbeds(unittest.TestCase):
     # FitVids 1.0 ($.fn.fitVids in the Tempera theme, .export/theme/wp-content/themes/tempera/js/frontend.js)
     # keeps YouTube and Vimeo players, Kickstarter video.html iframes, and all
@@ -380,7 +387,7 @@ def mobile_nav(path, choose=()):
     return json.loads(run.stdout)
 
 
-@unittest.skipUnless(shutil.which("node"), "needs node")
+@needs_node
 class MobileNav(unittest.TestCase):
     # On small screens the site shows the menu as a select like the one that
     # TinyNav 1.03 mod 0.1.1 makes ($.fn.tinyNav in the Tempera theme,
@@ -619,7 +626,7 @@ def touch_menu(browser, taps, path="/about/"):
     return json.loads(run.stdout)
 
 
-@unittest.skipUnless(shutil.which("node"), "needs node")
+@needs_node
 class TouchMenu(unittest.TestCase):
     # On touch screens wider than the small screen menu, the WordPress theme
     # (js/frontend.js in Tempera) cancelled the first tap on a top level menu
@@ -1611,7 +1618,7 @@ def wordpress_ids(content):
     return ids
 
 
-@unittest.skipUnless(shutil.which("node"), "needs node")
+@needs_node
 class PostIdLinks(unittest.TestCase):
     """/?p=<ID> and /?page_id=<ID> open the post or page with that ID.
 

@@ -128,9 +128,10 @@ Every pull request runs these checks:
 - The build fails when the built site is 950 MB or larger. The GitHub
   Pages limit is 1 GB.
 
-To run the checks locally, install Hugo and Python 3.11 or later. Then
-install the Python packages that the checks use, for example in a virtual
-environment:
+To run the checks locally, install Hugo, Python 3.11 or later and Node.js
+18 or later. Without Node.js the tests that run the site script skip, or
+fail when the `CI` environment variable is set. Then install the Python
+packages that the checks use, for example in a virtual environment:
 
 ```sh
 python3 -m pip install -r requirements.txt
