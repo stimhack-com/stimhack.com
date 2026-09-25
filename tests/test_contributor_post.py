@@ -258,9 +258,33 @@ def content_walks():
     return found
 
 
+def bundle_file_names():
+    """Return file:line for each comparison with the name "index.md" or "_index.md" in the code.
+
+    Hugo makes a page bundle of the folder of a content file named index,
+    and a branch bundle of one named _index, in any content format
+    (common/paths/pathparser.go in the Hugo source). A check of the file
+    name that also knows index.md finds only some of the bundles.
+    """
+    names = {"index.md", "_index.md"}
+    found = []
+    for folder in ["migration", "scripts", "tests"]:
+        for path in sorted((ROOT / folder).glob("*.py")):
+            for node in ast.walk(ast.parse(path.read_text(), str(path))):
+                if isinstance(node, ast.Compare):
+                    operands = [node.left, *node.comparators]
+                    operands += [e for o in operands if isinstance(o, (ast.Tuple, ast.List, ast.Set)) for e in o.elts]
+                    if any(isinstance(o, ast.Constant) and o.value in names for o in operands):
+                        found.append(f"{path.relative_to(ROOT)}:{node.lineno}")
+    return found
+
+
 class ContentWalks(unittest.TestCase):
     def test_code_walks_content_only_with_content_files(self):
         self.assertEqual(content_walks(), [])
+
+    def test_code_finds_bundles_by_the_stem_of_the_file_name(self):
+        self.assertEqual(bundle_file_names(), [])
 
 
 if __name__ == "__main__":

@@ -1114,11 +1114,12 @@ def migrated_content(content):
     atexit.register(shutil.rmtree, copy, ignore_errors=True)
     shutil.copytree(content, copy, dirs_exist_ok=True)
     for path, front in content_files(copy / "posts"):
-        # Hugo makes a page bundle of the folder of a content file named index
-        # in any content format (common/paths/pathparser.go in the Hugo source).
+        # Hugo makes a page bundle of the folder of a content file named index,
+        # and a branch bundle of one named _index, in any content format
+        # (common/paths/pathparser.go in the Hugo source).
         if path.stem == "index" and not front.get("wp_id"):
             shutil.rmtree(path.parent)
-        elif path.name != "_index.md" and path.exists() and not front.get("wp_id"):
+        elif path.stem != "_index" and path.exists() and not front.get("wp_id"):
             path.unlink()
     return copy
 
