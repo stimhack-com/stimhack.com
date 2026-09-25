@@ -90,9 +90,15 @@ the export has a different version of; to take the export version of one,
 delete the file and run `convert.py` again. It prints the WordPress
 tournament results that `data/decklists.yaml` does not contain; add them to
 the file by hand.
+If the slug or date of a post or page changed in WordPress, the export gives
+its `wp_id` a new path. The run keeps the file at the old path, does not
+write the new one, and prints both paths. Move the file to the new path,
+change it to the new slug or date, and add its old URL to `aliases`.
+The unit tests fail if two content files have the same `wp_id`.
 `python3 migration/convert.py --overwrite` writes every file from the
-export again and discards all edits. Use it only before anyone edits the
-repository.
+export again and discards all edits. It also removes the file at the old
+path of a post or page that has a new path. Use it only before anyone edits
+the repository.
 
 `export.py` also downloads Internet Archive copies of two posts that were
 deleted from WordPress but are still linked from other posts

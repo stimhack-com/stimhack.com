@@ -15,13 +15,19 @@ keeps the content of every file that exists:
 - A post, page or _index.md file that does not exist yet is written. One
   that exists is kept, and listed if the export has a different version.
   Delete a listed file and run again to take the export version.
+- WordPress keeps the ID of a post or page when its slug or date changes,
+  so the export can give a wp_id that a content file has to a new path.
+  The file is kept, the new path is not written, and both are listed,
+  because the site would serve the post twice. Move the file to the new
+  path, change it to the new slug or date, and add its old URL to aliases.
 - data/decklists.yaml is kept if it exists. The WordPress rows that it
   does not contain are printed, to add by hand.
 - tests/legacy-urls.txt gets the URLs of the export added. No URL is removed,
   because the files of posts removed from WordPress are kept.
 
 --overwrite writes every file from the export and discards all edits.
-Use it only before anyone edits the repository.
+It removes a content file that has the wp_id of a post or page the export
+gives a new path. Use it only before anyone edits the repository.
 """
 import argparse
 import html
@@ -190,6 +196,39 @@ def write(path, front, body, overwrite):
     save(path, f"---\n{fm}---\n{body.strip()}\n", overwrite)
 
 
+def wp_id_files():
+    """Map each wp_id in the front matter of a content file to the paths of the files that have it."""
+    files = {}
+    for path in CONTENT.rglob("*"):
+        if path.is_file() and path.read_bytes().startswith(b"---\n"):
+            front = yaml.safe_load(path.read_text().split("---\n")[1]) or {}
+            if "wp_id" in front:
+                files.setdefault(front["wp_id"], set()).add(path)
+    return files
+
+
+def write_item(path, front, body, overwrite, files):
+    """write() a post or page. files is wp_id_files() from before the first write.
+
+    Another file with the same wp_id is the post at an older path, or a copy
+    of it. Without overwrite it is kept and path is not written. With
+    overwrite it is removed.
+    """
+    others = files.get(front["wp_id"], set()) - {path}
+    for other in sorted(others):
+        if overwrite:
+            other.unlink()
+            print(f"removed {other.relative_to(ROOT)}: the export has wp_id {front['wp_id']} at {path.relative_to(ROOT)}")
+        else:
+            print(
+                f"kept {other.relative_to(ROOT)} and did not write {path.relative_to(ROOT)}:"
+                f" the export has wp_id {front['wp_id']} at the second path"
+            )
+    if others and not overwrite:
+        return
+    write(path, front, body, overwrite)
+
+
 def media_paths(media):
     out = {}
     for m in media:
@@ -234,6 +273,7 @@ def post_images(post, media, attached):
 
 
 def convert_posts(posts, users, cats, tags, media, attached, comments, page_paths, overwrite):
+    files = wp_id_files()
     for p in posts:
         front = {
             "title": text(p["title"]["rendered"]),
@@ -258,8 +298,8 @@ def convert_posts(posts, users, cats, tags, media, attached, comments, page_path
         front["wp_id"] = p["id"]
         # The feed writes this as the item GUID, so feed readers know the post.
         front["wp_guid"] = html.unescape(p["guid"]["rendered"])
-        write(
-            CONTENT / "posts" / p["date"][:4] / f"{p['slug']}.html", front, clean_body(p["content"]["rendered"]), overwrite
+        write_item(
+            CONTENT / "posts" / p["date"][:4] / f"{p['slug']}.html", front, clean_body(p["content"]["rendered"]), overwrite, files
         )
 
 
@@ -304,6 +344,7 @@ def save_decklists(rows, overwrite):
 
 
 def convert_pages(pages, comments, overwrite):
+    files = wp_id_files()
     for p in pages:
         if p["slug"] in SKIP_PAGES:
             continue
@@ -322,7 +363,7 @@ def convert_pages(pages, comments, overwrite):
         }
         if p["id"] in comments:
             front["comments"] = comments[p["id"]]
-        write(CONTENT / "pages" / f"{p['slug']}.html", front, clean_body(body), overwrite)
+        write_item(CONTENT / "pages" / f"{p['slug']}.html", front, clean_body(body), overwrite, files)
 
 
 def convert_wayback_posts(users, cats, tags, overwrite):
@@ -330,6 +371,7 @@ def convert_wayback_posts(users, cats, tags, overwrite):
     by_name = lambda terms: {html.unescape(t["name"]).lower(): t["slug"] for t in terms}
     users, cats, tags = by_name(users), by_name(cats), by_name(tags)
     used = set()
+    files = wp_id_files()
     for slug, timestamp in wayback.POSTS.items():
         post = wayback.parse(EXPORT / "wayback" / f"{slug}.html", ROOT / "static")
         front = {
@@ -352,7 +394,7 @@ def convert_wayback_posts(users, cats, tags, overwrite):
             f'<a href="{front["archived_from"]}">Internet Archive copy</a> of '
             f'{datetime.strptime(timestamp[:8], "%Y%m%d"):%B %-d, %Y}.</em></p>\n'
         )
-        write(CONTENT / "posts" / post["date"][:4] / f"{slug}.html", front, note + clean_body(post["content"]), overwrite)
+        write_item(CONTENT / "posts" / post["date"][:4] / f"{slug}.html", front, note + clean_body(post["content"]), overwrite, files)
     return used
 
 
