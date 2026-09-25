@@ -1,10 +1,14 @@
-"""Tests that CI installs the third-party packages the Python code imports.
+"""Tests that CI installs the third-party packages the Python code imports,
+and the Node.js that the tests of the site script run.
 
 Run: python3 -m unittest discover tests
 """
 import ast
+import os
 import re
+import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -108,6 +112,71 @@ class Requirements(unittest.TestCase):
         self.assertIsNotNone(match, f"python-version {version!r} is not a pinned 3.x minor version")
         # tomllib, which tests/test_layouts.py imports, was added in 3.11.
         self.assertGreaterEqual(int(match.group(1)), 11)
+
+
+# Print the ID of each test in the directory argv[1] that unittest skips
+# before it runs, because the test or its class has a skip decorator.
+SKIPPED_TESTS = r"""
+import sys, unittest
+loader = unittest.TestLoader()
+def tests(suite):
+    for test in suite:
+        yield from tests(test) if isinstance(test, unittest.TestSuite) else [test]
+for test in tests(loader.discover(sys.argv[1])):
+    method = getattr(type(test), test._testMethodName)
+    if getattr(type(test), "__unittest_skip__", False) or getattr(method, "__unittest_skip__", False):
+        print(test.id())
+if loader.errors:
+    sys.exit("\\n".join(loader.errors))
+"""
+
+
+def skipped_tests(env):
+    """Return the IDs of the tests in tests/ that are skipped before they run when the environment is env."""
+    run = subprocess.run([sys.executable, "-c", SKIPPED_TESTS, str(ROOT / "tests")],
+                         env=env, cwd=ROOT, capture_output=True, text=True)
+    if run.returncode:
+        raise RuntimeError(run.stderr)
+    return set(run.stdout.split())
+
+
+class Node(unittest.TestCase):
+    def test_workflow_sets_up_node_before_the_unit_tests(self):
+        steps = build_steps()
+        setup = step_index(
+            steps, lambda s: str(s.get("uses", "")).startswith("actions/setup-node@"),
+            "uses actions/setup-node",
+        )
+        for i, step in enumerate(steps):
+            if "unittest" in step.get("run", ""):
+                self.assertLess(setup, i, f"step {step.get('name')!r} runs the tests before setup-node")
+
+    def test_setup_node_version_has_the_features_the_tests_use(self):
+        steps = build_steps()
+        setup = steps[step_index(
+            steps, lambda s: str(s.get("uses", "")).startswith("actions/setup-node@"),
+            "uses actions/setup-node",
+        )]
+        version = str(setup.get("with", {}).get("node-version", ""))
+        match = re.fullmatch(r"(\d+)(\.\d+){0,2}", version)
+        self.assertIsNotNone(match, f"node-version {version!r} is not a pinned version")
+        # Array.prototype.findLastIndex, which MOBILE_NAV in
+        # tests/test_layouts.py calls, was added in Node.js 18.
+        self.assertGreaterEqual(int(match.group(1)), 18)
+
+    def test_tests_do_not_skip_in_ci_when_node_is_missing(self):
+        # GitHub Actions sets CI=true in every step. A test that skips there
+        # when node is missing lets the job pass with the site script untested.
+        with tempfile.TemporaryDirectory() as without_node, tempfile.TemporaryDirectory() as with_node:
+            node = Path(with_node) / "node"
+            node.write_text("#!/bin/sh\nexit 1\n")
+            node.chmod(0o755)
+            skipped = {
+                path: skipped_tests({**os.environ, "CI": "true", "PATH": path})
+                for path in [without_node, with_node]
+            }
+        self.assertEqual(sorted(skipped[without_node] - skipped[with_node]), [],
+                         "skipped in CI when node is not on PATH")
 
 
 if __name__ == "__main__":
