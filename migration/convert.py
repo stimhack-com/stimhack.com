@@ -11,8 +11,12 @@ NetrunnerDB card images at card-images.netrunnerdb.com.
 
 Contributors edit these files after the migration. By default a run does
 not change a post, page, _index.md or data/decklists.yaml file that exists.
-For each item of the export that it does not write, it prints a line if the
-file differs from the export. It does not look at a file that no item of the
+For a post, page or _index.md file at the path that the export gives it,
+it prints a line if the file differs from the export (save). The list below
+says what it prints when a wp_id moves to a new path. For
+data/decklists.yaml it prints only the WordPress rows that the file does
+not contain, so a file that has all of them and other rows too gives no
+output (save_decklists). It does not look at a file that no item of the
 export writes, such as a content file whose wp_id is no longer in the
 export: that file is kept and nothing is printed (save and write_item only
 visit the items of the export). It does change tests/legacy-urls.txt and
