@@ -72,6 +72,8 @@ def parse(path, uploads_root):
     m = re.search(r"Posted by: (.+?) \| (\w+ \d+, \d{4}) \| Posted in (.+?) \|", meta)
     post_id = re.search(r"postid-(\d+)", " ".join(soup.body["class"]))
     content = soup.select_one(".entry-content")
+    # Read the tags first: their only links are in the footer removed below.
+    tags = [a.get_text() for a in soup.select("a[rel~=tag]") if "/tag/" in a["href"]]
     # The 2013 theme put the tag list inside the content; the new templates add their own.
     for el in content.select("div.tags, hr.divider-dotted, div.clear"):
         el.decompose()
@@ -80,7 +82,7 @@ def parse(path, uploads_root):
         "author": m[1],
         "date": _date(m[2], "%B %d, %Y"),
         "categories": [c.strip() for c in m[3].split(",")],
-        "tags": [a.get_text() for a in soup.select("a[rel~=tag]") if "/tag/" in a["href"]],
+        "tags": tags,
         "wp_id": int(post_id[1]),
         "content": content.decode_contents().strip(),
         "comments": _comments(soup, uploads_root),
