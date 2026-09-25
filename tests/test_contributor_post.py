@@ -254,6 +254,25 @@ class ContributorPost(unittest.TestCase):
         self.assertEqual(named, sorted(stopped))
 
 
+    def test_links_in_posts_for_later_are_checked(self):
+        # The link check of CI (.github/workflows/site.yml, "Check old URLs and
+        # internal links") runs on the output of the build step, which has no
+        # post for later. The first deploy after the date of the post builds
+        # it, and the link check then stops that deploy.
+        root = contributor_root(
+            ("contributor-test-later-link", "date: 2099-01-01T12:00:00-07:00", ["summary: Later."], False),
+        )
+        index = root / "content" / "posts" / "2026" / "contributor-test-later-link" / "index.md"
+        index.write_text(index.read_text() + "\n[A primer](/contributor-test-no-such-page/)\n")
+        result = unittest.TestResult()
+        with mock.patch.object(test_layouts, "ROOT", root):
+            unittest.TestLoader().loadTestsFromTestCase(test_layouts.PostsForLater).run(result)
+        traces = [trace for _, trace in result.failures + result.errors]
+        self.assertEqual(len(traces), 1, traces)
+        self.assertIn(
+            "broken link in /contributor-test-later-link/index.html: /contributor-test-no-such-page/", traces[0]
+        )
+
 class DraftPreview(unittest.TestCase):
     """The preview in CONTRIBUTING.md shows a new post before the contributor fills in its front matter.
 
