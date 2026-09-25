@@ -160,8 +160,11 @@ class Node(unittest.TestCase):
         version = str(setup.get("with", {}).get("node-version", ""))
         match = re.fullmatch(r"(\d+)(\.\d+){0,2}", version)
         self.assertIsNotNone(match, f"node-version {version!r} is not a pinned version")
-        # Array.prototype.findLastIndex, which MOBILE_NAV in
-        # tests/test_layouts.py calls, was added in Node.js 18.
+        # MOBILE_NAV in tests/test_layouts.py calls
+        # Array.prototype.findLastIndex. `node -e 'console.log(typeof
+        # [].findLastIndex)'` prints "undefined" with Node.js 13.14.0 and
+        # "function" with 23.4.0 and 24.4.1. The bound of 18 is not checked
+        # against a Node.js 18 install.
         self.assertGreaterEqual(int(match.group(1)), 18)
 
     def test_tests_do_not_skip_in_ci_when_node_is_missing(self):
