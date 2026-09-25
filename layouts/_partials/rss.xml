@@ -15,7 +15,7 @@
       <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
       <guid>{{ .Permalink }}</guid>
       {{ with index (.GetTerms "authors") 0 }}<dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">{{ .Title }}</dc:creator>{{ end }}
-      <description>{{ .Summary | plainify | htmlUnescape | transform.XMLEscape | safeHTML }}</description>
+      <description>{{ partial "summary-text.html" . | transform.XMLEscape | safeHTML }}</description>
     </item>
     {{- end }}
   </channel>

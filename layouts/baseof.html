@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
 <title>{{ if .IsHome }}{{ site.Title }} | {{ site.Params.description }}{{ else }}{{ .Title }} - {{ site.Title }}{{ end }}</title>
-<meta name="description" content="{{ with .Params.summary }}{{ . | plainify | truncate 160 }}{{ else }}{{ site.Params.description }}{{ end }}">
+<meta name="description" content="{{ if .Params.summary }}{{ partial "summary-text.html" . | truncate 160 }}{{ else }}{{ site.Params.description }}{{ end }}">
 <link rel="canonical" href="{{ .Permalink }}">
 {{- if site.Params.noindex }}
 <meta name="robots" content="noindex, nofollow">

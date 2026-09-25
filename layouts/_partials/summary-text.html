@@ -1,0 +1,7 @@
+{{- /* Summary of a page as plain text. Migrated posts have the WordPress excerpt
+       as plain text in front matter summary. Hugo renders that as Markdown in
+       .Summary, and a summary divider in the content replaces it, so use it as
+       written. New posts use the summary Hugo makes from their content. */ -}}
+{{- $text := "" -}}
+{{- with .Params.summary }}{{ $text = . }}{{ else }}{{ $text = .Summary | plainify | htmlUnescape }}{{ end -}}
+{{- return $text -}}

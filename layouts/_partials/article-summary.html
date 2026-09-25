@@ -10,7 +10,7 @@
     {{- with or (partial "image-url.html" (dict "page" . "param" "thumbnail")) (partial "image-url.html" (dict "page" . "param" "featured_image")) }}
     <a href="{{ $.RelPermalink }}" title="{{ $.Title }}"><img class="alignleft post_thumbnail wp-post-image" src="{{ . }}" alt="" height="200" loading="lazy" decoding="async"></a>
     {{- end }}
-    <p>{{ .Summary | plainify | htmlUnescape }}</p>
+    <p>{{ partial "summary-text.html" . }}</p>
     <p><a class="continue-reading-link" href="{{ .RelPermalink }}">Read More<i class="icon-right-dir"></i></a></p>
   </div>
   {{- end }}
