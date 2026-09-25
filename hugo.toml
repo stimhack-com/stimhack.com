@@ -68,9 +68,12 @@ uglyURLs = false
 # site root. The link hook does the same for a path to a page, and puts the
 # page URL in front of a #fragment. Both hooks then try resources.Get, so a
 # path that matches a file in assets/ becomes the URL of that file, and Hugo
-# publishes the file. Other relative URLs and all absolute URLs stay as
-# written. Source: embedded/templates/_markup/render-image.html and
-# render-link.html in the Hugo 0.166.0 binary. "fallback" uses the embedded
+# publishes the file. For other relative URLs and for all absolute URLs,
+# the hooks write the URL that urls.Parse gives (Go url.Parse, see
+# tpl/urls/urls.go) converted back to a string, not the text of the
+# Markdown. Source:
+# tpl/tplimpl/embedded/templates/_markup/render-image.html and
+# render-link.html in the Hugo 0.166.0 source. "fallback" uses the embedded
 # hook only when layouts/_markup/ has no hook of that kind.
 [markup.goldmark.renderHooks.image]
   useEmbedded = "fallback"
