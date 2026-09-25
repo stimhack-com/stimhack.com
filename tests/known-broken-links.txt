@@ -1,1 +1,5 @@
 # Links in migrated posts that were already broken on the WordPress site.
+# Each line is a decoded path as scripts/check_site.py reports it, without
+# the query or fragment.
+# href="netrunner.meteor.com" has no scheme, so it is a relative path.
+/kivs-top-five-picks-for-all-that-remains/netrunner.meteor.com

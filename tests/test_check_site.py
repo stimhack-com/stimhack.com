@@ -2,6 +2,7 @@
 import contextlib
 import io
 import shutil
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -38,6 +39,9 @@ PAGES = {
         <a href="">empty</a>
         <img srcset="https://example.com/a.png 1x, //cdn.example.com/b.png 2x">
         <a href="../post/hedge-fund.png">exists</a>
+        <a HREF=" ../post/ ">upper case name and spaces</a>
+        <img srcset="data:image/png;base64,iVBOR,w0KGgo= 1x, ../post/small.png 2x">
+        <img srcset="../post/small.png, ../post/hedge-fund.png 2x">
     """,
     # A page that is not index.html is served at its own file name, so its
     # relative links resolve against the directory it is in.
@@ -84,6 +88,14 @@ class BrokenLinks(unittest.TestCase):
 
     def test_skips_urls_that_are_not_paths_on_this_site(self):
         self.assertEqual({line for line in self.broken if not line.startswith("broken link in /post/")}, set())
+
+    def test_checks_the_directory_given_on_the_command_line(self):
+        result = subprocess.run(
+            [sys.executable, str(check_site.ROOT / "scripts" / "check_site.py"), str(self.public)],
+            capture_output=True, text=True,
+        )
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("broken link in /post/index.html: /post/hedge-fnd.png", result.stdout.splitlines())
 
 
 if __name__ == "__main__":

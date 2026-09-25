@@ -98,7 +98,14 @@ Every pull request runs these checks:
 - `python3 scripts/check_site.py` fails when a URL from the old WordPress site
   is missing, when a page links to a path on this site that does not
   exist, or when a page loads an image from an old cardgamedb.com or
-  netrunnerdb.com address that no longer works. Old links that were already
+  netrunnerdb.com address that no longer works. The link check reads the
+  `href`, `src`, `poster`, `data-src` and `srcset` attributes. It checks
+  paths that start with `/` and relative paths such as `hedge-fund.png`,
+  which it resolves against the URL of the page. It does not check URLs
+  with a scheme (`https:`, `mailto:`, `data:`), `//host` URLs, or values
+  that are only a `#fragment` or a `?query`. Old links that were already
   broken on WordPress are listed in `tests/known-broken-links.txt`.
+  To check a site that you built to a different directory, give the
+  directory: `python3 scripts/check_site.py <dir>`.
 
 Do not build with `--minify`. The HTML minifier breaks the XML feed at `/feed/`.
