@@ -32,7 +32,8 @@ COVER = ROOT / "tests" / "fixtures" / "bundles" / "posts" / "2026" / "bundle-art
 def contributor_root(*posts):
     """Return a directory that is ROOT with posts added to a copy of content/.
 
-    Each post is (folder name, date line, extra front matter lines, image). It
+    Each post is (folder name, date line, extra front matter lines, image). An
+    extra line replaces the line of the archetype with the same key. It
     is made with `hugo new` from the archetype and then changed as
     CONTRIBUTING.md says: draft false, an author, and the image as its
     featured_image. The folder names start with contributor-test-, so that
@@ -69,7 +70,13 @@ def contributor_root(*posts):
             elif line.startswith("featured_image:") and image:
                 line = "featured_image: cover.png"
             lines.append(line)
-        lines[1:1] = extra
+        for line in extra:
+            key = line.split(":")[0] + ":"
+            same = [i for i, old in enumerate(lines) if old.startswith(key)]
+            if same:
+                lines[same[0]] = line
+            else:
+                lines.insert(1, line)
         index.write_text("\n".join(lines) + "\n")
         if image:
             shutil.copy(COVER, index.parent / "cover.png")
@@ -156,9 +163,15 @@ class ContributorPost(unittest.TestCase):
         # Run every test of test_layouts with this content/ in place of the real one.
         # A new loader: the default one keeps the -k patterns of the command line.
         # Five new posts in articles give its archive one page more than WordPress had.
+        # CONTRIBUTING.md says that Hugo does not publish a draft or a post with
+        # a date in the future, so a pull request can add one.
         root = contributor_root(
             ("contributor-test-post", NEW_DATE, [], True),
             *((f"contributor-test-post-{n}", f"date: 2026-09-1{n}T12:00:00-07:00", [], False) for n in range(1, 5)),
+            ("contributor-test-later", "date: 2099-01-01T12:00:00-07:00", ["summary: A post for later."], False),
+            ("contributor-test-draft", NEW_DATE, ["draft: true", "summary: A draft."], False),
+            ("contributor-test-expired", NEW_DATE, ["expiryDate: 2026-01-01", "summary: Gone."], False),
+            ("contributor-test-publish", NEW_DATE, ["publishdate: 2099-01-01", "summary: Not yet."], False),
         )
         default = lambda content=None, environment=None: site_build.build(content or root / "content", environment)
         tests = unittest.TestSuite(
