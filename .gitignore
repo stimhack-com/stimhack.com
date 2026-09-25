@@ -1,5 +1,5 @@
-/.export/
-/public/
-/resources/
+/.export
+/public
+/resources
 /.hugo_build.lock
 __pycache__/
