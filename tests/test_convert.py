@@ -5,6 +5,7 @@ Run: python3 -m unittest discover tests
 import io
 import json
 import re
+import shutil
 import sys
 import tempfile
 import unittest
@@ -431,6 +432,19 @@ class Rerun(unittest.TestCase):
             "20 /tournament-decklists/\n52 /drafting-with-netrunner/\n100 /first-post/\n"
             "7011 /tournament-decklists/decklist-submssion/\n",
         )
+
+    def test_run_writes_the_pages_and_terms_that_the_site_serves(self):
+        self.export_with_an_archived_post()
+        # Only the archived post has the tag Drafting.
+        self.export["tags"][1]["count"] = 0
+        shutil.rmtree(self.root / "content")
+        self.run_convert(overwrite=True)
+        # Not the pages that SKIP_PAGES has, or the category and tag without posts.
+        self.assertEqual([str(path.relative_to(self.root / "content")) for path, _ in content_files(self.root / "content")], [
+            "authors/sneakysly/_index.md", "categories/cube-drafting/_index.md", "pages/tournament-decklists.html",
+            "posts/2013/drafting-with-netrunner.html", "posts/2016/first-post.html",
+            "tags/draft/_index.md", "tags/drafting/_index.md",
+        ])
 
     def test_default_run_keeps_the_ids_that_the_export_does_not_have(self):
         ids = self.root / "tests/wp-ids.txt"
