@@ -54,8 +54,22 @@ IMAGE_ATTRS = {"src", "poster", "data-src"}
 META_URL_PROPERTIES = {"og:image", "og:url"}
 # The URL in the content of a meta refresh tag, such as "0; url=/a/". The
 # delay can be followed by a semicolon, a comma or spaces, "url=" can be left
-# out, and the URL can be in quotes.
-REFRESH_URL = re.compile(r"""\s*[\d.]*(?:\s*[;,]\s*|\s+)(?:url\s*=\s*)?(?:(["'])(.*?)(?:\1|$)|(.*))""", re.I | re.S)
+# out, and the URL can be in quotes. Only ASCII white space (tab, line feed,
+# form feed, carriage return and space) counts as a space here, so a no-break
+# space is part of the URL (HTML Standard, shared declarative refresh steps,
+# https://html.spec.whatwg.org/multipage/semantics.html#shared-declarative-refresh-steps).
+REFRESH_URL = re.compile(
+    r"""[\t\n\f\r ]*[\d.]*(?:[\t\n\f\r ]*[;,][\t\n\f\r ]*|[\t\n\f\r ]+)"""
+    r"""(?:url[\t\n\f\r ]*=[\t\n\f\r ]*)?(?:(["'])(.*?)(?:\1|$)|(.*))""",
+    re.I | re.S,
+)
+# The characters that the URL parser removes from the start and the end of a
+# URL: the C0 controls U+0000 to U+001F and space. It also removes each tab,
+# line feed and carriage return inside the URL. Other white space, such as a
+# no-break space, is part of the URL (URL Standard, basic URL parser,
+# https://url.spec.whatwg.org/#concept-basic-url-parser). _WHATWG_C0_CONTROL_OR_SPACE
+# in Lib/urllib/parse.py is the same set.
+URL_TRIM = "".join(map(chr, range(0x21)))
 # The characters that separate the URLs and descriptors in a srcset: space,
 # tab, line feed, carriage return and form feed. Other white space, such as a
 # no-break space, is part of a URL.
@@ -106,6 +120,11 @@ def id_problems(public):
     return problems
 
 
+def url_text(value):
+    """Return a URL from an attribute value without the characters that the URL parser removes from it."""
+    return value.strip(URL_TRIM).translate(dict.fromkeys(map(ord, "\t\n\r")))
+
+
 def srcset_urls(srcset):
     """Return the URLs in a srcset such as "a.png 300w, b.png 600w".
 
@@ -144,25 +163,25 @@ class Links(HTMLParser):
             if value is None:
                 continue
             if name in LINK_ATTRS:
-                self.urls.append(value.strip())
+                self.urls.append(url_text(value))
                 if name in IMAGE_ATTRS:
-                    self.images.append(value.strip())
+                    self.images.append(url_text(value))
             elif name == "srcset":
-                self.urls.extend(srcset_urls(value))
-                self.images.extend(srcset_urls(value))
+                self.urls.extend(map(url_text, srcset_urls(value)))
+                self.images.extend(map(url_text, srcset_urls(value)))
         attrs = {name: value or "" for name, value in attrs}
         if tag == "link" and "canonical" in attrs.get("rel", "").lower().split():
-            self.canonical = attrs.get("href", "").strip()
+            self.canonical = url_text(attrs.get("href", ""))
         if tag != "meta" or "content" not in attrs:
             return
         if attrs.get("http-equiv", "").strip().lower() == "refresh":
             match = REFRESH_URL.match(attrs["content"])
             if match:
-                self.urls.append((match[2] if match[1] else match[3]).strip())
+                self.urls.append(url_text(match[2] if match[1] else match[3]))
         elif attrs.get("property", "").strip().lower() in META_URL_PROPERTIES:
-            self.urls.append(attrs["content"].strip())
+            self.urls.append(url_text(attrs["content"]))
             if attrs["property"].strip().lower() == "og:image":
-                self.images.append(attrs["content"].strip())
+                self.images.append(url_text(attrs["content"]))
 
 
 def parse(html):
