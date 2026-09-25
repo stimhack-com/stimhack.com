@@ -37,6 +37,7 @@ DIR is the built site to check. The default is public/.
 """
 import argparse
 import json
+import os
 import re
 import sys
 from html.parser import HTMLParser
@@ -99,9 +100,19 @@ KNOWN_BROKEN = {
 
 
 def exists(public, path):
-    """Return whether a decoded path such as /post/a b.png is a file on the site."""
-    target = public / path.lstrip("/")
-    return target.is_file() or (target / "index.html").is_file()
+    """Return whether a decoded path such as /post/a b.png is a file on the site.
+
+    The path is joined as text, not as a Path, since a Path drops a slash at
+    the end (_parse_path in Lib/pathlib.py) and a file name with a slash
+    after it names no file (path_resolution(7), "Trailing slashes"). A file
+    that the path finds outside public, such as /../a.png from a link to
+    /..%2Fa.png, is not on the site.
+    """
+    target = os.path.join(public, path.lstrip("/"))
+    for name in (target, os.path.join(target, "index.html")):
+        if os.path.isfile(name):
+            return Path(name).resolve().is_relative_to(Path(public).resolve())
+    return False
 
 
 def id_problems(public):
