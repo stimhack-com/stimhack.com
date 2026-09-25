@@ -123,7 +123,10 @@ function initMobileNav() {
 // submenu-open class keeps the submenu shown in a browser that does not keep
 // :hover or focus after the cancelled click. Unlike the theme, a mouse click
 // on a computer with a touch screen follows the link, and after a tap outside
-// the item the next tap on it opens the submenu again.
+// the item the next tap on it opens the submenu again. The stored tap is
+// cleared on pointercancel, on a key press and on a pointerdown on another
+// element, so after a tap that fires no click a later click that is not from a
+// tap, such as from the Enter key, follows the link.
 function initTouchMenu() {
   const menu = document.getElementById("prime_nav");
   if (!menu) return;
@@ -135,6 +138,7 @@ function initTouchMenu() {
     link.addEventListener("pointerdown", (event) => {
       tap = { link, touch: event.pointerType !== "mouse", shown: getComputedStyle(submenu).display !== "none" };
     });
+    link.addEventListener("pointercancel", () => { tap = null; });
     link.addEventListener("click", (event) => {
       const first = tap && tap.link === link && tap.touch && !tap.shown;
       tap = null;
@@ -144,8 +148,10 @@ function initTouchMenu() {
     });
   });
   document.addEventListener("pointerdown", (event) => {
+    if (tap && !tap.link.contains(event.target)) tap = null;
     items.forEach((li) => { if (!li.contains(event.target)) li.classList.remove("submenu-open"); });
   });
+  document.addEventListener("keydown", () => { tap = null; });
 }
 
 // Tournament decklists: search box filters rows, headers sort columns.
