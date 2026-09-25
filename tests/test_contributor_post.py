@@ -33,10 +33,13 @@ def contributor_root(*posts):
     """Return a directory that is ROOT with posts added to a copy of content/.
 
     Each post is (folder name, date line, extra front matter lines, image). An
-    extra line replaces the line of the archetype with the same key. It
-    is made with `hugo new` from the archetype and then changed as
-    CONTRIBUTING.md says: draft false, an author, and the image as its
-    featured_image. The folder names start with contributor-test-, so that
+    extra line replaces the line of the archetype with the same key in any
+    case. A folder
+    name such as "name/index.html" also gives the name of the content file,
+    which is index.md when it is not given. The post is made with `hugo new`
+    from the archetype and then changed as CONTRIBUTING.md says: draft false,
+    an author, and the image as its featured_image. The folder names start
+    with contributor-test-, in any case and with a space or a hyphen, so that
     they do not match a post that a contributor has added to content/: `hugo
     new` does not replace a file. The other entries of ROOT are copies, or
     symbolic links for the entries in LINKED.
@@ -53,6 +56,7 @@ def contributor_root(*posts):
     content = root / "content"
     shutil.copytree(ROOT / "content", content)
     for name, date, extra, image in posts:
+        name, _, file_name = name.partition("/")
         subprocess.run(
             [*hugo(), "new", "content", f"posts/2026/{name}/index.md",
              "--source", str(ROOT), "--contentDir", str(content), "--quiet"],
@@ -72,12 +76,14 @@ def contributor_root(*posts):
             lines.append(line)
         for line in extra:
             key = line.split(":")[0] + ":"
-            same = [i for i, old in enumerate(lines) if old.startswith(key)]
+            same = [i for i, old in enumerate(lines) if old.lower().startswith(key.lower())]
             if same:
                 lines[same[0]] = line
             else:
                 lines.insert(1, line)
         index.write_text("\n".join(lines) + "\n")
+        if file_name:
+            index.rename(index.with_name(file_name))
         if image:
             shutil.copy(COVER, index.parent / "cover.png")
     return root
@@ -132,29 +138,66 @@ class ContributorPost(unittest.TestCase):
         self.assertIn("/contributor-test-post/", test_layouts.all_posts(root / "content"))
 
     def test_content_walkers_give_a_post_the_url_of_its_folder(self):
-        # A post folder has no slug. Hugo serves the post at the folder name,
-        # in lower case.
+        # A post without a slug is served at the name of its folder, and a
+        # post with a slug at the slug. Hugo makes a URL of the name, in
+        # lower case with a hyphen for a space, and reads the slug key in any
+        # case. It does not publish a post whose pubdate or published is in
+        # the future, or whose unpublishdate has passed.
         root = contributor_root(
             ("contributor-test-post", NEW_DATE, [], False),
             ("Contributor-Test-Case", NEW_DATE, [], False),
+            ("Contributor Test Space", NEW_DATE, [], False),
+            ("contributor-test-slug", NEW_DATE, ["slug: Contributor Test Slug"], False),
+            ("contributor-test-key", NEW_DATE, ["Slug: contributor-test-upper-key"], False),
+            ("contributor-test-html/index.html", NEW_DATE, [], False),
+            ("contributor-test-pubdate", NEW_DATE, ["pubdate: 2099-01-01"], False),
+            ("contributor-test-published", NEW_DATE, ["published: 2099-01-01"], False),
+            ("contributor-test-unpublished", NEW_DATE, ["unpublishdate: 2026-01-01"], False),
         )
         self.assertEqual(walker_errors(root), [])
         new = set(test_layouts.all_posts(root / "content")) - set(test_layouts.all_posts(ROOT / "content"))
-        self.assertEqual(sorted(new), ["/contributor-test-case/", "/contributor-test-post/"])
+        self.assertEqual(sorted(new), [
+            "/contributor-test-case/",
+            "/contributor-test-html/",
+            "/contributor-test-post/",
+            "/contributor-test-slug/",
+            "/contributor-test-space/",
+            "/contributor-test-upper-key/",
+        ])
         out = build(root / "content")
         for url in new:
             with self.subTest(url=url):
                 self.assertTrue((out / url.strip("/") / "index.html").is_file())
+
+    def test_content_walkers_read_a_post_without_a_date(self):
+        # Hugo publishes a post without a date.
+        root = contributor_root(("contributor-test-no-date", "# No date.", [], False))
+        self.assertEqual(walker_errors(root), [])
+        self.assertIn("/contributor-test-no-date/", test_layouts.all_posts(root / "content"))
+        self.assertTrue((build(root / "content") / "contributor-test-no-date" / "index.html").is_file())
+
+    def test_migrated_content_leaves_out_the_folders_of_new_posts(self):
+        # Hugo makes a page bundle of a folder with an index file in any
+        # content format, and the images in the folder are its resources.
+        root = contributor_root(
+            ("contributor-test-post", NEW_DATE, [], True),
+            ("contributor-test-html/index.html", NEW_DATE, [], True),
+        )
+        migrated = test_layouts.migrated_content(root / "content")
+        left = [path.name for path in (migrated / "posts" / "2026").glob("contributor-test-*")]
+        self.assertEqual(left, [])
 
     def test_category_feed_check_reads_dates_that_are_not_quoted(self):
         # A slug, so that the post URL does not stop the check before it reads the date.
         # Hugo reads a date without an offset in the timeZone of hugo.toml. The
         # check compares the dates of the posts that are not in a feed with the
         # dates in it, so the posts with these dates are older than the feeds.
+        # Hugo gives a post without a date the zero time.
         root = contributor_root(
             ("contributor-test-post", NEW_DATE, ["slug: contributor-test-post"], False),
             ("contributor-test-local", "date: 2013-06-01T12:00:00", ["slug: contributor-test-local"], False),
             ("contributor-test-day", "date: 2013-06-02", ["slug: contributor-test-day"], False),
+            ("contributor-test-no-date", "# No date.", ["slug: contributor-test-no-date"], False),
         )
         content = root / "content"
         self.assertEqual(test_layouts.category_feed_errors(build(content), content), [])
@@ -172,6 +215,14 @@ class ContributorPost(unittest.TestCase):
             ("contributor-test-draft", NEW_DATE, ["draft: true", "summary: A draft."], False),
             ("contributor-test-expired", NEW_DATE, ["expiryDate: 2026-01-01", "summary: Gone."], False),
             ("contributor-test-publish", NEW_DATE, ["publishdate: 2099-01-01", "summary: Not yet."], False),
+            ("contributor-test-pubdate", NEW_DATE, ["pubdate: 2099-01-01", "summary: Not yet."], False),
+            # URLs that Hugo makes from a folder name, a slug and a bundle of an index.html.
+            ("Contributor Test Space", "date: 2026-09-21T12:00:00-07:00", ["summary: A space."], False),
+            ("contributor-test-slug", "date: 2026-09-22T12:00:00-07:00", ["slug: Contributor Test Slug"], False),
+            ("contributor-test-key", "date: 2026-09-23T12:00:00-07:00", ["Slug: contributor-test-upper-key"], False),
+            ("contributor-test-html/index.html", "date: 2026-09-24T12:00:00-07:00", ["summary: HTML."], True),
+            # Hugo reads the keys of front matter in any case.
+            ("contributor-test-categories", "date: 2026-09-25T12:00:00-07:00", ["Categories: [strategy]"], False),
         )
         default = lambda content=None, environment=None: site_build.build(content or root / "content", environment)
         tests = unittest.TestSuite(
