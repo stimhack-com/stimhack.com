@@ -218,10 +218,6 @@ class ImageUrlsReadWithTheParser(unittest.TestCase):
         self.assertEqual(found - self.ALLOWED, set())
 
 
-if __name__ == "__main__":
-    unittest.main()
-
-
 class WordPressIds(unittest.TestCase):
     """The check compares /wp-ids.json in the build with the IDs in tests/wp-ids.txt."""
 
@@ -297,3 +293,7 @@ class LegacyUrls(unittest.TestCase):
                 "legacy URL missing: /uploads/gone.png",
             },
         )
+
+
+if __name__ == "__main__":
+    unittest.main()
