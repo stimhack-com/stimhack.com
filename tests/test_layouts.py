@@ -27,3 +27,19 @@ class TermDescriptions(unittest.TestCase):
         html = (build() / "author" / "ian" / "index.html").read_text()
         description = re.search(r'<div id="author-description"><h2>Ian L</h2>(Ian .*? his wife)', html)
         self.assertEqual(description[1], "Ian &amp; his wife")
+
+
+class HomeGrid(unittest.TestCase):
+    def test_thumbnail_links_to_its_own_post(self):
+        html = (build() / "index.html").read_text()
+        boxes = html.split('<div class="wc-shortcodes-post-box ')[1:]
+        thumbnails = []
+        titles = []
+        for box in boxes:
+            thumbnail = re.search(r'wc-shortcodes-entry-thumbnail"><a href="([^"]*)" title="([^"]*)"', box)
+            if thumbnail:
+                thumbnails.append(thumbnail.groups())
+                title = re.search(r'wc-shortcodes-entry-title"><a href="([^"]*)" rel="bookmark">([^<]*)</a>', box)
+                titles.append(title.groups())
+        self.assertTrue(thumbnails)
+        self.assertEqual(thumbnails, titles)
