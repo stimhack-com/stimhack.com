@@ -16,7 +16,7 @@ uglyURLs = false
   homePosts = 12
   # Categories whose posts the site feed leaves out, as the WordPress feed did.
   feedExcludeCategories = ["decklists"]
-  repo = "https://github.com/stimhack/stimhack.com"
+  repo = "https://github.com/stimhack-com/stimhack.com"
 
   [[params.socials]]
     name = "Twitch"
