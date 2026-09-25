@@ -18,6 +18,9 @@ import convert  # noqa: E402
 # Shortcodes in the WordPress export whose plugins the static site does not run:
 # wc-shortcodes, a contact form plugin, Font Awesome icons and Easy Media Gallery.
 RAW_SHORTCODE = re.compile(r"\[/?(?:accordion|pane|one_fourth|Form|icon|easy-media)\b[^\]]*\]")
+# Any shortcode with an attribute, such as [name key=value], from a plugin not listed above.
+# Bracketed prose and card names in the posts do not have this shape.
+ATTRIBUTE_SHORTCODE = re.compile(r"\[[A-Za-z][\w-]* [\w-]+=[^\]]*\]")
 
 
 class RewriteUrls(unittest.TestCase):
@@ -103,7 +106,8 @@ class Shortcodes(unittest.TestCase):
             f"{path.relative_to(root)}: {m[0]}"
             for path in sorted([*(root / "content").rglob("*"), *(root / "data").rglob("*")])
             if path.is_file()
-            for m in RAW_SHORTCODE.finditer(path.read_text())
+            for pattern in (RAW_SHORTCODE, ATTRIBUTE_SHORTCODE)
+            for m in pattern.finditer(path.read_text())
         ]
         self.maxDiff = None
         self.assertEqual(found, [])
