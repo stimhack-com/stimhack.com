@@ -22,8 +22,9 @@ class Parse(unittest.TestCase):
         self.assertEqual(self.post["categories"], ["Cube Drafting"])
         self.assertEqual(self.post["wp_id"], 52)
 
-    def test_tags_exclude_the_category_link(self):
-        self.assertEqual(self.post["tags"], ["Draft"])
+    def test_tags_come_from_the_tag_footer_and_exclude_the_category_link(self):
+        # The archived pages link their tags only in the footer that parse() removes from the content.
+        self.assertEqual(self.post["tags"], ["Draft", "Drafting"])
 
     def test_old_theme_tag_footer_is_removed_from_content(self):
         self.assertEqual(self.post["content"], "<p>Body text.</p>")
