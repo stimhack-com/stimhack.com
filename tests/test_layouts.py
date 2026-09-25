@@ -1437,7 +1437,10 @@ def wordpress_ids(content):
 
 @unittest.skipUnless(shutil.which("node"), "needs node")
 class PostIdLinks(unittest.TestCase):
-    """WordPress redirected /?p=<ID> and /?page_id=<ID> to the post or page with that ID."""
+    """/?p=<ID> and /?page_id=<ID> open the post or page with that ID.
+
+    These are the forms of the WordPress GUIDs in .export/posts.json and .export/pages.json.
+    """
 
     maxDiff = None
 
@@ -1452,7 +1455,8 @@ class PostIdLinks(unittest.TestCase):
         self.assert_opens("?page_id=1879", "/articles-and-guides/")
 
     def test_either_parameter_takes_any_id(self):
-        # Posts and pages share one WordPress ID space, so either parameter finds either.
+        # No post in .export/posts.json has the ID of a page in .export/pages.json,
+        # and the script looks up both parameters in one map, so either finds either.
         self.assert_opens("?p=1879", "/articles-and-guides/")
         self.assert_opens("?page_id=5525", "/2014-world-championship-report-1st-place/")
 

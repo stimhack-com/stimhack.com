@@ -1,5 +1,7 @@
-{{- /* WordPress redirected /?p=<ID> and /?page_id=<ID> to the post or page
-with that ID. wp-ids.json maps each ID to its URL; only such a link loads it. */ -}}
+{{- /* Send /?p=<ID> and /?page_id=<ID> to the post or page with that ID.
+These are the forms of the WordPress GUIDs in the export: guid.rendered in
+.export/posts.json and .export/pages.json. wp-ids.json maps each ID to its
+URL; only such a link loads it. */ -}}
 <script>
 (function () {
   var query = new URLSearchParams(location.search);
