@@ -1930,3 +1930,7 @@ class StagingRobots(unittest.TestCase):
             if page.read_text().startswith("<!DOCTYPE html>") and self.NOINDEX not in page.read_text()
         ]
         self.assertEqual(missing[:5], [])
+
+
+if __name__ == "__main__":
+    unittest.main()
