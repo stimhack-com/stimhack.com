@@ -10,9 +10,13 @@ migration/archived-links.json, which download_uploads.py writes, and old
 NetrunnerDB card images at card-images.netrunnerdb.com.
 
 Contributors edit these files after the migration. By default a run does
-not change a post, page, _index.md or data/decklists.yaml file that exists,
-and prints a line for each difference from the export that it leaves in
-place. It does change tests/legacy-urls.txt and tests/wp-ids.txt:
+not change a post, page, _index.md or data/decklists.yaml file that exists.
+For each item of the export that it does not write, it prints a line if the
+file differs from the export. It does not look at a file that no item of the
+export writes, such as a content file whose wp_id is no longer in the
+export: that file is kept and nothing is printed (save and write_item only
+visit the items of the export). It does change tests/legacy-urls.txt and
+tests/wp-ids.txt:
 
 - A post, page or _index.md file that does not exist yet is written. One
   that exists is kept, and listed if the export has a different version.
