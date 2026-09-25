@@ -14,6 +14,7 @@ from datetime import datetime
 from email.utils import parsedate_to_datetime
 from html.parser import HTMLParser
 from urllib.parse import urlsplit
+from urllib.robotparser import RobotFileParser
 from xml.etree import ElementTree
 
 import yaml
@@ -1444,3 +1445,26 @@ class BundleFiles(unittest.TestCase):
             url = "/" + page.relative_to(out).as_posix()
             broken += [(url, path) for path in check_site.site_paths(url, page.read_text()) if not check_site.exists(out, path)]
         self.assertEqual(broken, [])
+
+
+class StagingRobots(unittest.TestCase):
+    """The staging site asks search engines not to index its pages with a noindex meta tag.
+
+    A crawler reads the tag only if robots.txt lets it fetch the page. Google:
+    "For the noindex rule to be effective, the page or resource must not be
+    blocked by a robots.txt file"
+    (https://developers.google.com/search/docs/crawling-indexing/block-indexing).
+    """
+
+    def test_robots_txt_lets_crawlers_fetch_the_pages_with_the_noindex_tag(self):
+        out = build(environment="staging")
+        robots = RobotFileParser()
+        robots.parse((out / "robots.txt").read_text().splitlines())
+        pages = [
+            "/" + page.relative_to(out).as_posix().removesuffix("index.html")
+            for page in sorted(out.rglob("*.html"))
+            if '<meta name="robots" content="noindex, nofollow">' in page.read_text()
+        ]
+        self.assertIn("/", pages)
+        blocked = [url for url in pages if not robots.can_fetch("*", url)]
+        self.assertEqual(blocked[:5], [])
