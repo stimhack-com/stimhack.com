@@ -34,7 +34,7 @@ STATIC = ROOT / "static"
 UPLOAD_RE = re.compile(
     r"""(?:(?:https?:)?//(?:www\.)?stimhack\.com|(?<![^\s"'(=,]))(/wp-content/uploads/[^"'\s<>)?#]*[^"'\s<>)?#,])"""
 )
-# The files of the site that can reference uploads.
+# The Hugo sources searched for uploads URLs. Other files in static/ are not searched.
 SITE_FILES = ("content", "data", "config", "assets", "layouts", "hugo.toml")
 
 session = requests.Session()
