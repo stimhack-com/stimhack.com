@@ -5,6 +5,8 @@ Run: python3 -m unittest discover tests
 import html
 import re
 import unittest
+from urllib.parse import urlsplit
+from xml.etree import ElementTree
 
 import yaml
 
@@ -344,3 +346,56 @@ class ArchivePager(unittest.TestCase):
                 if actual != expected:
                     wrong.append((url, actual, expected))
         self.assertEqual(wrong[:5], [])
+
+
+FEEDS = ["index.xml", "feed/index.html"]
+
+
+def feed_guids(out, feed):
+    """Return (post URL path, guid element as written) for each item in the feed file in out."""
+    text = (out / feed).read_text()
+    # Parse first, so a feed that is not valid XML fails here.
+    ElementTree.fromstring(text.encode())
+    items = re.findall(r"<item>.*?<link>([^<]*)</link>.*?(<guid[^>]*>[^<]*</guid>)", text, re.S)
+    return [(urlsplit(link).path, guid) for link, guid in items]
+
+
+def wordpress_ids(content):
+    """Return {post URL: WordPress post ID} for each post in content that has one."""
+    ids = {}
+    for path in sorted((content / "posts").rglob("*.*")):
+        front = yaml.safe_load(path.read_text().split("---\n")[1])
+        if front.get("wp_id"):
+            ids[front.get("url") or f"/{front['slug']}/"] = front["wp_id"]
+    return ids
+
+
+class FeedGuids(unittest.TestCase):
+    """Feed readers know items by GUID, so migrated posts keep the GUID WordPress gave them."""
+
+    maxDiff = None
+
+    def assert_wordpress_guids(self, out):
+        ids = wordpress_ids(ROOT / "content")
+        for feed in FEEDS:
+            with self.subTest(feed=feed):
+                items = [(url, guid) for url, guid in feed_guids(out, feed) if url in ids]
+                self.assertEqual(len(items), 20)
+                expected = [(url, f'<guid isPermaLink="false">https://stimhack.com/?p={ids[url]}</guid>') for url, _ in items]
+                self.assertEqual(items, expected)
+
+    def test_migrated_posts_keep_wordpress_guid(self):
+        self.assert_wordpress_guids(build())
+
+    def test_staging_feed_has_production_guids(self):
+        self.assert_wordpress_guids(build(environment="staging"))
+
+    def test_post_without_wordpress_id_has_permalink_guid(self):
+        out = build(FIXTURE)
+        for feed in FEEDS:
+            with self.subTest(feed=feed):
+                guids = dict(feed_guids(out, feed))
+                self.assertIn(guids["/new-post/"], [
+                    "<guid>https://stimhack.com/new-post/</guid>",
+                    '<guid isPermaLink="true">https://stimhack.com/new-post/</guid>',
+                ])
