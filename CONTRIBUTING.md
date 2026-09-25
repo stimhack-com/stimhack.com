@@ -140,4 +140,17 @@ packages that the checks use, for example in a virtual environment:
 python3 -m pip install -r requirements.txt
 ```
 
+Then run the checks from the root of the repository:
+
+```sh
+python3 -m unittest discover tests
+hugo --cleanDestinationDir --printPathWarnings --panicOnWarning
+python3 scripts/check_site.py
+```
+
+`--cleanDestinationDir` removes the files in `public/` that are not in
+`static/` before Hugo writes the pages. Without it, pages from an earlier
+build stay in `public/`. A link to such a page then passes the check on your
+computer, but fails in CI, which builds from a new checkout.
+
 Do not build with `--minify`. The HTML minifier breaks the XML feed at `/feed/`.
