@@ -1,0 +1,14 @@
+# The main menu of the fixture sites in tests/fixtures. Their content has
+# none of the pages that the menu in hugo.toml links to, and a menu entry
+# without a page stops the build. The menus of this file replace those of
+# hugo.toml when it comes after hugo.toml in --config.
+[[menus.main]]
+  name = "Home"
+  pageRef = "/"
+  weight = 10
+  pre = "fa-home"
+[[menus.main]]
+  name = "Forums"
+  url = "http://forum.stimhack.com/"
+  weight = 30
+  pre = "fa-comments-o"

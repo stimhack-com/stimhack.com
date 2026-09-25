@@ -25,7 +25,7 @@ from urllib.robotparser import RobotFileParser
 from xml.etree import ElementTree
 from zoneinfo import ZoneInfo
 
-from site_build import ROOT, build, hugo
+from site_build import FIXTURE_CONFIG, ROOT, build, hugo
 
 sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "migration"))
@@ -960,7 +960,7 @@ class UntitledPages(unittest.TestCase):
             # The flags of the build step in .github/workflows/site.yml.
             result = subprocess.run(
                 [*hugo(), "--source", str(ROOT), "--destination", out, "--contentDir", str(UNTITLED),
-                 "--printPathWarnings", "--panicOnWarning"],
+                 "--config", FIXTURE_CONFIG, "--printPathWarnings", "--panicOnWarning"],
                 capture_output=True,
                 text=True,
             )
@@ -1492,9 +1492,9 @@ class CategoryFeeds(unittest.TestCase):
 
 
 def build_with_params(params, out, content=CATEGORY_SPELLINGS):
-    """Build content into out with hugo.toml and the site params in params.
+    """Build content into out with FIXTURE_CONFIG and the site params in params.
 
-    Return the finished Hugo process. The params go in a second config file:
+    Return the finished Hugo process. The params go in a third config file:
     Hugo reads an environment variable such as HUGO_PARAMS_FEEDEXCLUDECATEGORIES
     as a string, not a list.
     """
@@ -1502,7 +1502,7 @@ def build_with_params(params, out, content=CATEGORY_SPELLINGS):
     extra.write_text("[params]\n" + "".join(f"  {key} = {json.dumps(value)}\n" for key, value in params.items()))
     return subprocess.run(
         [*hugo(), "--source", str(ROOT), "--destination", str(Path(out) / "public"),
-         "--contentDir", str(content), "--config", f"{ROOT / 'hugo.toml'},{extra}"],
+         "--contentDir", str(content), "--config", f"{FIXTURE_CONFIG},{extra}"],
         capture_output=True,
         text=True,
     )

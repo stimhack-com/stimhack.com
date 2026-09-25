@@ -5,13 +5,19 @@
   {{- /* On a post, WordPress highlighted the menu items for the post's categories. */}}
   {{- $categories := slice }}
   {{- if eq .Section "posts" }}{{ range .GetTerms "categories" }}{{ $categories = $categories | append .RelPermalink }}{{ end }}{{ end }}
+  {{- /* Hugo gives an entry whose pageRef names no page the URL of its url setting, which is empty
+       when the entry has none (MenuEntry.URL in navigation/menu.go and assembleMenus in hugolib/site.go
+       of Hugo 0.166). The menu would then link to the page that shows it. */}}
+  {{- $noURL := "Menu entry %q in hugo.toml has no URL. Its pageRef %q is not the path of a page. Use the path of a page in content/, as in /pages/<name>, or use url for a link to another site." }}
   {{- range site.Menus.main }}
+    {{- if not .URL }}{{ errorf $noURL .Name .PageRef }}{{ end }}
     {{- $current := or ($page.IsMenuCurrent "main" .) ($page.HasMenuCurrent "main" .) (and .Page (in $categories .Page.RelPermalink)) }}
     <li class="menu-item{{ if .HasChildren }} menu-item-has-children{{ end }}{{ if $current }} current-menu-item{{ end }}">
       <a href="{{ .URL }}"><span><i class="fa {{ .Pre }}" aria-hidden="true"></i> {{ .Name }}</span></a>
       {{- if .HasChildren }}
       <ul class="sub-menu">
         {{- range .Children }}
+        {{- if not .URL }}{{ errorf $noURL .Name .PageRef }}{{ end }}
         <li class="menu-item{{ if $page.IsMenuCurrent "main" . }} current-menu-item{{ end }}"><a href="{{ .URL }}"><span><i class="fa {{ .Pre }}" aria-hidden="true"></i> {{ .Name }}</span></a></li>
         {{- end }}
       </ul>

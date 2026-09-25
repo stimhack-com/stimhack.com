@@ -7,6 +7,9 @@ from functools import cache
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+FIXTURES = ROOT / "tests" / "fixtures"
+# hugo.toml with the main menu of the fixture sites in FIXTURES.
+FIXTURE_CONFIG = f"{ROOT / 'hugo.toml'},{FIXTURES / 'menu.toml'}"
 
 
 @cache
@@ -14,6 +17,7 @@ def build(content=None, environment=None):
     """Build the site with Hugo into a temporary directory and return its path.
 
     content is a directory to use in place of content/, for tests with their own posts.
+    A directory in FIXTURES gets the main menu of FIXTURE_CONFIG.
     environment is a Hugo environment such as "staging", which adds config/<environment>/.
     """
     out = Path(tempfile.mkdtemp(prefix="stimhack-build-"))
@@ -21,6 +25,8 @@ def build(content=None, environment=None):
     args = ["--source", str(ROOT), "--destination", str(out), "--quiet"]
     if content:
         args += ["--contentDir", str(content)]
+        if Path(content).is_relative_to(FIXTURES):
+            args += ["--config", FIXTURE_CONFIG]
     if environment:
         args += ["--environment", environment]
     subprocess.run([*hugo(), *args], check=True)
