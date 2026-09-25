@@ -1,7 +1,7 @@
 """Tests for the checks in scripts/check_site.py, on a small built site."""
+import ast
 import contextlib
 import io
-import re
 import shutil
 import subprocess
 import sys
@@ -215,9 +215,89 @@ class ImageUrlsReadWithTheParser(unittest.TestCase):
             path.relative_to(check_site.ROOT).as_posix()
             for folder in ("scripts", "migration")
             for path in (check_site.ROOT / folder).rglob("*.py")
-            if re.search(r"<img\\[bs]", path.read_text())
+            if img_patterns(path.read_text())
         }
         self.assertEqual(found - self.ALLOWED, set())
+
+    def test_finds_each_spelling_of_an_img_pattern(self):
+        for source in [
+            'import re\nre.compile(r"<img\\b[^>]*src")',
+            'import re\nre.compile(r"""<img[^>]*src=["\']([^"\']+)""", re.I)',
+            'import re\nre.findall("<img ", html)',
+            'import re\nre.search("<IMG", html)',
+            'import re\nre.compile("(?i)<img")',
+            'import re\nre.compile(f"<img{ATTRIBUTES}")',
+            'import re\nTAG = "<im" + "g"\n\ndef find(html):\n    return re.findall(TAG + " src", html)',
+            'import re\nIMG = "<img"\nPATTERN = IMG + "[^>]*src"\nre.compile(PATTERN)',
+            'import re\nre.sub(pattern="<img[^>]*>", repl="", string=html)',
+            'import re as regex\nregex.match("<img", html)',
+            'from re import finditer\nfinditer("<img", html)',
+            'from re import split as cut\ncut("<img", html)',
+            *(f'import re\nre.{name}("<img", html)' for name in sorted(RE_FUNCTIONS)),
+        ]:
+            with self.subTest(source=source):
+                self.assertNotEqual(img_patterns(source), [])
+
+    def test_ignores_img_text_that_is_not_a_pattern(self):
+        for source in [
+            'html = "<img src=x>"\nprint(html)',
+            'import re\nre.sub("<picture>", "<img>", html)',
+            'import re\nre.compile("<image")',
+        ]:
+            with self.subTest(source=source):
+                self.assertEqual(img_patterns(source), [])
+
+
+RE_FUNCTIONS = {"compile", "search", "match", "fullmatch", "findall", "finditer", "sub", "subn", "split"}
+
+
+def img_patterns(source):
+    """Return the line of each regular expression in source whose pattern contains "<img" in any case.
+
+    A pattern counts when it is the pattern argument of a function of the re
+    module, written in the call or held by a name that the source assigns
+    anywhere. The text of a pattern is every string constant in it and in the
+    names it uses, joined, so a pattern built from pieces also counts.
+    """
+    tree = ast.parse(source)
+    modules, functions, assigned = set(), set(), {}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            modules |= {alias.asname or alias.name for alias in node.names if alias.name == "re"}
+        elif isinstance(node, ast.ImportFrom) and node.module == "re":
+            functions |= {alias.asname or alias.name for alias in node.names if alias.name in RE_FUNCTIONS}
+        elif isinstance(node, (ast.Assign, ast.AnnAssign, ast.AugAssign)) and node.value is not None:
+            for target in node.targets if isinstance(node, ast.Assign) else [node.target]:
+                if isinstance(target, ast.Name):
+                    assigned.setdefault(target.id, []).append(node.value)
+
+    def text(node, seen):
+        parts = []
+        for child in ast.walk(node):
+            if isinstance(child, ast.Constant) and isinstance(child.value, str):
+                parts.append(child.value)
+            elif isinstance(child, ast.Name) and child.id not in seen:
+                parts.extend(text(value, seen | {child.id}) for value in assigned.get(child.id, []))
+        return "".join(parts)
+
+    found = []
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Call):
+            continue
+        func = node.func
+        if not (
+            isinstance(func, ast.Attribute)
+            and isinstance(func.value, ast.Name)
+            and func.value.id in modules
+            and func.attr in RE_FUNCTIONS
+            or isinstance(func, ast.Name)
+            and func.id in functions
+        ):
+            continue
+        patterns = node.args[:1] + [keyword.value for keyword in node.keywords if keyword.arg == "pattern"]
+        if any("<img" in text(pattern, set()).lower() for pattern in patterns):
+            found.append(node.lineno)
+    return found
 
 
 class WordPressIds(unittest.TestCase):
