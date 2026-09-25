@@ -56,6 +56,17 @@ uglyURLs = false
   # Markdown posts can embed HTML (iframes, decklist tables).
   unsafe = true
 
+# A new post refers to the images and files in its folder by file name.
+# Archive pages show the whole content of a video post, so a relative URL
+# there resolves against the archive URL. Hugo's embedded render hooks
+# replace a file name that is a resource of the page with its URL from the
+# site root, and leave other URLs as written. "fallback" uses them when
+# layouts/_markup/ has no hook of the same kind.
+[markup.goldmark.renderHooks.image]
+  useEmbedded = "fallback"
+[markup.goldmark.renderHooks.link]
+  useEmbedded = "fallback"
+
 # WordPress served the feed at /feed/, and the feed of each category at
 # /category/<slug>/feed/. GitHub Pages only serves index.html for a
 # directory, so each feed is written to feed/index.html as well.
