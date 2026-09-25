@@ -424,6 +424,237 @@ class MobileNav(unittest.TestCase):
         self.assertEqual(mobile_nav("/about/", choose=[self.HEADER])["navigations"], [])
 
 
+# Run the site script from argv[1] in node with a fake page at the address in
+# argv[2] whose main menu is argv[3], a JSON list of MenuParser items, and tap
+# or click menu items as argv[5] describes. argv[4] is a JSON list of the
+# classes that the site CSS uses to show the submenu of an item
+# (#access li.<class> > ul). argv[5] is a JSON object:
+#   browser: "hover-kept" keeps :hover on the last element that was tapped,
+#     and fires click on each tap (Chromium with touch emulation).
+#     "hover-lost" does not keep :hover after a tap, and fires click on each tap.
+#     "ios" keeps :hover like "hover-kept", but does not fire click when the
+#     :hover of the tap shows a submenu that was hidden (WebKit on iOS).
+#   taps: a list of {text, input}. text is the text of a menu link, or
+#     "outside" for the page content. input is "touch", "mouse" or "keyboard".
+# A tap on a link in a hidden submenu is not possible. After a navigation the
+# page is gone, so the remaining taps are not done. Print, for each tap, the
+# address it navigated to or null, and the text of each top level item whose
+# submenu is shown after it.
+TOUCH_MENU = r"""
+const fs = require("fs"), vm = require("vm");
+const [file, url, menuJson, openClassesJson, scenarioJson] = process.argv.slice(1);
+const openClasses = JSON.parse(openClassesJson);
+const {browser, taps} = JSON.parse(scenarioJson);
+const page = new URL(url);
+const location = {protocol: page.protocol, host: page.host, pathname: page.pathname, href: url};
+class El {
+  constructor(tag, parent, {classes = [], attrs = {}, text = ""} = {}) {
+    this.tagName = tag.toUpperCase(); this.parentNode = parent; this.children = []; this.listeners = {};
+    this.attrs = attrs; this.text = text; this.style = {};
+    const own = this.classes = new Set(classes);
+    this.classList = {
+      add: (...names) => names.forEach((name) => own.add(name)),
+      remove: (...names) => names.forEach((name) => own.delete(name)),
+      contains: (name) => own.has(name),
+      toggle: (name, force) => { const on = force === undefined ? !own.has(name) : force; on ? own.add(name) : own.delete(name); return on; },
+    };
+    if (parent) parent.children.push(this);
+  }
+  get className() { return [...this.classes].join(" "); }
+  set className(value) { this.classes.clear(); value.split(/\s+/).filter(Boolean).forEach((name) => this.classes.add(name)); }
+  get textContent() { return this.text + this.children.map((child) => child.textContent).join(""); }
+  get href() { return new URL(this.attrs.href, url).href; }
+  getAttribute(name) { return name in this.attrs ? this.attrs[name] : null; }
+  addEventListener(type, fn) { (this.listeners[type] ||= []).push(fn); }
+  removeEventListener(type, fn) { this.listeners[type] = (this.listeners[type] || []).filter((f) => f !== fn); }
+  contains(node) { for (let n = node; n; n = n.parentNode) if (n === this) return true; return false; }
+  querySelector(sel) {
+    const child = /^:scope > (\w+)$/.exec(sel);
+    if (!child) throw new Error(`fake querySelector does not support ${sel}`);
+    return this.children.find((c) => c.tagName === child[1].toUpperCase()) || null;
+  }
+  closest(sel) {
+    if (!/^\w+$/.test(sel)) throw new Error(`fake closest does not support ${sel}`);
+    for (let n = this; n instanceof El; n = n.parentNode) if (n.tagName === sel.toUpperCase()) return n;
+    return null;
+  }
+  after(el) { this.inserted = el; }
+}
+const body = new El("body", null);
+const menu = new El("ul", body, {attrs: {id: "prime_nav"}});
+const content = new El("div", body, {attrs: {id: "content"}});
+const links = new Map();
+const build = (ul, items) => items.forEach((item) => {
+  const li = new El("li", ul, {classes: item.classes});
+  const a = new El("a", li, {attrs: {href: item.href}});
+  const span = new El("span", a, {text: item.text});
+  links.set(item.text.trim(), span);
+  if (item.children) build(new El("ul", li, {classes: ["sub-menu"]}), item.children);
+});
+build(menu, JSON.parse(menuJson));
+let hovered = null;
+const isSubmenu = (el) => el.tagName === "UL" && el.parentNode && el.parentNode.tagName === "LI";
+const shown = (ul) => openClasses.some((name) => ul.parentNode.classes.has(name)) || (hovered !== null && ul.parentNode.contains(hovered));
+const getComputedStyle = (el) => (isSubmenu(el) && !shown(el) ? {display: "none", visibility: "hidden"} : {display: "block", visibility: "visible"});
+const document = {documentElement: {}, body, listeners: {},
+  addEventListener: El.prototype.addEventListener, removeEventListener: El.prototype.removeEventListener,
+  querySelectorAll: () => [],
+  getElementById: (id) => (id === "prime_nav" ? menu : null),
+  createElement: (tag) => new El(tag, null)};
+body.parentNode = document;
+function Option(text, value) { this.text = text; this.value = value; }
+const context = vm.createContext({console, Option, location, document, getComputedStyle});
+context.window = context;
+context.listeners = {};
+context.addEventListener = El.prototype.addEventListener.bind(context);
+context.removeEventListener = El.prototype.removeEventListener.bind(context);
+document.parentNode = context;
+// The fake select from the small screen menu has only the methods that the script calls.
+El.prototype.add = function () {};
+vm.runInContext(fs.readFileSync(file, "utf8"), context);
+const dispatch = (target, type, props = {}) => {
+  const event = {type, target, defaultPrevented: false, ...props,
+    preventDefault() { this.defaultPrevented = true; }, stopPropagation() { this.stopped = true; }};
+  for (let n = target; n && !event.stopped; n = n.parentNode) {
+    event.currentTarget = n;
+    for (const fn of [...((n.listeners || {})[type] || [])]) fn.call(n, event);
+  }
+  return event;
+};
+const openItems = () => menu.children.filter((li) => {
+  const ul = li.querySelector(":scope > ul");
+  return ul && getComputedStyle(ul).display !== "none";
+}).map((li) => li.querySelector(":scope > a").textContent.trim());
+const results = [];
+for (const {text, input} of taps) {
+  const target = text === "outside" ? content : links.get(text);
+  if (!target) throw new Error(`no link ${JSON.stringify(text)}`);
+  for (let n = target.parentNode; n instanceof El; n = n.parentNode) {
+    if (isSubmenu(n) && getComputedStyle(n).display === "none") throw new Error(`${text} is in a hidden submenu`);
+  }
+  const hiddenBefore = new Set(openItems());
+  let click = true;
+  if (input === "touch") {
+    dispatch(target, "pointerdown", {pointerType: "touch"});
+    dispatch(target, "touchstart", {touches: [{}]});
+    dispatch(target, "pointerup", {pointerType: "touch"});
+    dispatch(target, "touchend", {touches: []});
+    hovered = target;
+    if (browser === "ios" && openItems().some((item) => !hiddenBefore.has(item))) click = false;
+  } else if (input === "mouse") {
+    hovered = target;
+    dispatch(target, "pointerdown", {pointerType: "mouse"});
+    dispatch(target, "mousedown");
+    dispatch(target, "pointerup", {pointerType: "mouse"});
+    dispatch(target, "mouseup");
+  }
+  let navigated = null;
+  if (click) {
+    const event = dispatch(target, "click", {pointerType: input === "keyboard" ? "" : input});
+    const a = target.closest("a");
+    if (a && !event.defaultPrevented) navigated = a.getAttribute("href");
+  }
+  if (input === "touch" && browser === "hover-lost") hovered = null;
+  results.push({navigated, open: openItems()});
+  if (navigated) break;
+}
+console.log(JSON.stringify(results));
+"""
+
+
+def css_open_classes(out):
+    """Return the classes that the built site CSS uses to show the submenu of a menu item."""
+    css = "".join(path.read_text() for path in (out / "css").glob("*.css"))
+    classes = []
+    for selectors, declarations in re.findall(r"([^{}]+)\{([^{}]*)\}", css):
+        if not re.search(r"display:\s*block", declarations):
+            continue
+        for selector in selectors.split(","):
+            match = re.fullmatch(r"#access(?: ul)? li\.([\w-]+)\s*>\s*ul", selector.strip())
+            if match:
+                classes.append(match[1])
+    return classes
+
+
+def touch_menu(browser, taps, path="/about/"):
+    """Tap the menu of the built page at path in browser, as TOUCH_MENU describes.
+
+    taps is a list of link texts, or of (text, input) pairs for input other than touch.
+    """
+    out = build()
+    html_page = (out / path.lstrip("/") / "index.html").read_text()
+    script = re.search(r'<script src="(/js/site[^"]*\.js)"', html_page)[1]
+    parser = MenuParser()
+    parser.feed(html_page)
+    taps = [{"text": tap, "input": "touch"} if isinstance(tap, str) else {"text": tap[0], "input": tap[1]}
+            for tap in taps]
+    run = subprocess.run(["node", "-e", TOUCH_MENU, str(out / script.lstrip("/")), f"https://stimhack.com{path}",
+                          json.dumps(parser.menu), json.dumps(css_open_classes(out)),
+                          json.dumps({"browser": browser, "taps": taps})],
+                         capture_output=True, text=True)
+    if run.returncode:
+        raise RuntimeError(run.stderr)
+    return json.loads(run.stdout)
+
+
+@unittest.skipUnless(shutil.which("node"), "needs node")
+class TouchMenu(unittest.TestCase):
+    # On touch screens wider than the small screen menu, the WordPress theme
+    # (js/frontend.js in Tempera) cancelled the first tap on a top level menu
+    # item that has a submenu, so the submenu opened, and followed the link on
+    # the second tap. Without this, a browser that follows the link on the
+    # first tap shows no way to the submenu items. Browsers differ in what
+    # they do on a tap, so the tests run each browser model that TOUCH_MENU
+    # describes. The models do not include focus, which some browsers give to
+    # a tapped link.
+    maxDiff = None
+    ARTICLES = "Articles and Guides"
+    TAP_BROWSERS = ["hover-kept", "hover-lost"]
+
+    def test_first_tap_on_item_with_submenu_opens_the_submenu(self):
+        for browser in self.TAP_BROWSERS + ["ios"]:
+            with self.subTest(browser=browser):
+                self.assertEqual(touch_menu(browser, [self.ARTICLES]),
+                                 [{"navigated": None, "open": [self.ARTICLES]}])
+
+    def test_second_tap_follows_the_link(self):
+        for browser in self.TAP_BROWSERS + ["ios"]:
+            with self.subTest(browser=browser):
+                self.assertEqual(touch_menu(browser, [self.ARTICLES, self.ARTICLES]), [
+                    {"navigated": None, "open": [self.ARTICLES]},
+                    {"navigated": "/category/articles/", "open": [self.ARTICLES]},
+                ])
+
+    def test_submenu_item_can_be_tapped_after_the_first_tap(self):
+        for browser in self.TAP_BROWSERS + ["ios"]:
+            with self.subTest(browser=browser):
+                self.assertEqual(touch_menu(browser, [self.ARTICLES, "Set Reviews"]), [
+                    {"navigated": None, "open": [self.ARTICLES]},
+                    {"navigated": "/set-reviews/", "open": [self.ARTICLES]},
+                ])
+
+    def test_tap_outside_closes_the_submenu_and_the_next_tap_is_a_first_tap(self):
+        for browser in self.TAP_BROWSERS:
+            with self.subTest(browser=browser):
+                self.assertEqual(touch_menu(browser, [self.ARTICLES, "outside", self.ARTICLES]), [
+                    {"navigated": None, "open": [self.ARTICLES]},
+                    {"navigated": None, "open": []},
+                    {"navigated": None, "open": [self.ARTICLES]},
+                ])
+
+    def test_item_without_submenu_follows_the_link_on_the_first_tap(self):
+        for browser in self.TAP_BROWSERS + ["ios"]:
+            with self.subTest(browser=browser):
+                self.assertEqual(touch_menu(browser, ["About"]), [{"navigated": "/about/", "open": []}])
+
+    def test_mouse_and_keyboard_follow_the_link_on_the_first_click(self):
+        for browser in self.TAP_BROWSERS:
+            for tool in ["mouse", "keyboard"]:
+                with self.subTest(browser=browser, input=tool):
+                    self.assertEqual(touch_menu(browser, [(self.ARTICLES, tool)])[0]["navigated"],
+                                     "/category/articles/")
+
+
 def root_context_uses_in_blocks(text):
     """Yield each action that uses $. inside a range or with block."""
     stack = []
