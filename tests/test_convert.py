@@ -313,7 +313,9 @@ class Rerun(unittest.TestCase):
         urls.write_text(urls.read_text() + "/added-by-hand/\n")
         self.export["posts"].append(post(101, "second-post"))
         self.run_convert()
-        self.assertLessEqual({"/added-by-hand/", "/first-post/", "/second-post/"}, set(urls.read_text().split()))
+        # The URLs of self.export, the old URL of each moved post and the URL added by hand, one per line and sorted.
+        expected = ["/added-by-hand/", "/author/ian/", "/category/articles/", "/first-post/", "/second-post/", "/tournament-decklists/"]
+        self.assertEqual(urls.read_text(), "".join(f"{url}\n" for url in sorted(expected + list(convert.MOVED))))
 
     def test_default_run_does_not_write_a_second_file_for_a_renamed_post(self):
         # An editor changed the slug of post 100 in WordPress.
