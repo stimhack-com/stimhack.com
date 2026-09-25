@@ -13,8 +13,10 @@
       <title>{{ .Title }}</title>
       <link>{{ .Permalink }}</link>
       <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
-      {{- /* Feed readers know items by GUID. Migrated posts keep the GUID
-      WordPress gave them, which does not change with baseURL. */}}
+      {{- /* Feed readers know items by GUID, so posts from WordPress keep the
+      GUID it wrote, which does not change with baseURL. WordPress wrote http:
+      GUIDs for posts before ID 13959 (guid in .export/posts.json), but the
+      feed holds only the newest posts, which all have https: GUIDs. */}}
       {{ with .Params.wp_id }}<guid isPermaLink="false">https://stimhack.com/?p={{ . }}</guid>{{ else }}<guid>{{ .Permalink }}</guid>{{ end }}
       {{ with index (.GetTerms "authors") 0 }}<dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">{{ .Title }}</dc:creator>{{ end }}
       <description>{{ partial "summary-text.html" . | transform.XMLEscape | safeHTML }}</description>
