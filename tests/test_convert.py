@@ -15,8 +15,9 @@ import yaml
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "migration"))
 import convert  # noqa: E402
 
-# wc-shortcodes tags that appear in the WordPress export.
-RAW_SHORTCODE = re.compile(r"\[/?(?:accordion|pane|one_fourth)\b[^\]]*\]")
+# Shortcodes in the WordPress export whose plugins the static site does not run:
+# wc-shortcodes, a contact form plugin, Font Awesome icons and Easy Media Gallery.
+RAW_SHORTCODE = re.compile(r"\[/?(?:accordion|pane|one_fourth|Form|icon|easy-media)\b[^\]]*\]")
 
 
 class RewriteUrls(unittest.TestCase):
@@ -82,13 +83,29 @@ class Shortcodes(unittest.TestCase):
         )
         self.assertEqual(out, "<p><strong>Austin</strong></p>\n\n<p>Stimhack x 3</p>")
 
+    def test_forms_become_a_closed_note(self):
+        # The contact form plugin is gone and a static site cannot take submissions.
+        out = convert.convert_shortcodes("<p>Fill out the following:</p>\n[Form id=&#8221;10&#8243;]")
+        self.assertEqual(out, "<p>Fill out the following:</p>\n<p><em>This form is closed.</em></p>")
+
+    def test_font_awesome_3_icons_become_font_awesome_4_icons(self):
+        out = convert.convert_shortcodes('<td>[icon name=icon-facetime-video] <a href="/x/">X</a></td>')
+        self.assertEqual(out, '<td><i class="fa fa-video-camera" aria-hidden="true"></i> <a href="/x/">X</a></td>')
+
+    def test_easy_media_gallery_is_removed(self):
+        # The gallery post it names is not in the export.
+        out = convert.convert_shortcodes("[easy-media med=&#8221;5326&#8243;]\n<p>Spaces Between</p>")
+        self.assertEqual(out, "\n<p>Spaces Between</p>")
+
     def test_generated_content_has_no_raw_shortcodes(self):
-        root = Path(__file__).resolve().parent.parent / "content"
+        root = Path(__file__).resolve().parent.parent
         found = [
             f"{path.relative_to(root)}: {m[0]}"
-            for path in sorted(root.rglob("*.html"))
+            for path in sorted([*(root / "content").rglob("*"), *(root / "data").rglob("*")])
+            if path.is_file()
             for m in RAW_SHORTCODE.finditer(path.read_text())
         ]
+        self.maxDiff = None
         self.assertEqual(found, [])
 
 
@@ -108,6 +125,10 @@ class Excerpt(unittest.TestCase):
     def test_shortcodes_are_removed(self):
         item = {"excerpt": {"rendered": "<p>Austin [pane title=&#8221;Austin&#8220;] 1st Place</p>"}}
         self.assertEqual(convert.excerpt(item), "Austin 1st Place")
+
+    def test_forms_become_a_closed_note(self):
+        item = {"excerpt": {"rendered": "<p>[Form id=&#8221;12&#8243;]</p>\n"}}
+        self.assertEqual(convert.excerpt(item), "This form is closed.")
 
 
 class PageComments(unittest.TestCase):
