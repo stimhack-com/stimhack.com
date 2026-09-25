@@ -1,5 +1,7 @@
-{{- /* WordPress-style pager: first, previous, two pages each side, next, last.
-Like the old theme, an archive with five pages or fewer shows every page and no arrows. */ -}}
+{{- /* Pager: first, previous, two pages each side, next, last. An archive
+with five pages or fewer shows every page and no arrows. Both match the
+samples of the live WordPress pager recorded in ArchivePager in
+tests/test_layouts.py. */ -}}
 {{- $p := . -}}
 {{- $n := $p.PageNumber }}
 {{- $showAll := le $p.TotalPages 5 }}
