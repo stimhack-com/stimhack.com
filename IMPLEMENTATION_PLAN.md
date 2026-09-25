@@ -22,8 +22,9 @@ Status: Done (desktop + 400px checked).
 Goal: GitHub Actions build + Pages deploy; PR preview build check; CONTRIBUTING.md with a Markdown post template.
 Success: a PR that adds a Markdown post builds green; main deploys to Pages.
 Tests: CI on a test PR; link checker over built site.
-Status: Workflow written, not yet run. Needs the GitHub org and repo.
+Status: Workflow written. Contribution flow (CONTRIBUTING.md, archetypes/posts.md), checks and review done. Not yet run on GitHub: needs the repository at github.com/stimhack-com/stimhack.com and the Pages setup in README.md.
 
 ## Stage 5: Cutover
 Goal: custom domain, DNS switch (user action), final re-export of anything posted since.
-Status: Not started. Blocked on user: org name, DNS access.
+Status: Not started. Blocked on user: DNS access.
+Note: the final export uses the default `convert.py` run, not `--overwrite`. It writes only posts, pages and taxonomy files that do not exist yet, keeps edited files, and prints the tournament results to add to data/decklists.yaml by hand.
