@@ -1,6 +1,6 @@
+{{- /* Staging (params.noindex) allows crawling too. Its pages carry a noindex
+meta tag (baseof.html), and a crawler reads that tag only on a page that
+robots.txt lets it fetch:
+https://developers.google.com/search/docs/crawling-indexing/block-indexing */ -}}
 User-agent: *
-{{- if site.Params.noindex }}
-Disallow: /
-{{- else }}
 Disallow:
-{{- end }}

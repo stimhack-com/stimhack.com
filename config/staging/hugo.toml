@@ -1,5 +1,9 @@
 # Preview deployment at static.stimhack.com, used to review the site before
-# it replaces WordPress. Search engines are asked not to index it.
+# it replaces WordPress. Each page has a noindex meta tag that asks search
+# engines not to index it. robots.txt does not block crawling, because a
+# crawler that cannot fetch a page cannot read the tag. Images and feeds
+# cannot carry the tag, and GitHub Pages cannot send an X-Robots-Tag header,
+# so search engines can index those files.
 baseURL = "https://static.stimhack.com/"
 
 [params]

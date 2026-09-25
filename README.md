@@ -21,7 +21,7 @@ Pushes to `main` deploy to GitHub Pages. The repository variable `SITE_ENV`
 selects the build:
 
 - `staging` (the default) builds for `https://static.stimhack.com/` and asks
-  search engines not to index the site. Use it to review the site before it
+  search engines not to index its pages. Use it to review the site before it
   replaces WordPress.
 - `production` builds for `https://stimhack.com/`.
 

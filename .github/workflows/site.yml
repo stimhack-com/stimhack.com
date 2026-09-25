@@ -20,7 +20,7 @@ concurrency:
 env:
   HUGO_VERSION: 0.166.0
   # "staging" builds for static.stimhack.com and asks search engines not to
-  # index it (config/staging/). Set the repository variable SITE_ENV to
+  # index its pages (config/staging/). Set the repository variable SITE_ENV to
   # "production" when stimhack.com moves to this site.
   SITE_ENV: ${{ vars.SITE_ENV || 'staging' }}
 
