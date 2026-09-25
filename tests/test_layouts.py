@@ -1280,12 +1280,27 @@ def post_url(path, front):
     return front.get("url") or f"/{(front.get('slug') or name).lower()}/"
 
 
+def is_published(front):
+    """Tell if Hugo publishes the post with front matter front now.
+
+    Hugo leaves out a draft, a post whose publishDate, or else date, is in the
+    future, and a post whose expiryDate has passed: hugo.toml and the build
+    step in .github/workflows/site.yml do not set buildDrafts, buildFuture or
+    buildExpired. Hugo reads the keys of front matter in any case.
+    """
+    keys = {key.lower(): value for key, value in front.items()}
+    now = datetime.now(TIME_ZONE)
+    publish = keys.get("publishdate") or keys["date"]
+    expiry = keys.get("expirydate")
+    return not keys.get("draft") and as_datetime(publish) <= now and (expiry is None or as_datetime(expiry) > now)
+
+
 def all_posts(content):
-    """Return {post URL: front matter} for each post in content."""
+    """Return {post URL: front matter} for each post in content that Hugo publishes."""
     return {
         post_url(path, front): front
         for path, front in content_files(content / "posts")
-        if path.name != "_index.md"
+        if path.name != "_index.md" and is_published(front)
     }
 
 
@@ -1318,13 +1333,17 @@ def category_slugs(front):
 
 
 def post_date(front):
-    """Return the date of the post with front matter front, with its time zone.
+    """Return the date of the post with front matter front, with its time zone."""
+    return as_datetime(front["date"])
+
+
+def as_datetime(value):
+    """Return the date value from front matter as a datetime with its time zone.
 
     A migrated post has a quoted date string. `hugo new` writes the date
     without quotes, so YAML reads it as a datetime, or as a date when it has no
     time. Hugo reads a date without an offset in the timeZone of hugo.toml.
     """
-    value = front["date"]
     if isinstance(value, str):
         value = datetime.fromisoformat(value)
     elif not isinstance(value, datetime):
