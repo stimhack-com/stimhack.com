@@ -253,6 +253,8 @@ def convert_posts(posts, users, cats, tags, media, attached, comments, page_path
             # WordPress served the page at this URL and the post only by ID.
             front["url"] = f"/{p['slug']}-2/"
         front["wp_id"] = p["id"]
+        # The feed writes this as the item GUID, so feed readers know the post.
+        front["wp_guid"] = html.unescape(p["guid"]["rendered"])
         write(
             CONTENT / "posts" / p["date"][:4] / f"{p['slug']}.html", front, clean_body(p["content"]["rendered"]), overwrite
         )
@@ -336,6 +338,9 @@ def convert_wayback_posts(users, cats, tags, overwrite):
             "tags": [tags[t.lower()] for t in post["tags"]],
             "comments": [dict(c, content=rewrite_urls(c["content"])) for c in post["comments"]],
             "wp_id": post["wp_id"],
+            # The archived page does not show the GUID. Every post in the export
+            # with an ID below 13959 has the GUID http://stimhack.com/?p=<ID>.
+            "wp_guid": f"http://stimhack.com/?p={post['wp_id']}",
             "archived_from": wayback.capture_url(slug),
         }
         used |= set(front["categories"]) | set(front["tags"])

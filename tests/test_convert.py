@@ -229,7 +229,7 @@ def decklists_page(rows):
 def post(post_id, slug):
     return {
         "id": post_id, "slug": slug, "link": f"https://stimhack.com/{slug}/",
-        "title": {"rendered": slug}, "content": {"rendered": f"<p>{slug} from WordPress.</p>"},
+        "guid": {"rendered": f"https://stimhack.com/?p={post_id}"}, "title": {"rendered": slug}, "content": {"rendered": f"<p>{slug} from WordPress.</p>"},
         "excerpt": {"rendered": ""}, "format": "standard", "featured_media": 0,
         "author": 7, "categories": [3], "tags": [],
         "date": "2016-05-01T10:00:00", "date_gmt": "2016-05-01T17:00:00",

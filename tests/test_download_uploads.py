@@ -28,6 +28,7 @@ def image(id, post, name):
 def post(id, slug, featured_media):
     return {
         "id": id, "slug": slug, "link": f"https://stimhack.com/{slug}/", "format": "standard",
+        "guid": {"rendered": f"https://stimhack.com/?p={id}"},
         "title": {"rendered": slug}, "content": {"rendered": "<p>No images.</p>"},
         "excerpt": {"rendered": "<p>No images.</p>"},
         "date": "2020-01-02T10:00:00", "date_gmt": "2020-01-02T18:00:00",
