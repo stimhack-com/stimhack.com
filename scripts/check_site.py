@@ -56,6 +56,10 @@ META_URL_PROPERTIES = {"og:image", "og:url"}
 # delay can be followed by a semicolon, a comma or spaces, "url=" can be left
 # out, and the URL can be in quotes.
 REFRESH_URL = re.compile(r"""\s*[\d.]*(?:\s*[;,]\s*|\s+)(?:url\s*=\s*)?(?:(["'])(.*?)(?:\1|$)|(.*))""", re.I | re.S)
+# The characters that separate the URLs and descriptors in a srcset: space,
+# tab, line feed, carriage return and form feed. Other white space, such as a
+# no-break space, is part of a URL.
+SRCSET_SPACE = " \t\n\r\f"
 # Hosts of the production site. The host of the built site is added from its
 # canonical link, since a staging build has another baseURL.
 SITE_HOSTS = {"stimhack.com", "www.stimhack.com"}
@@ -105,17 +109,18 @@ def id_problems(public):
 def srcset_urls(srcset):
     """Return the URLs in a srcset such as "a.png 300w, b.png 600w".
 
-    A URL is a run of characters that are not spaces, so it can contain a
-    comma, as the data: URL in tests/test_check_site.py does. A comma after
-    the descriptors, or at the end of a URL that has no descriptors, separates
-    the candidates. A comma inside parentheses in a descriptor also separates
+    A URL is a run of characters that are not in SRCSET_SPACE, so it can
+    contain a no-break space, and it can contain a comma, as the data: URL in
+    tests/test_check_site.py does. A comma after the descriptors, or at the
+    end of a URL that has no descriptors, separates the candidates. A comma inside parentheses in a descriptor also separates
     them. No srcset in .export/posts.json or .export/pages.json has
-    parentheses. SRCSET_CANDIDATE in migration/convert.py splits the same way.
+    parentheses. SRCSET_CANDIDATE in migration/convert.py splits the same way,
+    which tests/test_check_site.py checks.
     """
     urls = []
     rest = srcset
-    while rest := rest.lstrip(" \t\n\r\f,"):
-        url = re.match(r"\S+", rest).group()
+    while rest := rest.lstrip(SRCSET_SPACE + ","):
+        url = re.match(f"[^{SRCSET_SPACE}]+", rest).group()
         rest = rest[len(url):]
         if url.endswith(","):
             url = url.rstrip(",")

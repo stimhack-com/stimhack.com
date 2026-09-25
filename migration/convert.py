@@ -61,12 +61,14 @@ SKIP_PAGES = {"landing", "under-maintenance", "submission-successful", "decklist
 
 SITE_URL = re.compile(r"^(?:https?:)?//(?:www\.)?stimhack\.com(?=/|$)")
 URL_ATTR = re.compile(r"""\b(href|src|srcset|poster|data-src)=(["'])(.*?)\2""", re.S)
-# One srcset candidate: a URL, which ends at whitespace and loses trailing commas,
-# then either those commas or descriptors up to the next comma. A comma inside
-# parentheses in a descriptor also ends the candidate. No srcset in
-# .export/posts.json or .export/pages.json has parentheses.
-# srcset_urls() in scripts/check_site.py splits a srcset the same way.
-SRCSET_CANDIDATE = re.compile(r"([\s,]*)(\S*[^\s,])(,+|[^,]*)")
+# One srcset candidate: a URL, which ends at a space, tab, line feed, carriage
+# return or form feed and loses trailing commas, then either those commas or
+# descriptors up to the next comma. Other white space, such as a no-break
+# space, is part of the URL. A comma inside parentheses in a descriptor also
+# ends the candidate. No srcset in .export/posts.json or .export/pages.json has
+# parentheses. srcset_urls() in scripts/check_site.py splits a srcset the same
+# way, which tests/test_check_site.py checks.
+SRCSET_CANDIDATE = re.compile(r"([ \t\n\r\f,]*)([^ \t\n\r\f]*[^ \t\n\r\f,])(,+|[^,]*)")
 IFRAME_HTTP = re.compile(r"""(<iframe\b[^>]*\bsrc=["'])http://""", re.I)
 # wc-shortcodes tags that appear in the export.
 SHORTCODE_TAG = re.compile(r"\[/?(?:accordion|pane|one_fourth)\b[^\]]*\]")
