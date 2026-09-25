@@ -29,7 +29,8 @@ class SiteSource(unittest.TestCase):
 
     def test_root_names_are_ignored_when_they_are_symlinks(self):
         # A worktree can have .export as a symlink to the main checkout's
-        # export data. git does not treat a symlink as a directory.
+        # export data. A pattern foo/ does not match a symbolic link foo
+        # (gitignore(5), EXAMPLES).
         names = [".export", "public", "resources"]
         with tempfile.TemporaryDirectory() as tmp:
             repo, target = Path(tmp) / "repo", Path(tmp) / "target"
