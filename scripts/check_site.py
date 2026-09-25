@@ -39,7 +39,7 @@ import re
 import sys
 from html.parser import HTMLParser
 from pathlib import Path
-from urllib.parse import quote, unquote, urljoin, urlsplit
+from urllib.parse import quote, unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parent.parent
 PUBLIC = ROOT / "public"
@@ -74,6 +74,10 @@ URL_TRIM = "".join(map(chr, range(0x21)))
 # tab, line feed, carriage return and form feed. Other white space, such as a
 # no-break space, is part of a URL.
 SRCSET_SPACE = " \t\n\r\f"
+# The segments of a URL path that the URL parser reads as "." (1) or ".."
+# (2), in lower case (URL Standard, single-dot and double-dot URL path
+# segments, https://url.spec.whatwg.org/#single-dot-path-segment).
+DOT_SEGMENTS = {".": 1, "%2e": 1, "..": 2, ".%2e": 2, "%2e.": 2, "%2e%2e": 2}
 # Hosts of the production site. The host of the built site is added from its
 # canonical link, since a staging build has another baseURL.
 SITE_HOSTS = {"stimhack.com", "www.stimhack.com"}
@@ -199,6 +203,31 @@ def built_host(public):
     return urlsplit(canonical).hostname if canonical else None
 
 
+def request_path(page_url, path):
+    """Return the path that a browser requests for a path in a link on the page at page_url.
+
+    The steps are those of the path state of the URL parser for an http or
+    https URL (URL Standard, https://url.spec.whatwg.org/#path-state). They
+    differ from urljoin: a ";" at the end of the path stays, and %2e is a dot
+    in a "." or ".." segment.
+    """
+    if path.startswith("/"):
+        segments = []
+        path = path[1:]
+    else:
+        segments = page_url.split("/")[1:-1]
+    names = path.split("/")
+    for index, name in enumerate(names):
+        dots = DOT_SEGMENTS.get(name.lower(), 0)
+        if dots == 2 and segments:
+            segments.pop()
+        if not dots:
+            segments.append(name)
+        elif index == len(names) - 1:
+            segments.append("")
+    return "/" + "/".join(segments)
+
+
 def site_paths(page_url, html, hosts):
     """Return the decoded paths on this site that a page links to, without query or fragment.
 
@@ -206,15 +235,23 @@ def site_paths(page_url, html, hosts):
     """
     for url in parse(html).urls:
         parts = urlsplit(url)
+        if parts.scheme.lower() not in ("", "http", "https"):
+            continue
+        # In an http or https URL, and so in a relative URL on a page of this
+        # site, the URL parser reads a backslash before the query or the
+        # fragment as a slash (URL Standard, https://url.spec.whatwg.org/#special-authority-ignore-slashes-state
+        # and https://url.spec.whatwg.org/#path-state).
+        before, rest = re.match(r"([^?#]*)(.*)", url, re.S).groups()
+        parts = urlsplit(before.replace("\\", "/") + rest)
         if parts.scheme or parts.netloc:
-            if parts.scheme.lower() not in ("", "http", "https") or parts.hostname not in hosts:
+            if parts.hostname not in hosts:
                 continue
             path = parts.path or "/"
         elif parts.path:
             path = parts.path
         else:
             continue
-        yield unquote(urljoin(page_url, path))
+        yield unquote(request_path(page_url, path))
 
 
 def main(args=()):
