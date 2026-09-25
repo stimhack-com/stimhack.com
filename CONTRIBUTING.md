@@ -51,11 +51,10 @@ without `-D` does not show drafts.
 
 The checks on a pull request fail when a post that is not a draft has no
 title, date, authors or categories, or has an author slug that has no
-`_index.md` file in `content/authors/`. When `date` is not set, Hugo uses
-`publishDate` or else `lastmod` as the date, so a post with one of them
-passes. This includes a post with a date in
-the future. A draft can have no date, authors or categories, so `hugo server -D`
-shows a new post before you fill them in.
+`_index.md` file in `content/authors/`. The checks also apply to a post
+with a date in the future. When `date` is not set, Hugo uses `publishDate`
+or else `lastmod` as the date. A draft can have no date, authors or
+categories, so `hugo server -D` shows a new post before you fill them in.
 
 ### Add yourself as an author
 
