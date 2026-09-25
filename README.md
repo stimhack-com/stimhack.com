@@ -25,9 +25,34 @@ selects the build:
   replaces WordPress.
 - `production` builds for `https://stimhack.com/`.
 
-To go live, set `SITE_ENV` to `production`, change the custom domain in the
-repository's Pages settings to `stimhack.com`, and point the DNS record at
-GitHub Pages.
+A change to `SITE_ENV` does not start a build. After you change it, run the
+workflow (Actions > Build and deploy > Run workflow) or push a commit.
+
+### Set up a new repository
+
+1. In Settings > Pages, set Source to "GitHub Actions". The first deploy
+   fails until you do this.
+2. In Settings > Pages, set the custom domain to `static.stimhack.com`. A
+   deploy from a workflow ignores a `CNAME` file, so this setting is the
+   only place for the domain.
+3. In the DNS for stimhack.com, which is on Cloudflare, add a CNAME record
+   from `static.stimhack.com` to `stimhack-com.github.io`. The recommended
+   proxy status is "DNS only", not "Proxied", so that GitHub can issue the
+   HTTPS certificate.
+4. Optional: verify stimhack.com for the organization in the organization's
+   GitHub settings. This stops other GitHub accounts from using the domain
+   for their Pages sites.
+
+Until the custom domain is set, GitHub serves the site at
+`https://stimhack-com.github.io/stimhack.com/`. Links there that start
+with `/` are broken, because the site expects to be at the root of its
+domain.
+
+### Go live
+
+Set `SITE_ENV` to `production` and run the workflow. Change the custom
+domain in Settings > Pages to `stimhack.com`, and point the DNS record
+for stimhack.com at GitHub Pages.
 
 ## Layout
 
