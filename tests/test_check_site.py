@@ -442,12 +442,12 @@ class SrcsetSpaces(unittest.TestCase):
         self.assertEqual(reported, {"broken link in /post/index.html: /post/\xa0a.png"})
 
 
-def post_problems(test, markup):
-    """Return the problems that the check reports for a site whose /post/ page has markup and whose /post/a.png exists."""
+def post_problems(test, markup, site="https://static.example.com/"):
+    """Return the problems that the check reports for a site at the URL site whose /post/ page has markup and whose /post/a.png exists."""
     public = Path(tempfile.mkdtemp(prefix="check-site-")) / "public"
     test.addCleanup(shutil.rmtree, public.parent)
     (public / "post").mkdir(parents=True)
-    (public / "index.html").write_text('<link rel="canonical" href="https://static.example.com/">')
+    (public / "index.html").write_text(f'<link rel="canonical" href="{site}">')
     (public / "post" / "a.png").write_bytes(b"")
     (public / "post" / "index.html").write_text(markup)
     return problems(public)
@@ -548,6 +548,69 @@ class UrlPaths(unittest.TestCase):
                 prefix = "broken link in /post/index.html: "
                 broken = {line.removeprefix(prefix) for line in post_problems(self, markup) if line.startswith("broken link in ")}
                 self.assertEqual(broken, paths, f"{markup!r} reported {sorted(broken)}")
+
+
+class UrlSchemes(unittest.TestCase):
+    """The check reads an http or https URL without "//" after the scheme as a browser does.
+
+    When the scheme is the scheme of the page, the URL is relative to the
+    page, so "https:gone.png" on an https page is "gone.png". When the scheme
+    is another one, the text after the scheme is a host, so "http:gone.png"
+    on an https page is on the host gone.png. A browser ignores each slash or
+    backslash before a host, so "https:///stimhack.com/" is on the host
+    stimhack.com (URL Standard, scheme state and special authority ignore
+    slashes state, https://url.spec.whatwg.org/#scheme-state). The pages of
+    the site have the scheme of its canonical link. The expected paths are
+    the pathname that whatwg-url 16.0.1, the reference implementation of the
+    URL Standard, gives for each URL against https://stimhack.com/post/ or
+    http://stimhack.com/post/, decoded.
+    """
+
+    # Markup on /post/ of an https site, where a.png exists, and the broken
+    # paths that the check must report for it.
+    BROKEN = [
+        ('<img src="https:gone.png">', {"/post/gone.png"}),
+        ('<img src="HTTPS:gone.png">', {"/post/gone.png"}),
+        ('<img src="https:/gone.png">', {"/gone.png"}),
+        (r'<img src="https:\gone.png">', {"/gone.png"}),
+        (r'<img src="https:..\gone.png">', {"/gone.png"}),
+        ('<img src="https:a.png">', set()),
+        ('<a href="https:">', set()),
+        ('<a href="https:?q">', set()),
+        ('<a href="https:///stimhack.com/gone.png">', {"/gone.png"}),
+        ('<a href="https:////stimhack.com/gone.png">', {"/gone.png"}),
+        (r'<a href="https:/\stimhack.com/gone.png">', {"/gone.png"}),
+        ('<a href="///stimhack.com/gone.png">', {"/gone.png"}),
+        (r'<a href="\\\stimhack.com/gone.png">', {"/gone.png"}),
+        ('<a href="http:stimhack.com/gone.png">', {"/gone.png"}),
+        ('<a href="http:///stimhack.com/gone.png">', {"/gone.png"}),
+        ('<a href="http:gone.png">', set()),
+        ('<a href="http:/gone.png">', set()),
+        ('<a href="http:">', set()),
+    ]
+    # Markup on /post/ of an http site and the broken paths.
+    BROKEN_ON_HTTP = [
+        ('<img src="http:gone.png">', {"/post/gone.png"}),
+        ('<img src="http:/gone.png">', {"/gone.png"}),
+        ('<a href="http:stimhack.com/gone.png">', {"/post/stimhack.com/gone.png"}),
+        ('<a href="https:///stimhack.com/gone.png">', {"/gone.png"}),
+        ('<img src="https:gone.png">', set()),
+        ('<a href="https:">', set()),
+    ]
+
+    def check(self, site, cases):
+        for markup, paths in cases:
+            with self.subTest(site=site, markup=markup):
+                prefix = "broken link in /post/index.html: "
+                problems = post_problems(self, markup, site)
+                broken = {line.removeprefix(prefix) for line in problems if line.startswith("broken link in ")}
+                self.assertEqual(broken, paths, f"{markup!r} reported {sorted(broken)}")
+
+    def test_reports_the_path_that_a_browser_requests_on_an_https_site(self):
+        self.check("https://static.example.com/", self.BROKEN)
+
+    def test_reports_the_path_that_a_browser_requests_on_an_http_site(self):
+        self.check("http://static.example.com/", self.BROKEN_ON_HTTP)
 
 
 class UrlsTrimmedWithUrlText(unittest.TestCase):
