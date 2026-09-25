@@ -387,13 +387,17 @@ class Rerun(unittest.TestCase):
         )
 
     def export_with_an_archived_post(self):
-        """Add a post restored from the Internet Archive, pages that SKIP_PAGES has, and terms without posts."""
+        """Add a post restored from the Internet Archive, pages that SKIP_PAGES has, and terms and a user without posts."""
         (self.root / ".export/wayback").mkdir()
         fixture = Path(__file__).parent / "fixtures" / "wayback-post.html"
         (self.root / ".export/wayback/drafting-with-netrunner.html").write_text(fixture.read_text())
         # The archived page names the author, the category and the tags of the post.
         self.wayback = {"drafting-with-netrunner": "20131113101435"}
-        self.export["users"] = [{"id": 7, "slug": "sneakysly", "name": "SneakySly", "link": "https://stimhack.com/author/sneakysly/", "avatar_urls": {}}]
+        # User 9 wrote no post, as user 86 in .export/users.json.
+        self.export["users"] = [
+            {"id": 7, "slug": "sneakysly", "name": "SneakySly", "link": "https://stimhack.com/author/sneakysly/", "avatar_urls": {}},
+            {"id": 9, "slug": "no-posts", "name": "No Posts", "link": "https://stimhack.com/author/no-posts/", "avatar_urls": {}},
+        ]
         term = lambda term_id, slug, name, link, count: {"id": term_id, "slug": slug, "name": name, "link": f"https://stimhack.com{link}", "count": count}
         self.export["categories"] = [
             term(3, "cube-drafting", "Cube Drafting", "/category/cube-drafting/", 1),
@@ -413,7 +417,7 @@ class Rerun(unittest.TestCase):
     def test_run_lists_the_url_of_each_archived_post_page_and_term_with_posts(self):
         self.export_with_an_archived_post()
         self.run_convert(overwrite=True)
-        # Not /under-maintenance/, which SKIP_PAGES has, or /category/empty/ and /tag/unused/, which have no posts.
+        # Not /under-maintenance/, which SKIP_PAGES has, or /category/empty/, /tag/unused/ and /author/no-posts/, which have no posts.
         expected = [
             "/author/sneakysly/", "/category/cube-drafting/", "/drafting-with-netrunner/", "/first-post/",
             "/tag/draft/", "/tag/drafting/", "/tournament-decklists/", "/tournament-decklists/decklist-submssion/",
@@ -439,7 +443,7 @@ class Rerun(unittest.TestCase):
         self.export["tags"][1]["count"] = 0
         shutil.rmtree(self.root / "content")
         self.run_convert(overwrite=True)
-        # Not the pages that SKIP_PAGES has, or the category and tag without posts.
+        # Not the pages that SKIP_PAGES has, or the category, tag and author without posts.
         self.assertEqual([str(path.relative_to(self.root / "content")) for path, _ in content_files(self.root / "content")], [
             "authors/sneakysly/_index.md", "categories/cube-drafting/_index.md", "pages/tournament-decklists.html",
             "posts/2013/drafting-with-netrunner.html", "posts/2016/first-post.html",
