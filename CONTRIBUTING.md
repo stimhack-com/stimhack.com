@@ -106,12 +106,17 @@ Every pull request runs these checks:
   post, page or archive is missing, when a page links to a path on this site that does not
   exist, or when a page loads an image from an old cardgamedb.com or
   netrunnerdb.com address that no longer works. The link check reads the
-  `href`, `src`, `poster`, `data-src` and `srcset` attributes. It checks
-  paths that start with `/` and relative paths such as `hedge-fund.png`,
-  which it resolves against the URL of the page. It does not check URLs
-  with a scheme (`https:`, `mailto:`, `data:`), `//host` URLs, or values
-  that are only a `#fragment` or a `?query`. Old links that were already
-  broken on WordPress are listed in `tests/known-broken-links.txt`.
+  `href`, `src`, `poster`, `data-src` and `srcset` attributes, the URL in
+  a meta refresh tag (Hugo's alias pages redirect with one), and the
+  `og:image` and `og:url` meta tags. It checks paths that start with `/`,
+  relative paths such as `hedge-fund.png`, which it resolves against the
+  URL of the page, and `http`, `https` and `//host` URLs on
+  `stimhack.com`, `www.stimhack.com` or the host of the build's
+  `baseURL`, which it reads from the canonical link in `index.html`. It
+  does not check other URLs with a scheme (`mailto:`, `data:`), URLs on
+  other hosts, or values that are only a `#fragment` or a `?query`. Old
+  links that were already broken on WordPress are listed in
+  `tests/known-broken-links.txt`.
   To check a site that you built to a different directory, give the
   directory: `python3 scripts/check_site.py <dir>`.
 - The build fails when the built site is 950 MB or larger. The GitHub

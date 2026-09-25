@@ -1521,7 +1521,8 @@ BUNDLES = ROOT / "tests" / "fixtures" / "bundles"
 
 def linked_paths(out, url):
     """Return the paths on the site that the page at url links to, resolved against url."""
-    return set(check_site.site_paths(url, (out / url.strip("/") / "index.html").read_text()))
+    hosts = check_site.SITE_HOSTS | {check_site.built_host(out)}
+    return set(check_site.site_paths(url, (out / url.strip("/") / "index.html").read_text(), hosts))
 
 
 class BundleFiles(unittest.TestCase):
@@ -1543,10 +1544,13 @@ class BundleFiles(unittest.TestCase):
 
     def test_no_page_has_a_broken_link(self):
         out = build(BUNDLES)
+        hosts = check_site.SITE_HOSTS | {check_site.built_host(out)}
         broken = []
         for page in sorted(out.rglob("*.html")):
             url = "/" + page.relative_to(out).as_posix()
-            broken += [(url, path) for path in check_site.site_paths(url, page.read_text()) if not check_site.exists(out, path)]
+            broken += [
+                (url, path) for path in check_site.site_paths(url, page.read_text(), hosts) if not check_site.exists(out, path)
+            ]
         self.assertEqual(broken, [])
 
 

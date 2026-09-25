@@ -9,12 +9,17 @@
    Internet Archive. It does not have the home page,
    feeds, archive pages after the first (/page/2/), date archives or
    attachment pages.
-2. Every path on this site in an href, src, poster, data-src or srcset
-   attribute of the built HTML must point to a file. Relative paths, such as
-   an image referenced by file name from a post's folder, are resolved
-   against the URL of the page they are on. URLs with a scheme (https:,
-   mailto:, data: and so on), //host URLs, and values that are only a
-   #fragment or a ?query are not paths on this site and are not checked.
+2. Every URL on this site in the built HTML must point to a file. The check
+   reads the href, src, poster, data-src and srcset attributes, the url in a
+   meta refresh tag (Hugo's alias pages redirect with one), and the content
+   of og:image and og:url meta tags. Relative paths, such as an image
+   referenced by file name from a post's folder, are resolved against the
+   URL of the page they are on. An http, https or //host URL is on this site
+   when its host is stimhack.com, www.stimhack.com or the host of the
+   canonical link in the built index.html, which Hugo writes from the
+   baseURL of the build. Other URLs with a scheme (mailto:, data: and so
+   on), URLs on other hosts, and values that are only a #fragment or a
+   ?query are not checked.
 3. No page loads an image from an address that no longer serves images.
 
 Usage: hugo && python3 scripts/check_site.py [DIR]
@@ -32,6 +37,15 @@ ROOT = Path(__file__).resolve().parent.parent
 PUBLIC = ROOT / "public"
 # Attributes that hold one URL. srcset holds a list of URLs.
 LINK_ATTRS = {"href", "src", "poster", "data-src"}
+# Meta tags whose content attribute is a URL.
+META_URL_PROPERTIES = {"og:image", "og:url"}
+# The URL in the content of a meta refresh tag, such as "0; url=/a/". The
+# delay can be followed by a semicolon, a comma or spaces, "url=" can be left
+# out, and the URL can be in quotes.
+REFRESH_URL = re.compile(r"""\s*[\d.]*(?:\s*[;,]\s*|\s+)(?:url\s*=\s*)?(?:(["'])(.*?)(?:\1|$)|(.*))""", re.I | re.S)
+# Hosts of the production site. The host of the built site is added from its
+# canonical link, since a staging build has another baseURL.
+SITE_HOSTS = {"stimhack.com", "www.stimhack.com"}
 IMG_SRC = re.compile(r"""<img\b[^>]*?\bsrc=["']?([^"'\s>]+)""", re.I)
 # Image addresses that are gone. Use card-images.netrunnerdb.com for card scans.
 DEAD_IMAGES = re.compile(
@@ -74,11 +88,12 @@ def srcset_urls(srcset):
 
 
 class Links(HTMLParser):
-    """Collect the URLs in the link attributes of the tags on a page."""
+    """Collect the URLs that the tags on a page link to, and the page's canonical URL."""
 
     def __init__(self):
         super().__init__()
         self.urls = []
+        self.canonical = None
 
     def handle_starttag(self, tag, attrs):
         for name, value in attrs:
@@ -88,18 +103,50 @@ class Links(HTMLParser):
                 self.urls.append(value.strip())
             elif name == "srcset":
                 self.urls.extend(srcset_urls(value))
+        attrs = {name: value or "" for name, value in attrs}
+        if tag == "link" and "canonical" in attrs.get("rel", "").lower().split():
+            self.canonical = attrs.get("href", "").strip()
+        if tag != "meta" or "content" not in attrs:
+            return
+        if attrs.get("http-equiv", "").strip().lower() == "refresh":
+            match = REFRESH_URL.match(attrs["content"])
+            if match:
+                self.urls.append((match[2] if match[1] else match[3]).strip())
+        elif attrs.get("property", "").strip().lower() in META_URL_PROPERTIES:
+            self.urls.append(attrs["content"].strip())
 
 
-def site_paths(page_url, html):
-    """Return the decoded paths on this site that a page links to, without query or fragment."""
+def parse(html):
+    """Return the Links of a page."""
     links = Links()
     links.feed(html)
     links.close()
-    for url in links.urls:
+    return links
+
+
+def built_host(public):
+    """Return the host of the canonical link in the built index.html, or None if it has none."""
+    home = public / "index.html"
+    canonical = parse(home.read_text(errors="replace")).canonical if home.is_file() else None
+    return urlsplit(canonical).hostname if canonical else None
+
+
+def site_paths(page_url, html, hosts):
+    """Return the decoded paths on this site that a page links to, without query or fragment.
+
+    hosts are the lower case host names whose http, https and //host URLs are on this site.
+    """
+    for url in parse(html).urls:
         parts = urlsplit(url)
-        if parts.scheme or parts.netloc or not parts.path:
+        if parts.scheme or parts.netloc:
+            if parts.scheme.lower() not in ("", "http", "https") or parts.hostname not in hosts:
+                continue
+            path = parts.path or "/"
+        elif parts.path:
+            path = parts.path
+        else:
             continue
-        yield unquote(urljoin(page_url, parts.path))
+        yield unquote(urljoin(page_url, path))
 
 
 def main(args=()):
@@ -108,6 +155,12 @@ def main(args=()):
     public = parser.parse_args(args).dir
 
     errors = []
+    hosts = set(SITE_HOSTS)
+    if host := built_host(public):
+        hosts.add(host)
+    else:
+        errors.append("no canonical link with a host in /index.html, so links to the built site's host are not checked")
+
     for url in (ROOT / "tests" / "legacy-urls.txt").read_text().split():
         if not exists(public, unquote(urlsplit(url).path)):
             errors.append(f"legacy URL missing: {url}")
@@ -121,7 +174,7 @@ def main(args=()):
         # public/<dir>/index.html is served at /<dir>/. A relative path
         # resolves to the same URL against either, since resolution drops
         # the part of the base after the last slash (RFC 3986, section 5.2.3).
-        for path in site_paths("/" + quote(name), html):
+        for path in site_paths("/" + quote(name), html, hosts):
             if path in KNOWN_BROKEN or exists(public, path):
                 continue
             errors.append(f"broken link in /{name}: {path}")
