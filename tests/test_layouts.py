@@ -1740,7 +1740,10 @@ def wordpress_ids(content):
 class PostIdLinks(unittest.TestCase):
     """/?p=<ID> and /?page_id=<ID> open the post or page with that ID.
 
-    These are the forms of the WordPress GUIDs in .export/posts.json and .export/pages.json.
+    These are the forms of the WordPress GUIDs in the export. Each post in
+    .export/posts.json has a GUID /?p=<ID>. In .export/pages.json, 14 of the
+    16 pages have a GUID /?page_id=<ID>. Page 8083 (glossary-2) has the GUID
+    http://stimhack.com/glossary-2/ and page 7011 has no GUID.
     """
 
     maxDiff = None

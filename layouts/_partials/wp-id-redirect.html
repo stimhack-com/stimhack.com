@@ -1,7 +1,9 @@
 {{- /* Send /?p=<ID> and /?page_id=<ID> to the post or page with that ID.
-These are the forms of the WordPress GUIDs in the export: guid.rendered in
-.export/posts.json and .export/pages.json. wp-ids.json maps each ID to its
-URL; only such a link loads it. */ -}}
+These are the forms of the WordPress GUIDs in the export (guid.rendered).
+Each post in .export/posts.json has a GUID /?p=<ID>. In .export/pages.json,
+14 of the 16 pages have a GUID /?page_id=<ID>. Page 8083 (glossary-2) has
+the GUID http://stimhack.com/glossary-2/ and page 7011 has no GUID.
+wp-ids.json maps each ID to its URL; only such a link loads it. */ -}}
 <script>
 (function () {
   var query = new URLSearchParams(location.search);
