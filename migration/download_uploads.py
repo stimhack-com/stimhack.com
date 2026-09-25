@@ -3,9 +3,11 @@
 
 Collects the original file of every media item (other sites link to them),
 the featured image and thumbnail that convert.py writes into each post's
-front matter, and every uploads URL referenced in post and page HTML. Other
-WordPress size variants are not used and would push the site over the 1 GB
-GitHub Pages limit.
+front matter, every uploads URL referenced in post and page HTML, and every
+uploads URL in the files of the site. convert.py keeps content files that
+the export no longer has, and contributors add posts, so the site can use
+uploads the export does not name. Other WordPress size variants are not
+used and would push the site over the 1 GB GitHub Pages limit.
 
 Files already on disk are skipped. Files on disk that are not in the set are
 moved to .export/unused-uploads/. Writes .export/missing-uploads.txt for URLs
@@ -27,7 +29,13 @@ import convert
 ROOT = Path(__file__).resolve().parent.parent
 EXPORT = ROOT / ".export"
 STATIC = ROOT / "static"
-UPLOAD_RE = re.compile(r"""(?:https?:)?//(?:www\.)?stimhack\.com(/wp-content/uploads/[^"'\s<>)?#]+)""")
+# An uploads URL of this site: absolute, or a path that starts after a quote, a space, "(", "=" or ",".
+# A path cannot end in ",", which separates the URLs of a srcset.
+UPLOAD_RE = re.compile(
+    r"""(?:(?:https?:)?//(?:www\.)?stimhack\.com|(?<![^\s"'(=,]))(/wp-content/uploads/[^"'\s<>)?#]*[^"'\s<>)?#,])"""
+)
+# The files of the site that can reference uploads.
+SITE_FILES = ("content", "data", "config", "assets", "layouts", "hugo.toml")
 
 session = requests.Session()
 session.headers["User-Agent"] = "stimhack-migration/1.0"
@@ -42,6 +50,11 @@ def upload_paths():
         for item in json.loads((EXPORT / f"{kind}.json").read_text()):
             html = (item.get("content") or {}).get("rendered", "")
             paths.update(UPLOAD_RE.findall(html))
+    for name in SITE_FILES:
+        top = ROOT / name
+        for f in [top] if top.is_file() else top.rglob("*"):
+            if f.is_file():
+                paths.update(UPLOAD_RE.findall(f.read_text(errors="replace")))
     paths = {unquote(p) for p in paths}
     # The featured_image and thumbnail paths that convert.py writes, already unquoted.
     images, attached = convert.media_paths(media), convert.first_attachments(media)
