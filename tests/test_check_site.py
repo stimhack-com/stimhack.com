@@ -78,6 +78,8 @@ PAGES = {
         <picture><source srcset="https://netrunnerdb.com/bundles/source-srcset.png 1x"></picture>
         <video src="data:video/mp4;base64,AAAA" poster="http://cardgamedb.com/forums/uploads/poster.jpg"></video>
         <meta property="og:image" content="http://cardgamedb.com/forums/uploads/og-image.jpg">
+        <img src="//www.cardgamedb.com/forums/uploads/scheme-relative.jpg">
+        <img src="HTTPS://NetrunnerDB.com/card_image/upper-case.png">
         <img src="https://card-images.netrunnerdb.com/v2/large/01001.jpg">
     """,
     "index.html": '<link rel="canonical" href="https://static.example.com/">',
@@ -165,6 +167,8 @@ class BrokenLinks(unittest.TestCase):
                     "https://netrunnerdb.com/bundles/source-srcset.png",
                     "http://cardgamedb.com/forums/uploads/poster.jpg",
                     "http://cardgamedb.com/forums/uploads/og-image.jpg",
+                    "//www.cardgamedb.com/forums/uploads/scheme-relative.jpg",
+                    "HTTPS://NetrunnerDB.com/card_image/upper-case.png",
                 ]
             },
             f"reported: {sorted(reported)}",
