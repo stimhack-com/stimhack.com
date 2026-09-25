@@ -13,7 +13,9 @@
       <title>{{ .Title }}</title>
       <link>{{ .Permalink }}</link>
       <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
-      <guid>{{ .Permalink }}</guid>
+      {{- /* Feed readers know items by GUID. Migrated posts keep the GUID
+      WordPress gave them, which does not change with baseURL. */}}
+      {{ with .Params.wp_id }}<guid isPermaLink="false">https://stimhack.com/?p={{ . }}</guid>{{ else }}<guid>{{ .Permalink }}</guid>{{ end }}
       {{ with index (.GetTerms "authors") 0 }}<dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">{{ .Title }}</dc:creator>{{ end }}
       <description>{{ partial "summary-text.html" . | transform.XMLEscape | safeHTML }}</description>
     </item>
