@@ -1,0 +1,5 @@
+{{- $ids := newScratch }}
+{{- range $page := site.RegularPages }}
+  {{- with $page.Params.wp_id }}{{ $ids.SetInMap "ids" (string .) $page.RelPermalink }}{{ end }}
+{{- end }}
+{{- $ids.Get "ids" | jsonify }}

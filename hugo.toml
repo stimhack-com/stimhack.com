@@ -56,21 +56,35 @@ uglyURLs = false
   # Markdown posts can embed HTML (iframes, decklist tables).
   unsafe = true
 
-# WordPress served the feed at /feed/. GitHub Pages only serves index.html
-# for a directory, so the feed is written to feed/index.html as well.
+# WordPress served the feed at /feed/, and the feed of each category at
+# /category/<slug>/feed/. GitHub Pages only serves index.html for a
+# directory, so each feed is written to feed/index.html as well.
 # Do not build with --minify: the HTML minifier would mangle this XML.
 [outputFormats.wpfeed]
   mediaType = "text/html"
-  baseName = "index"
-  path = "feed"
+  baseName = "feed/index"
+  isPlainText = true
+  notAlternative = true
+
+# WordPress IDs of posts and pages and their URLs, for old /?p=<ID> links.
+[outputFormats.wpids]
+  mediaType = "application/json"
+  baseName = "wp-ids"
   isPlainText = true
   notAlternative = true
 
 [outputs]
-  home = ["html", "rss", "wpfeed"]
+  home = ["html", "rss", "wpfeed", "wpids"]
   section = ["html"]
   taxonomy = ["html"]
   term = ["html"]
+
+# Category archives have feeds too. Tag and author archives do not.
+[[cascade]]
+  outputs = ["html", "rss", "wpfeed"]
+  [cascade.target]
+    kind = "term"
+    path = "{/categories/**}"
 
 [services.rss]
   limit = 20

@@ -1,0 +1,13 @@
+{{- /* WordPress redirected /?p=<ID> and /?page_id=<ID> to the post or page
+with that ID. wp-ids.json maps each ID to its URL; only such a link loads it. */ -}}
+<script>
+(function () {
+  var query = new URLSearchParams(location.search);
+  var id = parseInt(query.get("p") || query.get("page_id"), 10);
+  if (!(id > 0)) return;
+  fetch("/wp-ids.json")
+    .then(function (response) { return response.json(); })
+    .then(function (urls) { if (urls[id]) location.replace(urls[id] + location.hash); })
+    .catch(function () {});
+})();
+</script>

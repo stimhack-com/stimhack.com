@@ -2,6 +2,7 @@
 <html lang="{{ site.Language.Locale }}">
 <head>
 <meta charset="UTF-8">
+{{- if or .IsHome (eq .Kind "404") }}{{ partial "wp-id-redirect.html" . }}{{ end }}
 <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
 {{- $pager := partial "archive-pager.html" . }}
 {{- $later := and $pager (gt $pager.PageNumber 1) }}
@@ -13,6 +14,9 @@
 {{- end }}
 <link rel="shortcut icon" href="{{ site.Params.favicon }}">
 <link rel="alternate" type="application/rss+xml" title="{{ site.Title }} &raquo; Feed" href="{{ "index.xml" | absURL }}">
+{{- if and (not .IsHome) (.OutputFormats.Get "wpfeed") }}
+<link rel="alternate" type="application/rss+xml" title="{{ site.Title }} &raquo; {{ .Title }} Category Feed" href="{{ .Permalink }}feed/">
+{{- end }}
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato&display=swap">
 {{- $css := resources.Match "css/vendor/*.css" | append (resources.Get "css/stimhack.css") | resources.Concat "css/site.css" | minify | fingerprint }}
 <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">

@@ -1,16 +1,18 @@
-{{- $pages := where site.RegularPages "Section" "posts" -}}
-{{- /* The site feed leaves out posts in any category of feedExcludeCategories. */}}
-{{- if .IsHome }}{{ $pages = $pages | complement (where $pages "Params.categories" "intersect" site.Params.feedExcludeCategories) }}{{ end -}}
+{{- /* The site feed lists all posts, a category feed the posts in that category. */}}
+{{- $pages := where (cond .IsHome site.RegularPages .Pages) "Section" "posts" -}}
+{{- /* Every feed leaves out posts in any category of feedExcludeCategories,
+as every WordPress feed did: its decklists category feed had no items. */}}
+{{- $pages = $pages | complement (where $pages "Params.categories" "intersect" site.Params.feedExcludeCategories) -}}
 {{- $pages = first site.Config.Services.RSS.Limit $pages.ByDate.Reverse -}}
 {{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>{{ site.Title }}</title>
-    <link>{{ site.Home.Permalink }}</link>
+    <title>{{ site.Title }}{{ if not .IsHome }} » {{ .Title }}{{ end }}</title>
+    <link>{{ .Permalink }}</link>
     <description>{{ site.Params.description }}</description>
     <language>{{ site.Language.Locale }}</language>
     {{ with $pages }}<lastBuildDate>{{ (index . 0).Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</lastBuildDate>{{ end }}
-    <atom:link href="{{ "feed/" | absURL }}" rel="self" type="application/rss+xml" />
+    <atom:link href="{{ .Permalink }}feed/" rel="self" type="application/rss+xml" />
     {{- range $pages }}
     <item>
       <title>{{ .Title }}</title>
