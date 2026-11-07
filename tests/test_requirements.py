@@ -63,6 +63,11 @@ def build_steps():
     return yaml.safe_load(WORKFLOW.read_text())["jobs"]["build"]["steps"]
 
 
+def runs_the_tests(step):
+    """Tell if a workflow step runs the tests in tests/, with unittest or pytest."""
+    return bool(re.search(r"\b(unittest|pytest)\b", step.get("run", "")))
+
+
 def step_index(steps, predicate, what):
     for i, step in enumerate(steps):
         if predicate(step):
@@ -97,7 +102,7 @@ class Requirements(unittest.TestCase):
             if re.search(r"\bpython3?\b", step.get("run", "")) and "pip install" not in step["run"]:
                 self.assertLess(install, i, f"step {step.get('name')!r} runs Python before pip install")
         self.assertTrue(
-            any("unittest" in s.get("run", "") for s in steps[install + 1:]),
+            any(runs_the_tests(s) for s in steps[install + 1:]),
             "no unit test step after pip install",
         )
 
@@ -148,7 +153,7 @@ class Node(unittest.TestCase):
             "uses actions/setup-node",
         )
         for i, step in enumerate(steps):
-            if "unittest" in step.get("run", ""):
+            if runs_the_tests(step):
                 self.assertLess(setup, i, f"step {step.get('name')!r} runs the tests before setup-node")
 
     def test_setup_node_version_has_the_features_the_tests_use(self):

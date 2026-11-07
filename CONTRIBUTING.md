@@ -104,7 +104,7 @@ rename them.
 
 Every pull request runs these checks:
 
-- `python3 -m unittest discover tests` tests the site check script, the
+- `python3 -m pytest -n auto tests` tests the site check script, the
   templates, and these migration scripts: `convert.py`, `wayback.py`,
   `download_uploads.py`, `archived_images.py`, `archived_links.py` and
   `nrdb_images.py`. It does not test `export.py` or
@@ -152,10 +152,14 @@ python3 -m pip install -r requirements.txt
 Then run the checks from the root of the repository:
 
 ```sh
-python3 -m unittest discover tests
+python3 -m pytest -n auto tests
 hugo --cleanDestinationDir --printPathWarnings --panicOnWarning
 python3 scripts/check_site.py
 ```
+
+`python3 -m pytest -n auto tests` runs the tests on every CPU at once, as
+CI does. `python3 -m unittest discover tests` runs the same tests one at a
+time and needs no pytest.
 
 `--cleanDestinationDir` removes the files in `public/` that are not in
 `static/` before Hugo writes the pages. Without it, pages from an earlier

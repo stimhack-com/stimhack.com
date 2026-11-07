@@ -3,3 +3,6 @@
 beautifulsoup4==4.12.3
 PyYAML==6.0.1
 requests==2.31.0
+# Runs the tests in parallel in CI: python3 -m pytest -n auto tests
+pytest==9.2.0
+pytest-xdist==3.8.0
