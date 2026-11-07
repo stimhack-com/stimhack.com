@@ -89,14 +89,14 @@ SITE_FILES = {
     ),
     "data/decks.yaml": 'image: "/wp-content/uploads/2026/01/data.png"\n',
     "hugo.toml": '[params]\n  headerImage = "/wp-content/uploads/2026/01/header.png"\n',
-    "config/staging/hugo.toml": 'favicon = "/wp-content/uploads/2026/01/staging.ico"\n',
+    "config/_default/hugo.toml": 'favicon = "/wp-content/uploads/2026/01/config.ico"\n',
     "assets/css/site.css": "body { background: url(/wp-content/uploads/2026/01/background.jpg); }\n",
     "layouts/_partials/logo.html": '<img src="https://stimhack.com/wp-content/uploads/2026/01/logo.png">\n',
 }
 REFERENCED = {
     "2026/01/thumb.jpg", "2026/01/markdown.png", "2026/01/absolute.png", "2026/01/one.png",
     "2026/01/two.png", "2026/01/Will-O’-the Wisp.png", "2026/01/data.png", "2026/01/header.png",
-    "2026/01/staging.ico", "2026/01/background.jpg", "2026/01/logo.png",
+    "2026/01/config.ico", "2026/01/background.jpg", "2026/01/logo.png",
 }
 UNREFERENCED = {"2026/01/other-host.png", "2026/01/archived.png", "2026/01/unused.png"}
 

@@ -28,9 +28,6 @@
 {{- if not .IsHome }}{{ with partial "summary-text.html" . }}{{ $description = . | truncate 160 }}{{ end }}{{ end }}
 <meta name="description" content="{{ $description }}">
 <link rel="canonical" href="{{ if $later }}{{ $pager.URL | absURL }}{{ else }}{{ .Permalink }}{{ end }}">
-{{- if site.Params.noindex }}
-<meta name="robots" content="noindex, nofollow">
-{{- end }}
 <link rel="shortcut icon" href="{{ site.Params.favicon }}">
 <link rel="alternate" type="application/rss+xml" title="{{ site.Title }} &raquo; Feed" href="{{ "index.xml" | absURL }}">
 {{- if and (not .IsHome) (.OutputFormats.Get "wpfeed") }}

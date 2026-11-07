@@ -82,7 +82,8 @@ SRCSET_SPACE = " \t\n\r\f"
 # segments, https://url.spec.whatwg.org/#single-dot-path-segment).
 DOT_SEGMENTS = {".": 1, "%2e": 1, "..": 2, ".%2e": 2, "%2e.": 2, "%2e%2e": 2}
 # Hosts of the production site. The host of the built site is added from its
-# canonical link, since a staging build has another baseURL.
+# canonical link, since a build with another baseURL, such as one made with
+# hugo --baseURL, links to its own host.
 SITE_HOSTS = {"stimhack.com", "www.stimhack.com"}
 # Image addresses that are gone. Use card-images.netrunnerdb.com for card scans.
 # The pattern matches the host and the path of an image URL.
@@ -307,7 +308,7 @@ def main(args=()):
         hosts.add(site.hostname)
     else:
         errors.append("no canonical link with a host in /index.html, so links to the built site's host are not checked")
-    # The baseURL in hugo.toml and in config/staging/hugo.toml is https.
+    # The baseURL in hugo.toml is https.
     scheme = site.scheme.lower() if site and site.scheme else "https"
 
     for url in (ROOT / "tests" / "legacy-urls.txt").read_text().split():
