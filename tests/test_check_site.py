@@ -909,5 +909,22 @@ def url_path_joins(source):
     return found
 
 
+class DeadAudio(unittest.TestCase):
+    """The check reports audio from an address that no longer serves it.
+
+    Podbean served podcast files at signed URLs such as
+    http://s60.podbean.com/pb/<hash>/<expiry>/.../Episode47-Final.mp3. They
+    expired: in November 2026 they returned an HTML page, not audio. The
+    files of the show are now at mcdn.podbean.com.
+    """
+
+    def test_reports_audio_from_an_expired_podbean_address(self):
+        old = "http://s60.podbean.com/pb/9f8ef36bedb0a4741296446ac6dbd415/55e43e39/data4/blogs60/708615/uploads/Episode47-Final.mp3"
+        new = "https://mcdn.podbean.com/mf/web/7f2xv5/Episode46-Final.mp3"
+        problems = post_problems(self, f'<audio src="{old}" controls></audio><audio src="{new}" controls></audio>')
+        dead = [line for line in problems if "from a dead address" in line]
+        self.assertEqual(dead, [f"file from a dead address in /post/index.html: {old}"])
+
+
 if __name__ == "__main__":
     unittest.main()
