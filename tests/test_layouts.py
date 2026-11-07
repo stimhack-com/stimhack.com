@@ -1846,12 +1846,23 @@ class ExportIdsInMap(unittest.TestCase):
         self.assertEqual(wrong, [])
 
 
-def id_problems(out):
-    """Return the lines about WordPress IDs that scripts/check_site.py prints for the built site in out."""
+@cache
+def site_check(out):
+    """Return the lines that scripts/check_site.py prints for the built site in out.
+
+    The check reads every page of the site, so each built site is checked
+    once. build() writes a new directory for each site and the tests do not
+    change it afterwards.
+    """
     stdout = io.StringIO()
     with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(io.StringIO()):
         check_site.main([str(out)])
-    return [line for line in stdout.getvalue().splitlines() if line.startswith("WordPress ID")]
+    return tuple(stdout.getvalue().splitlines())
+
+
+def id_problems(out):
+    """Return the lines about WordPress IDs that scripts/check_site.py prints for the built site in out."""
+    return [line for line in site_check(out) if line.startswith("WordPress ID")]
 
 
 class ListedIds(unittest.TestCase):
@@ -1934,10 +1945,7 @@ class KnownBrokenLinks(unittest.TestCase):
         self.assertEqual(sorted(check_site.KNOWN_BROKEN - broken), [])
 
     def test_the_check_reports_no_broken_link_in_the_built_site(self):
-        stdout = io.StringIO()
-        with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(io.StringIO()):
-            check_site.main([str(build())])
-        self.assertEqual([line for line in stdout.getvalue().splitlines() if line.startswith("broken link in ")], [])
+        self.assertEqual([line for line in site_check(build()) if line.startswith("broken link in ")], [])
 
 
 class Robots(unittest.TestCase):
