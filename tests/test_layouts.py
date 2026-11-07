@@ -1957,6 +1957,34 @@ class Robots(unittest.TestCase):
         self.assertTrue((out / "sitemap.xml").is_file())
 
 
+class InlineCode(HTMLParser):
+    """Collect the text of the inline scripts and the event handler attributes of a page."""
+
+    def __init__(self):
+        super().__init__()
+        self.code = []
+        self.inline = False
+
+    def handle_starttag(self, tag, attrs):
+        self.code += [value or "" for name, value in attrs if name.startswith("on")]
+        self.inline = tag == "script" and not any(name == "src" for name, _ in attrs)
+
+    def handle_endtag(self, tag):
+        if tag == "script":
+            self.inline = False
+
+    def handle_data(self, data):
+        if self.inline:
+            self.code.append(data)
+
+
+def calls_jquery(html):
+    """Tell if an inline script or an event handler attribute in html calls jQuery or $."""
+    parser = InlineCode()
+    parser.feed(html)
+    return any(re.search(r"\bjQuery\b|\$\s*[(.]", code) for code in parser.code)
+
+
 class InlineScripts(unittest.TestCase):
     """No page calls jQuery: the site loads no jQuery, so a call to it only throws an error.
 
@@ -1964,13 +1992,26 @@ class InlineScripts(unittest.TestCase):
     players with jQuery. The site does what it needs in assets/js/site.js.
     """
 
+    def test_finds_each_form_of_a_jquery_call(self):
+        for html in [
+            "<script>jQuery(document).ready(function () {});</script>",
+            "<script>if (a<b) jQuery(document)</script>",
+            "<script>$(document).ready()</script>",
+            "<script>jQuery.fn.x = 1</script>",
+            '<a onclick="jQuery(this).hide()">x</a>',
+        ]:
+            with self.subTest(html=html):
+                self.assertTrue(calls_jquery(html))
+        for html in ['<script src="/js/site.js"></script>', "<script>var s = `${a}`;</script>", "<p>$(5) in prose</p>"]:
+            with self.subTest(html=html):
+                self.assertFalse(calls_jquery(html))
+
     def test_no_page_calls_jquery(self):
         out = build()
         pages = {page.relative_to(out).as_posix(): page.read_text() for page in sorted(out.rglob("*.html"))}
         loaders = [name for name, text in pages.items() if re.search(r"<script\b[^>]*\bsrc=[^>]*jquery", text, re.I)]
         self.assertEqual(loaders, [])
-        calls = [name for name, text in pages.items() if re.search(r"<script\b(?![^>]*\bsrc=)[^>]*>[^<]*\bjQuery\s*\(", text)]
-        self.assertEqual(calls, [])
+        self.assertEqual([name for name, text in pages.items() if calls_jquery(text)], [])
 
 
 if __name__ == "__main__":
