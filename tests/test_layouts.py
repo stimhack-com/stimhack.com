@@ -22,6 +22,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 from typing import NamedTuple
 from urllib.parse import urlsplit
+from urllib.robotparser import RobotFileParser
 from xml.etree import ElementTree
 
 from site_build import FIXTURE_CONFIG, ROOT, build, hugo, published_pages
@@ -1937,6 +1938,23 @@ class KnownBrokenLinks(unittest.TestCase):
         with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(io.StringIO()):
             check_site.main([str(build())])
         self.assertEqual([line for line in stdout.getvalue().splitlines() if line.startswith("broken link in ")], [])
+
+
+class Robots(unittest.TestCase):
+    """robots.txt lets crawlers fetch every page and names the sitemap.
+
+    Google finds a sitemap from a Sitemap line in robots.txt, written as a
+    full URL as in its example
+    (https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap#addsitemap).
+    """
+
+    def test_robots_txt_names_the_sitemap_of_the_site(self):
+        out = build()
+        robots = RobotFileParser()
+        robots.parse((out / "robots.txt").read_text().splitlines())
+        self.assertTrue(robots.can_fetch("*", "/"))
+        self.assertEqual(robots.site_maps(), [CONFIG["baseURL"] + "sitemap.xml"])
+        self.assertTrue((out / "sitemap.xml").is_file())
 
 
 if __name__ == "__main__":
