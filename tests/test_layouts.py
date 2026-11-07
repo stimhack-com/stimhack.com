@@ -1957,5 +1957,21 @@ class Robots(unittest.TestCase):
         self.assertTrue((out / "sitemap.xml").is_file())
 
 
+class InlineScripts(unittest.TestCase):
+    """No page calls jQuery: the site loads no jQuery, so a call to it only throws an error.
+
+    WordPress plugins added inline scripts to posts that started their
+    players with jQuery. The site does what it needs in assets/js/site.js.
+    """
+
+    def test_no_page_calls_jquery(self):
+        out = build()
+        pages = {page.relative_to(out).as_posix(): page.read_text() for page in sorted(out.rglob("*.html"))}
+        loaders = [name for name, text in pages.items() if re.search(r"<script\b[^>]*\bsrc=[^>]*jquery", text, re.I)]
+        self.assertEqual(loaders, [])
+        calls = [name for name, text in pages.items() if re.search(r"<script\b(?![^>]*\bsrc=)[^>]*>[^<]*\bjQuery\s*\(", text)]
+        self.assertEqual(calls, [])
+
+
 if __name__ == "__main__":
     unittest.main()
