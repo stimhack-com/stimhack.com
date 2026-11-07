@@ -157,11 +157,11 @@ class BrokenLinks(unittest.TestCase):
         )
 
     def test_reports_images_from_dead_addresses_in_each_image_attribute(self):
-        reported = {line for line in self.problems if line.startswith("image from a dead address in ")}
+        reported = {line for line in self.problems if line.startswith("file from a dead address in ")}
         self.assertEqual(
             reported,
             {
-                "image from a dead address in /dead-images/index.html: " + url
+                "file from a dead address in /dead-images/index.html: " + url
                 for url in [
                     "http://cardgamedb.com/forums/uploads/img-src.jpg",
                     "http://www.cardgamedb.com/forums/uploads/spaces-around-equals.jpg",
@@ -507,7 +507,7 @@ class UrlSpaces(unittest.TestCase):
     def test_reports_an_image_that_a_browser_loads_from_a_dead_address(self):
         for markup, urls in self.DEAD:
             with self.subTest(markup=markup):
-                prefix = "image from a dead address in /post/index.html: "
+                prefix = "file from a dead address in /post/index.html: "
                 dead = {line.removeprefix(prefix) for line in self.check(markup) if line.startswith(prefix)}
                 self.assertEqual(dead, urls, f"{markup!r} reported {sorted(dead)}")
 
@@ -654,7 +654,7 @@ class UrlSchemes(unittest.TestCase):
     def test_reports_an_image_that_a_browser_loads_from_a_dead_address(self):
         for markup, urls in self.DEAD:
             with self.subTest(markup=markup):
-                prefix = "image from a dead address in /post/index.html: "
+                prefix = "file from a dead address in /post/index.html: "
                 dead = {line.removeprefix(prefix) for line in post_problems(self, markup) if line.startswith(prefix)}
                 self.assertEqual(dead, urls, f"{markup!r} reported {sorted(dead)}")
 
