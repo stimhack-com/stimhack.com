@@ -114,7 +114,8 @@ them, and a re-run only asks for what is still missing. `convert.py` also
 changes old NetrunnerDB card image links to card-images.netrunnerdb.com
 (`migration/nrdb_images.py`).
 
-`export.py` and `download_uploads.py` read the live WordPress site, so run
-them before it is shut down. `convert.py` reads only `.export/` and the
-files in the repository. Without `--overwrite`, it does not change posts
-that people edited in this repository.
+The WordPress site was shut down on 2026-11-06, so `export.py` and
+`download_uploads.py`, which read it, can no longer run. The last export is
+in `.export/`, which is not in the repository. `convert.py` reads only
+`.export/` and the files in the repository. Without `--overwrite`, it does
+not change posts that people edited in this repository.
