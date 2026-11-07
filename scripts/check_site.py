@@ -27,9 +27,9 @@
    scheme of the canonical link, as in a browser. Other URLs with a scheme
    (mailto:, data: and so on), URLs on other hosts, and values that are only
    a #fragment or a ?query are not checked.
-4. No page loads an image from an address that no longer serves images. The
-   check reads the src, poster, data-src and srcset attributes and the
-   content of og:image meta tags.
+4. No page loads an image or an audio file from an address that no longer
+   serves it. The check reads the src, poster, data-src and srcset
+   attributes and the content of og:image meta tags.
 
 Usage: hugo && python3 scripts/check_site.py [DIR]
 
@@ -85,11 +85,14 @@ DOT_SEGMENTS = {".": 1, "%2e": 1, "..": 2, ".%2e": 2, "%2e.": 2, "%2e%2e": 2}
 # canonical link, since a build with another baseURL, such as one made with
 # hugo --baseURL, links to its own host.
 SITE_HOSTS = {"stimhack.com", "www.stimhack.com"}
-# Image addresses that are gone. Use card-images.netrunnerdb.com for card scans.
-# The pattern matches the host and the path of an image URL.
-DEAD_IMAGES = re.compile(
+# Addresses of files that are gone. Use card-images.netrunnerdb.com for card
+# scans. Podbean's signed s<N>.podbean.com/pb/ links expired; the files of a
+# show are at mcdn.podbean.com. The pattern matches the host and the path of
+# a URL.
+DEAD_FILES = re.compile(
     r"^(?:www\.)?(?:cardgamedb\.com/forums/uploads/"
-    r"|netrunnerdb\.com/(?:web/)?(?:bundles/|card_image/))",
+    r"|netrunnerdb\.com/(?:web/)?(?:bundles/|card_image/))"
+    r"|^s\d+\.podbean\.com/pb/",
     re.I,
 )
 # Links in old posts that were already broken on the WordPress site.
@@ -321,8 +324,8 @@ def main(args=()):
         name = page.relative_to(public).as_posix()
         for src in parse(html).images:
             host, path = split_url(src, scheme) or (None, "")
-            if host and DEAD_IMAGES.match(host + request_path("/", path)):
-                errors.append(f"image from a dead address in /{name}: {src}")
+            if host and DEAD_FILES.match(host + request_path("/", path)):
+                errors.append(f"file from a dead address in /{name}: {src}")
         # public/<dir>/index.html is served at /<dir>/. A relative path
         # resolves to the same URL against either, since resolution drops
         # the part of the base after the last slash (RFC 3986, section 5.2.3).
