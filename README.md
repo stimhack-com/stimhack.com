@@ -42,7 +42,7 @@ without a deploy, so merging it deploys it.
    Settings > Pages.
 4. Verify stimhack.com for the organization in the organization's GitHub
    settings. This stops other GitHub accounts from using the domain or its
-   subdomains for their Pages sites.
+   immediate subdomains, such as `www.stimhack.com`, for their Pages sites.
 
 Until the custom domain is set, GitHub serves the site at
 `https://stimhack-com.github.io/stimhack.com/`. Links there that start
@@ -114,8 +114,9 @@ them, and a re-run only asks for what is still missing. `convert.py` also
 changes old NetrunnerDB card image links to card-images.netrunnerdb.com
 (`migration/nrdb_images.py`).
 
-The WordPress site was shut down on 2026-11-06, so `export.py` and
-`download_uploads.py`, which read it, can no longer run. The last export is
-in `.export/`, which is not in the repository. `convert.py` reads only
+The WordPress site was shut down on 2026-11-06. `export.py` read its REST
+API, so it can no longer run, and `download_uploads.py` can no longer
+download uploads from it. The last export is in `.export/`, which is not in
+the repository. `convert.py` reads only
 `.export/` and the files in the repository. Without `--overwrite`, it does
 not change posts that people edited in this repository.

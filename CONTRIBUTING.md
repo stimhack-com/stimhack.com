@@ -115,8 +115,9 @@ Every pull request runs these checks:
   post, page or archive is missing, when an old `/?p=<ID>` or
   `/?page_id=<ID>` link in `tests/wp-ids.txt` does not go to its post or
   page, when a page links to a path on this site that does not
-  exist, or when a page loads an image from an old cardgamedb.com or
-  netrunnerdb.com address that no longer works. The link check reads the
+  exist, or when a page loads a file from an address that no longer works:
+  images from old cardgamedb.com or netrunnerdb.com addresses, and audio
+  from expired Podbean links. The link check reads the
   `href`, `src`, `poster`, `data-src` and `srcset` attributes, the URL in
   a meta refresh tag (Hugo's alias pages redirect with one), and the
   `og:image` and `og:url` meta tags. It checks paths that start with `/`,
