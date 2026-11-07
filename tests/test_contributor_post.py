@@ -234,7 +234,7 @@ class ContributorPost(unittest.TestCase):
             # Hugo reads the keys of front matter in any case.
             ("contributor-test-categories", "date: 2026-09-15T12:00:00-07:00", ["Categories: [strategy]", "Summary: Keys."], False),
         )
-        default = lambda content=None, environment=None: site_build.build(content or root / "content", environment)
+        default = lambda content=None: site_build.build(content or root / "content")
         tests = unittest.TestSuite(
             test for test in each_test(unittest.TestLoader().loadTestsFromModule(test_layouts)) if test.id() not in SLOW
         )
@@ -328,8 +328,7 @@ class PostAuthors(unittest.TestCase):
         with tempfile.TemporaryDirectory() as out:
             # The flags of the build step in .github/workflows/site.yml.
             # The step also passes --gc, which removes unused cache files after the
-            # build, and --environment, which sets baseURL and params.noindex
-            # (config/staging/hugo.toml). No errorf in layouts/ reads them.
+            # build and changes no check.
             result = subprocess.run(
                 [*hugo(), "--source", str(ROOT), "--destination", out, "--contentDir", str(content),
                  "--printPathWarnings", "--panicOnWarning"],
@@ -377,8 +376,7 @@ class PostDatesAndCategories(unittest.TestCase):
         with tempfile.TemporaryDirectory() as out:
             # The flags of the build step in .github/workflows/site.yml.
             # The step also passes --gc, which removes unused cache files after the
-            # build, and --environment, which sets baseURL and params.noindex
-            # (config/staging/hugo.toml). No errorf in layouts/ reads them.
+            # build and changes no check.
             result = subprocess.run(
                 [*hugo(), "--source", str(ROOT), "--destination", out, "--contentDir", str(content),
                  "--printPathWarnings", "--panicOnWarning"],

@@ -17,42 +17,37 @@ The preview is at `http://localhost:1313/`.
 
 ## Deployment
 
-Pushes to `main` deploy to GitHub Pages. The repository variable `SITE_ENV`
-selects the build:
-
-- `staging` (the default) builds for `https://static.stimhack.com/` and asks
-  search engines not to index its pages. Use it to review the site before it
-  replaces WordPress.
-- `production` builds for `https://stimhack.com/`.
-
-A change to `SITE_ENV` does not start a build. After you change it, run the
-workflow (Actions > Build and deploy > Run workflow) or push a commit.
+Pushes to `main` build the site and deploy it to GitHub Pages at
+`https://stimhack.com/`. A pull request runs the same build and checks
+without a deploy, so merging it deploys it.
 
 ### Set up a new repository
 
 1. In Settings > Pages, set Source to "GitHub Actions". The first deploy
    fails until you do this.
-2. In Settings > Pages, set the custom domain to `static.stimhack.com`. A
-   deploy from a workflow ignores a `CNAME` file, so this setting is the
-   only place for the domain.
-3. In the DNS for stimhack.com, which is on Cloudflare, add a CNAME record
-   from `static.stimhack.com` to `stimhack-com.github.io`. The recommended
-   proxy status is "DNS only", not "Proxied", so that GitHub can issue the
-   HTTPS certificate.
-4. Optional: verify stimhack.com for the organization in the organization's
-   GitHub settings. This stops other GitHub accounts from using the domain
-   for their Pages sites.
+2. In Settings > Pages, set the custom domain to `stimhack.com`. A deploy
+   from a workflow ignores a `CNAME` file, so this setting is the only
+   place for the domain.
+3. In the DNS for stimhack.com, which is on Cloudflare, point the domain
+   at GitHub Pages. GitHub lists the current addresses in
+   [Managing a custom domain for your GitHub Pages site](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site):
+   - `stimhack.com` A records: `185.199.108.153`, `185.199.109.153`,
+     `185.199.110.153`, `185.199.111.153`
+   - `stimhack.com` AAAA records: `2606:50c0:8000::153`,
+     `2606:50c0:8001::153`, `2606:50c0:8002::153`, `2606:50c0:8003::153`
+   - `www.stimhack.com` CNAME record: `stimhack-com.github.io`
+
+   Set every record to "DNS only", not "Proxied", so that GitHub can issue
+   the HTTPS certificate. When it has, turn on "Enforce HTTPS" in
+   Settings > Pages.
+4. Verify stimhack.com for the organization in the organization's GitHub
+   settings. This stops other GitHub accounts from using the domain or its
+   subdomains for their Pages sites.
 
 Until the custom domain is set, GitHub serves the site at
 `https://stimhack-com.github.io/stimhack.com/`. Links there that start
 with `/` are broken, because the site expects to be at the root of its
 domain.
-
-### Go live
-
-Set `SITE_ENV` to `production` and run the workflow. Change the custom
-domain in Settings > Pages to `stimhack.com`, and point the DNS record
-for stimhack.com at GitHub Pages.
 
 ## Layout
 

@@ -22,7 +22,6 @@ from html.parser import HTMLParser
 from pathlib import Path
 from typing import NamedTuple
 from urllib.parse import urlsplit
-from urllib.robotparser import RobotFileParser
 from xml.etree import ElementTree
 
 from site_build import FIXTURE_CONFIG, ROOT, build, hugo, published_pages
@@ -965,8 +964,7 @@ class UntitledPages(unittest.TestCase):
         with tempfile.TemporaryDirectory() as out:
             # The flags of the build step in .github/workflows/site.yml.
             # The step also passes --gc, which removes unused cache files after the
-            # build, and --environment, which sets baseURL and params.noindex
-            # (config/staging/hugo.toml). No errorf in layouts/ reads them.
+            # build and changes no check.
             result = subprocess.run(
                 [*hugo(), "--source", str(ROOT), "--destination", out, "--contentDir", str(UNTITLED),
                  "--config", FIXTURE_CONFIG, "--printPathWarnings", "--panicOnWarning"],
@@ -998,8 +996,7 @@ class PostsForLater(unittest.TestCase):
         with tempfile.TemporaryDirectory() as out:
             # The flags of the build step in .github/workflows/site.yml, and the posts for later.
             # The step also passes --gc, which removes unused cache files after the
-            # build, and --environment, which sets baseURL and params.noindex
-            # (config/staging/hugo.toml). No errorf in layouts/ reads them.
+            # build and changes no check.
             result = subprocess.run(
                 [*hugo(), "--source", str(ROOT), "--destination", out,
                  "--printPathWarnings", "--panicOnWarning", "--buildFuture", "--buildExpired"],
@@ -1170,9 +1167,9 @@ def migrated_content(content):
     return copy
 
 
-def migrated_site(environment=None):
+def migrated_site():
     """Return the site built from the posts in content/ that came from WordPress."""
-    return build(migrated_content(ROOT / "content"), environment)
+    return build(migrated_content(ROOT / "content"))
 
 
 class FeedGuids(unittest.TestCase):
@@ -1196,9 +1193,6 @@ class FeedGuids(unittest.TestCase):
 
     def test_migrated_posts_keep_wordpress_guid(self):
         self.assert_wordpress_guids(migrated_site())
-
-    def test_staging_feed_has_production_guids(self):
-        self.assert_wordpress_guids(migrated_site(environment="staging"))
 
     def test_older_post_keeps_its_http_guid(self):
         # WordPress wrote http: GUIDs for its older posts. The main feed shows
@@ -1943,42 +1937,6 @@ class KnownBrokenLinks(unittest.TestCase):
         with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(io.StringIO()):
             check_site.main([str(build())])
         self.assertEqual([line for line in stdout.getvalue().splitlines() if line.startswith("broken link in ")], [])
-
-
-class StagingRobots(unittest.TestCase):
-    """The staging site asks search engines not to index its pages with a noindex meta tag.
-
-    A crawler reads the tag only if robots.txt lets it fetch the page. Google:
-    "For the noindex rule to be effective, the page or resource must not be
-    blocked by a robots.txt file"
-    (https://developers.google.com/search/docs/crawling-indexing/block-indexing).
-    """
-
-    NOINDEX = '<meta name="robots" content="noindex, nofollow">'
-
-    def test_robots_txt_lets_crawlers_fetch_the_pages_with_the_noindex_tag(self):
-        out = build(environment="staging")
-        robots = RobotFileParser()
-        robots.parse((out / "robots.txt").read_text().splitlines())
-        pages = [
-            "/" + page.relative_to(out).as_posix().removesuffix("index.html")
-            for page in sorted(out.rglob("*.html"))
-            if self.NOINDEX in page.read_text()
-        ]
-        self.assertIn("/", pages)
-        blocked = [url for url in pages if not robots.can_fetch("*", url)]
-        self.assertEqual(blocked[:5], [])
-
-    def test_every_staging_html_page_has_the_noindex_tag(self):
-        # Crawlers can fetch every page, so a page without the tag can be
-        # indexed. The feeds at feed/index.html are RSS, not HTML.
-        out = build(environment="staging")
-        missing = [
-            page.relative_to(out).as_posix()
-            for page in sorted(out.rglob("*.html"))
-            if page.read_text().startswith("<!DOCTYPE html>") and self.NOINDEX not in page.read_text()
-        ]
-        self.assertEqual(missing[:5], [])
 
 
 if __name__ == "__main__":
